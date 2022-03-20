@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class CasinoSimulator {
+    public static int money;
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("CasinoSimulator");
 
