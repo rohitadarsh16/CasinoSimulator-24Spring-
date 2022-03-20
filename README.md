@@ -13,7 +13,7 @@ java -jar Casino.jar
 - A window will open displaying an image of Ace of Hearts
 
 # How to contribute
-Follow this project board to know the latest status of the project: [Trello]([https://trello.com/b/EWAn1oRz/casinosimulator-tasks])
+Follow this project board to know the latest status of the project: [Trello](https://trello.com/b/EWAn1oRz/casinosimulator-tasks)
 
 ### How to build
 - Clone main branch into a folder
