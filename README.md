@@ -1,8 +1,8 @@
-# Project Name
-Put here a short paragraph describing your project. 
-Adding an screenshot or a mockup of your application in action would be nice.  
+# CasinoSimulator
+The program will run a simulation of various games found within a casino. These include standard games such as Slots, Blackjack, etc. The program will have a main menu to select each game and will include a graphical user interface (GUI) to interact with the various games while playing. There will be a free-play mode, where there is infinite money to be played with, and a standard mode with a limited amount of money to start with.
 
 ![This is a screenshot.](casino.png)
+
 # How to run
 Provide here instructions on how to use your application.   
 - Download the latest binary from the Release section on the right on GitHub.  
