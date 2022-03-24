@@ -4,7 +4,6 @@ The program will run a simulation of various games found within a casino. These 
 ![This is a screenshot.](casino.png)
 
 # How to run
-Provide here instructions on how to use your application.   
 - Download the latest binary from the Release section on the right on GitHub.  
 - On the command line navigate to the **bin** directory and run with
 ```
