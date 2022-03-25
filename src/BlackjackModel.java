@@ -5,28 +5,35 @@ import java.util.List;
 public class BlackjackModel {
     private MainMenuModel menuModel;
     private BlackjackView blackjackView;
-    private int money;
     private LinkedList<Card> deck;
     private Player dealer;
     private Player player;
 
+    private int money;
+    private int round;
+
     public BlackjackModel(MainMenuModel menu, int money) {
         menuModel = menu;
-        this.money = money;
         deck = new LinkedList<>();
         dealer = new Player();
         player = new Player();
         blackjackView = new BlackjackView(this);
+        this.money = money;
+        round = 1;
     }
 
     public void createDeck() {
         deck.clear();
         int suit; // 0 - clubs; 1 - diamonds; 2 - hearts; 3 - spades
+        int points = 0;
 
         for (int i = 0; i < 4; i++) {
             suit = i;
-            for (int j = 1; j <= 13; j++) {
-                Card c = new Card(j, suit);
+            for (int j = 0; j < 13; j++) {
+                points = j + 1;
+                if (j >= 10)
+                    points = 10;
+                Card c = new Card(j+1, suit, points);
                 deck.add(c);
             }
         }
@@ -46,24 +53,29 @@ public class BlackjackModel {
     }
 
     int[] popDealerCard() {
-        int[] ret = new int[2];
+        int[] ret = new int[3];
         Card c = dealer.popCard();
 
-        ret[0] = c.value;
-        ret[1] = c.suit;
+        ret[0] = c.suit;
+        ret[1] = c.value-1;
+        ret[2] = c.points;
 
         return ret;
     }
 
     int[] popPlayerCard() {
-        int[] ret = new int[2];
+        int[] ret = new int[3];
         Card c = player.popCard();
 
-        ret[0] = c.value;
-        ret[1] = c.suit;
+        ret[0] = c.suit;
+        ret[1] = c.value-1;
+        ret[2] = c.points;
 
         return ret;
     }
+
+    int getDealerTotal() { return dealer.getTotal(); }
+    int getPlayerTotal() { return player.getTotal(); }
 
     public void exit() {
         menuModel.setVisible();
@@ -77,15 +89,18 @@ public class BlackjackModel {
     private class Card {
         int value;
         int suit;
+        int points;
 
-        Card(int v, int s) {
+        Card(int v, int s, int p) {
             value = v;
             suit = s;
+            points = p;
         }
 
         Card(Card c) {
             value = c.value;
             suit = c.suit;
+            points = c.points;
         }
     }
 
@@ -103,7 +118,7 @@ public class BlackjackModel {
         void addCard() {
             Card c = new Card(deck.pollFirst());
             hand[i++] = c;
-            total += c.value;
+            total += c.points;
         }
 
         Card popCard() { return hand[j++]; }
