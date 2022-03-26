@@ -16,11 +16,11 @@ public class SlotModel {
     }
 
     public void pullLever() {
-        //random number from 0-9, represent for 10 symbols: apple, watermelon, grape, strawberry, banana, orange, cherry, bar, “7”, diamond
+        //random number from 0-6, represent for 7 symbols: apple, grape, orange, cherry, “7”, diamond, heart
         Random ramdomNumber = new Random();
-        slot1 = ramdomNumber.nextInt(10);
-        slot2 = ramdomNumber.nextInt(10);
-        slot3 = ramdomNumber.nextInt(10);
+        slot1 = ramdomNumber.nextInt(7);
+        slot2 = ramdomNumber.nextInt(7);
+        slot3 = ramdomNumber.nextInt(7);
 
 
     }
