@@ -24,29 +24,40 @@ public class SlotModel {
 
 
     }
+    //Get slot number methods. There should be a better way to do it because if we need 9 slots, then there are 9 get methods.
+    public int getSlot1 () {
+        return slot1;
+    }
+    public int getSlot2 () {
+        return slot2;
+    }
+    public int getSlot3 () {
+        return slot3;
+    }
 
-    public void matchCheck() {
+    public String matchCheck() {
 
         //Some simple winning rules, modify if needed
         if (slot1 == slot2 && slot2 == slot3) {
             //if 7 symbol is 3 in the row, then jackpot winner
             if (slot1 == 0) {
                 money += 100;
-                System.out.print("Jackpot Winner!!!");
+                return "Jackpot Winner!!!";
             //Other 3 in the row
             } else {
                 money += 50;
-                System.out.print("Winner!!");
+                return "Winner!!";
             }
         //2 in the row
         } else if (slot1 == slot2 || slot2 == slot3 || slot3 == slot1) {
-            System.out.print("Free Spin!");
+            return "Free Spin!";
         //No matches
         } else {
-            System.out.print("Bad luck!");
+            return "Bad luck!";
         }
 
     }
+
 
 
     public void exit() {
