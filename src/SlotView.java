@@ -19,7 +19,7 @@ public class SlotView extends JFrame {
         setResizable(false);
 
         BufferedImage[] picture;
-        File path = new File("Pictures");
+        File path = new File("Assets/Slotmachine");
         File[] allFiles = path.listFiles();
         String contents[] = path.list();
 
