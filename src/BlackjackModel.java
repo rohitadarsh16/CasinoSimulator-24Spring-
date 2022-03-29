@@ -3,6 +3,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class BlackjackModel {
+    private currentState currentState;
     private MainMenuModel menuModel;
     private BlackjackView blackjackView;
     private LinkedList<Card> deck;
@@ -12,7 +13,16 @@ public class BlackjackModel {
     private int money;
     private int round;
 
+    public enum currentState{
+        pWin, dWin, pStand, dStand, dTurn, pTurn, draw //d = dealer, p = player
+    }
+
+    public currentState getCurrentState(){
+        return currentState;
+    }
+
     public BlackjackModel(MainMenuModel menu, int money) {
+        currentState = currentState.pTurn;
         menuModel = menu;
         deck = new LinkedList<>();
         dealer = new Player();
@@ -41,6 +51,65 @@ public class BlackjackModel {
 
     public void shuffle() {
         Collections.shuffle(deck);
+    }
+
+    public void playerHit(){
+        player.addCard();
+        if (player.isBlackjack()){
+            currentState = currentState.pWin; //player wins
+        }
+        else if(player.hasBusted()){
+            currentState = currentState.dWin; //dealer wins
+        }
+        else{
+            currentState = currentState.dTurn;
+        }
+    }
+
+    public void playerStand(){              //player stands which makes it the dealer's turn
+        currentState = currentState.dTurn;
+        player.setToStanding(true);
+        dealerTurn();
+    }
+
+    public void dealerHit(){
+        dealer.addCard();
+        if(dealer.isBlackjack()){
+            currentState = currentState.dWin; //dealer has blackjack and wins
+        }
+        else if(dealer.hasBusted()){
+            currentState = currentState.pWin; //dealer busted and player wins
+        }
+        else if (player.isStanding()){ //dealer neither has blackjack or busted and loops back to add another card
+            dealerTurn();
+        }
+        else {
+            currentState = currentState.pTurn;
+        }
+    }
+
+    public void dealerStand(){
+        currentState = currentState.pTurn;
+        dealer.setToStanding(true);                         // if both player and dealer are standing then do this
+        if(player.isStanding()){
+            if(player.getTotal() == dealer.getTotal()){     //player and dealer have same total, draw
+                currentState = currentState.draw;
+            }
+            else if(player.getTotal() < dealer.getTotal()){     //dealer has higher total than player, dealer wins
+                currentState = currentState.dWin;
+            }
+            else{                                               //otherwise player has higher total and wins
+                currentState = currentState.pWin;
+            }
+        }
+    }
+
+    public void dealerTurn(){               //dealer's turn
+        if (dealer.getTotal() < 17){        //if dealer has less than 17 they hit
+            dealerHit();
+        }
+        else                                //otherwise they stand
+            dealerStand();
     }
 
     public void deal() {
@@ -109,8 +178,10 @@ public class BlackjackModel {
         int i; // hand index
         int j; // index for popping
         int total;
+        private boolean stand;
 
         Player() {
+            stand = false;
             hand = new Card[10];
             i = j = total = 0;
         }
@@ -119,6 +190,22 @@ public class BlackjackModel {
             Card c = new Card(deck.pollFirst());
             hand[i++] = c;
             total += c.points;
+        }
+
+        public boolean hasBusted(){
+            return total > 21;
+        }
+
+        public boolean isBlackjack(){
+            return total == 21;
+        }
+
+        public boolean isStanding(){
+            return stand;
+        }
+
+        public void setToStanding(boolean stand){
+             this.stand = stand;
         }
 
         Card popCard() { return hand[j++]; }
