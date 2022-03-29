@@ -4,8 +4,9 @@ The program will run a simulation of various games found within a casino. These 
 ![This is a screenshot.](casino.png)
 
 # How to run
-- Download Casino.jar and the Assets folder from the latest release
-- On the command line navigate to the folder where the files were downloaded and run
+- Download Casino.zip from the latest release
+- Extract the zip file; there should be a **jar** file and an **Assets** folder
+- On the command line navigate to the folder where the files were extracted and run
 ```
 java -jar Casino.jar
 ```
