@@ -18,15 +18,14 @@ Follow this project board to know the latest status of the project: [Trello](htt
 - Clone main branch into a folder
 - Open IntelliJ 11
 - Build the project by going to Build -> Build Project
-- Copy the MANIFEST.MF file to out/production/CasinoSimulator
-- Open a terminal and navigate to out/production/CasinoSimulator
-- Now run
-```
-jar cfm Casino.jar MANIFEST.MF *.class
-```
-- Move **Casino.jar** to the main directory where the Assets folder is also located
+- Now go to File -> Project Structure and then click on Artifacts
+- If this is empty click on the + sign and choose JAR -> From modules with dependencies
+- Under Main Class select CasinoSimulator then click OK and click OK again
+- Now click on Build -> Build Artifacts
+- A new folder named **artifacts** will be created under the **out** folder
+- Navigate to the last folder and move **CasinoSimulator.jar** to the main directory where the Assets folder is also located
 - In the terminal navigate to the main folder and run
 ```
-java -jar Casino.jar
+java -jar CasinoSimulator.jar
 ```
 - Have fun!!!
