@@ -4,12 +4,12 @@ The program will run a simulation of various games found within a casino. These 
 ![This is a screenshot.](casino.png)
 
 # How to run
-- Download the latest binary from the Release section on the right on GitHub.  
-- On the command line navigate to the **bin** directory and run with
+- Download Casino.jar and the Assets folder from the latest release
+- On the command line navigate to the folder where the files were downloaded and run
 ```
 java -jar Casino.jar
 ```
-- A window will open displaying an image of Ace of Hearts
+- A window will open with a menu where one can choose which game to play
 
 # How to contribute
 Follow this project board to know the latest status of the project: [Trello](https://trello.com/b/EWAn1oRz/casinosimulator-tasks)
@@ -18,14 +18,14 @@ Follow this project board to know the latest status of the project: [Trello](htt
 - Clone main branch into a folder
 - Open IntelliJ 11
 - Build the project by going to Build -> Build Project
-- Open a terminal and navigate to out/production/CasinoSimulator
-- Now run
+- Now go to File -> Project Structure and then click on Artifacts
+- If this is empty click on the + sign and choose JAR -> From modules with dependencies
+- Under Main Class select CasinoSimulator then click OK and click OK again
+- Now click on Build -> Build Artifacts
+- A new folder named **artifacts** will be created under the **out** folder
+- Navigate to the last folder and move **CasinoSimulator.jar** to the main directory where the Assets folder is also located
+- In the terminal navigate to the main folder and run
 ```
-jar cfm Casino.jar MANIFEST.MF CasinoSimulator.class
-```
-- Move **Casino.jar** to the bin directory
-- Navigate to the **bin** directory and run
-```
-java -jar Casino.jar
+java -jar CasinoSimulator.jar
 ```
 - Have fun!!!
