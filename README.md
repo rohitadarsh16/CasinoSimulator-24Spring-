@@ -3,6 +3,9 @@ The program will run a simulation of various games found within a casino. These 
 
 ![This is a screenshot.](casino.png)
 
+#IMPORTANT!
+Minimum Java version required is **17.0.1**.
+
 # How to run
 - Download Casino.zip from the latest release
 - Extract the zip file; there should be a **jar** file and an **Assets** folder
