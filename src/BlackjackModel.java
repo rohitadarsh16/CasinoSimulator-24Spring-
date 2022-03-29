@@ -80,7 +80,7 @@ public class BlackjackModel {
         else if(dealer.hasBusted()){
             currentState = currentState.pWin; //dealer busted and player wins
         }
-        else if (player.isStanding()){ //dealer neither has blackjack or busted and loops back to add another card
+        else if (player.isStanding()){ //dealer neither has blackjack or busted and loops back to check if at 17
             dealerTurn();
         }
         else {

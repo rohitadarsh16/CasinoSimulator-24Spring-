@@ -4,12 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
 
 public class BlackjackView extends JFrame {
     private BlackjackModel blackjackModel;
     private JLabel[][] deckLabel;
     private JLabel cardBack;
     private int[] hiddenCard;
+
 
     private int x; // x position for cards
 
@@ -27,6 +29,18 @@ public class BlackjackView extends JFrame {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
         setLayout(null);
+
+        JLabel dealerWin = new JLabel( "Dealer Wins!");
+        dealerWin.setBounds(260, 500, 100, 70);
+        dealerWin.setVisible(false);
+
+        JLabel playerWin = new JLabel("Player Wins!");
+        playerWin.setBounds(260, 500, 100, 70);
+        playerWin.setVisible(false);
+
+        JLabel draw = new JLabel("It's a Draw");
+        draw.setBounds(260, 450, 100, 70);
+        draw.setVisible(false);
 
         JLabel dealerLabel = new JLabel("Dealer");
         dealerLabel.setBounds(275, 10, 50, 30);
@@ -95,12 +109,37 @@ public class BlackjackView extends JFrame {
             }
         });
 
-        standBtn.addActionListener(new ActionListener() {
+        standBtn.addActionListener(new ActionListener() {   //player hit stand button
             @Override
             public void actionPerformed(ActionEvent e) {
-                deckLabel[hiddenCard[0]][hiddenCard[1]].setVisible(true);
-                cardBack.setVisible(false);
-                dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
+                if(e.getSource() == standBtn) {
+                    int[] c;
+                    int y = 70;
+                    x = 222;
+
+                    deckLabel[hiddenCard[0]][hiddenCard[1]].setVisible(true);
+                    cardBack.setVisible(false);
+                    dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
+                    hitBtn.setEnabled(false);
+                    standBtn.setEnabled(false);
+
+                    blackjackModel.playerStand();
+                    dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
+
+                    c = blackjackModel.popDealerCard();
+                    deckLabel[c[0]][c[1]].setBounds(x, y, 96, 144);
+
+
+                    if (blackjackModel.getCurrentState() == BlackjackModel.currentState.pWin) { //player wins by either having more points or dealer busts
+                        playerWin.setVisible(true);
+                    } else if (blackjackModel.getCurrentState() == BlackjackModel.currentState.dWin) { //dealer wins by having more points
+                        dealerWin.setVisible(true);
+                    } else if (blackjackModel.getCurrentState() == BlackjackModel.currentState.draw) { //both player and dealer have same point values
+                        draw.setVisible(true);
+                    }
+                    add(deckLabel[c[0]][c[1]]);
+                    x += 96;
+                }
             }
         });
 
@@ -112,6 +151,38 @@ public class BlackjackView extends JFrame {
             }
         });
 
+        hitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == hitBtn){
+                        int[] c;
+                    int y = 304;
+                    blackjackModel.playerHit();
+
+
+                    c = blackjackModel.popPlayerCard();
+                    deckLabel[c[0]][c[1]].setBounds(x, y, 96, 144);
+                    add(deckLabel[c[0]][c[1]]);
+
+                    playerTotal.setText(String.valueOf(blackjackModel.getPlayerTotal()));
+
+                    if (blackjackModel.getCurrentState() == BlackjackModel.currentState.dWin) { // player busted while hitting
+                        dealerWin.setVisible(true);
+                        hitBtn.setEnabled(false);
+                        standBtn.setEnabled(false);
+                    } else if (blackjackModel.getCurrentState() == BlackjackModel.currentState.dTurn) {
+                        blackjackModel.dealerTurn();
+                    } else if (blackjackModel.getCurrentState() == BlackjackModel.currentState.pWin) { //player got Blackjack while hitting
+                        playerWin.setVisible(true);
+                        hitBtn.setEnabled(false);
+                        standBtn.setEnabled(false);
+                    }
+                    add(deckLabel[c[0]][c[1]]);
+                    x+=96;
+                }
+            }
+        });
+
         add(dealerLabel);
         add(dealerTotal);
         add(playerLabel);
@@ -120,6 +191,9 @@ public class BlackjackView extends JFrame {
         add(hitBtn);
         add(standBtn);
         add(exitBtn);
+        add(dealerWin);
+        add(playerWin);
+        add(draw);
 
         setLocationRelativeTo(null);
         setVisible(true);
