@@ -8,7 +8,7 @@ The program will run a simulation of various games found within a casino. These 
 - Extract the zip file; there should be a **jar** file and an **Assets** folder
 - On the command line navigate to the folder where the files were extracted and run
 ```
-java -jar Casino.jar
+java -jar CasinoSimulator.jar
 ```
 - A window will open with a menu where one can choose which game to play
 
