@@ -13,13 +13,16 @@ public class BlackjackView extends JFrame {
     private int[] hiddenCard;
 
 
-    private int x; // x position for cards
+    private int x_player; // x position for player cards
+    private int x_dealer; // x position for dealer cards
+    private final int Y_DEALER = 70;
+    private final int Y_PLAYER = 304;
 
     public BlackjackView(BlackjackModel black) {
         super("CasinoSimulator - Blackjack");
         blackjackModel = black;
 
-        x = 30;
+        x_dealer = x_player = 30;
         hiddenCard = new int[2];
 
         blackjackModel.createDeck();
@@ -75,19 +78,20 @@ public class BlackjackView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 blackjackModel.deal();
                 int[] c = null;
-                int y; // y position for card labels
+                //int y; // y position for card labels
 
                 for (int i = 0; i < 4; i++) {
-                    if (i % 2 == 0) {
-                        y = 304;
+                    if (i % 2 == 0) { // deal player
+                        //y = 304;
                         c = blackjackModel.popPlayerCard();
-                        deckLabel[c[0]][c[1]].setBounds(x, y, 96, 144);
+                        deckLabel[c[0]][c[1]].setBounds(x_player, Y_PLAYER, 96, 144);
+                        x_player += 96;
                     }
-                    else {
-                        y = 70;
+                    else { // deal dealer
+                        //y = 70;
                         c = blackjackModel.popDealerCard();
-                        deckLabel[c[0]][c[1]].setBounds(x, y, 96, 144);
-                        x += 96;
+                        deckLabel[c[0]][c[1]].setBounds(x_dealer, Y_DEALER, 96, 144);
+                        x_dealer += 96;
                     }
                     add(deckLabel[c[0]][c[1]]);
                     if (i == 3) {
@@ -114,8 +118,8 @@ public class BlackjackView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource() == standBtn) {
                     int[] c;
-                    int y = 70;
-                    x = 222;
+                    //int y = 70;
+                    //x = 222;
 
                     deckLabel[hiddenCard[0]][hiddenCard[1]].setVisible(true);
                     cardBack.setVisible(false);
@@ -127,7 +131,7 @@ public class BlackjackView extends JFrame {
                     dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
 
                     c = blackjackModel.popDealerCard();
-                    deckLabel[c[0]][c[1]].setBounds(x, y, 96, 144);
+                    deckLabel[c[0]][c[1]].setBounds(x_dealer, Y_DEALER, 96, 144);
 
 
                     if (blackjackModel.getCurrentState() == BlackjackModel.currentState.pWin) { //player wins by either having more points or dealer busts
@@ -138,7 +142,7 @@ public class BlackjackView extends JFrame {
                         draw.setVisible(true);
                     }
                     add(deckLabel[c[0]][c[1]]);
-                    x += 96;
+                    x_dealer += 96;
                 }
             }
         });
@@ -155,14 +159,14 @@ public class BlackjackView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource() == hitBtn){
-                        int[] c;
-                    int y = 304;
+                    int[] c;
+                    //int y = 304;
                     blackjackModel.playerHit();
 
 
                     c = blackjackModel.popPlayerCard();
-                    deckLabel[c[0]][c[1]].setBounds(x, y, 96, 144);
-                    add(deckLabel[c[0]][c[1]]);
+                    deckLabel[c[0]][c[1]].setBounds(x_player, Y_PLAYER, 96, 144);
+                    //add(deckLabel[c[0]][c[1]]);
 
                     playerTotal.setText(String.valueOf(blackjackModel.getPlayerTotal()));
 
@@ -177,8 +181,8 @@ public class BlackjackView extends JFrame {
                         hitBtn.setEnabled(false);
                         standBtn.setEnabled(false);
                     }
-                    add(deckLabel[c[0]][c[1]]);
-                    x+=96;
+                    //add(deckLabel[c[0]][c[1]]);
+                    x_player +=96;
                 }
             }
         });
