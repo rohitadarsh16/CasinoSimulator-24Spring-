@@ -8,15 +8,17 @@ import java.util.Arrays;
 
 public class BlackjackView extends JFrame {
     private BlackjackModel blackjackModel;
-    private JLabel[][] deckLabel;
-    private JLabel cardBack;
-    private int[] hiddenCard;
+    private JLabel[][] deckLabel; // holds all pictures of cards
+    private JLabel cardBack; // back of card picture
+    private int[] hiddenCard; // the last card dealt to the dealer is turned face down
 
+    private JLabel playerTotal;
+    private JLabel dealerTotal;
 
     private int x_player; // x position for player cards
     private int x_dealer; // x position for dealer cards
-    private final int Y_DEALER = 70;
-    private final int Y_PLAYER = 304;
+    private final int Y_DEALER = 70; // y position for dealer cards
+    private final int Y_PLAYER = 304; // y position for player cards
 
     public BlackjackView(BlackjackModel black) {
         super("CasinoSimulator - Blackjack");
@@ -25,6 +27,7 @@ public class BlackjackView extends JFrame {
         x_dealer = x_player = 30;
         hiddenCard = new int[2];
 
+        // prepare deck
         blackjackModel.createDeck();
         blackjackModel.shuffle();
 
@@ -33,14 +36,17 @@ public class BlackjackView extends JFrame {
         setResizable(false);
         setLayout(null);
 
+        // Dealer wins
         JLabel dealerWin = new JLabel( "Dealer Wins!");
         dealerWin.setBounds(260, 500, 100, 70);
         dealerWin.setVisible(false);
 
+        // Player wins
         JLabel playerWin = new JLabel("Player Wins!");
         playerWin.setBounds(260, 500, 100, 70);
         playerWin.setVisible(false);
 
+        // It's a tie
         JLabel draw = new JLabel("It's a Draw");
         draw.setBounds(260, 450, 100, 70);
         draw.setVisible(false);
@@ -48,15 +54,16 @@ public class BlackjackView extends JFrame {
         JLabel dealerLabel = new JLabel("Dealer");
         dealerLabel.setBounds(275, 10, 50, 30);
 
-        JLabel dealerTotal = new JLabel("0");
+        dealerTotal = new JLabel("0");
         dealerTotal.setBounds(330, 10, 50, 30);
 
         JLabel playerLabel = new JLabel("Player");
         playerLabel.setBounds(275, 234, 50, 30);
 
-        JLabel playerTotal = new JLabel("0");
+        playerTotal = new JLabel("0");
         playerTotal.setBounds(330, 234, 50, 30);
 
+        // Game buttons
         JButton dealBtn = new JButton("Deal");
         dealBtn.setBounds(145, 630, 100, 30);
 
@@ -73,39 +80,11 @@ public class BlackjackView extends JFrame {
 
         LoadAssets(); // load card images
 
+        // Deal button code
         dealBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 blackjackModel.deal();
-                int[] c = null;
-                //int y; // y position for card labels
-
-                for (int i = 0; i < 4; i++) {
-                    if (i % 2 == 0) { // deal player
-                        //y = 304;
-                        c = blackjackModel.popPlayerCard();
-                        deckLabel[c[0]][c[1]].setBounds(x_player, Y_PLAYER, 96, 144);
-                        x_player += 96;
-                    }
-                    else { // deal dealer
-                        //y = 70;
-                        c = blackjackModel.popDealerCard();
-                        deckLabel[c[0]][c[1]].setBounds(x_dealer, Y_DEALER, 96, 144);
-                        x_dealer += 96;
-                    }
-                    add(deckLabel[c[0]][c[1]]);
-                    if (i == 3) {
-                        deckLabel[c[0]][c[1]].setVisible(false);
-                        hiddenCard = c.clone();
-                    }
-                }
-
-                cardBack.setBounds(126, 70, 96, 144);
-                add(cardBack);
-
-                dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal() - c[2]));
-                playerTotal.setText(String.valueOf(blackjackModel.getPlayerTotal()));
-
                 dealBtn.setEnabled(false);
                 standBtn.setEnabled(true);
                 hitBtn.setEnabled(true);
@@ -113,40 +92,41 @@ public class BlackjackView extends JFrame {
             }
         });
 
+        // Stand button code
         standBtn.addActionListener(new ActionListener() {   //player hit stand button
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(e.getSource() == standBtn) {
-                    int[] c;
-                    //int y = 70;
-                    //x = 222;
+                int[] c;
+                //int y = 70;
+                //x = 222;
 
-                    deckLabel[hiddenCard[0]][hiddenCard[1]].setVisible(true);
-                    cardBack.setVisible(false);
-                    dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
-                    hitBtn.setEnabled(false);
-                    standBtn.setEnabled(false);
+                // show dealer's last card and update points
+                deckLabel[hiddenCard[0]][hiddenCard[1]].setVisible(true);
+                cardBack.setVisible(false);
+                dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
+                hitBtn.setEnabled(false);
+                standBtn.setEnabled(false);
 
-                    blackjackModel.playerStand();
-                    dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
+                blackjackModel.playerStand();
+                dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
 
-                    c = blackjackModel.popDealerCard();
-                    deckLabel[c[0]][c[1]].setBounds(x_dealer, Y_DEALER, 96, 144);
+                c = blackjackModel.popDealerCard();
+                deckLabel[c[0]][c[1]].setBounds(x_dealer, Y_DEALER, 96, 144);
 
 
-                    if (blackjackModel.getCurrentState() == BlackjackModel.currentState.pWin) { //player wins by either having more points or dealer busts
-                        playerWin.setVisible(true);
-                    } else if (blackjackModel.getCurrentState() == BlackjackModel.currentState.dWin) { //dealer wins by having more points
-                        dealerWin.setVisible(true);
-                    } else if (blackjackModel.getCurrentState() == BlackjackModel.currentState.draw) { //both player and dealer have same point values
-                        draw.setVisible(true);
-                    }
-                    add(deckLabel[c[0]][c[1]]);
-                    x_dealer += 96;
+                if (blackjackModel.getCurrentState() == BlackjackModel.currentState.pWin) { //player wins by either having more points or dealer busts
+                    playerWin.setVisible(true);
+                } else if (blackjackModel.getCurrentState() == BlackjackModel.currentState.dWin) { //dealer wins by having more points
+                    dealerWin.setVisible(true);
+                } else if (blackjackModel.getCurrentState() == BlackjackModel.currentState.draw) { //both player and dealer have same point values
+                    draw.setVisible(true);
                 }
+                add(deckLabel[c[0]][c[1]]);
+                x_dealer += 96;
             }
         });
 
+        // Exit button code
         exitBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -155,6 +135,7 @@ public class BlackjackView extends JFrame {
             }
         });
 
+        // Hit button code
         hitBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -203,10 +184,36 @@ public class BlackjackView extends JFrame {
         setVisible(true);
     }
 
+    public void ShowPlayerCard(int[] c) {
+        deckLabel[c[0]][c[1]].setBounds(x_player, Y_PLAYER, 96, 144);
+        x_player += 96;
+        add(deckLabel[c[0]][c[1]]);
+        playerTotal.setText(String.valueOf(blackjackModel.getPlayerTotal()));
+    }
+
+    public void ShowDealerCard(int[] c) {
+        deckLabel[c[0]][c[1]].setBounds(x_dealer, Y_DEALER, 96, 144);
+        x_dealer += 96;
+        add(deckLabel[c[0]][c[1]]);
+        dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
+    }
+
+    public void ShowBackCard(boolean visible) {
+        if (visible) {
+            cardBack.setBounds(x_dealer, Y_DEALER, 96, 144);
+            add(cardBack);
+        }
+        else
+            cardBack.setVisible(false);
+    }
+
+    /**
+     * Load all pictures from Assets folder.
+     */
     private void LoadAssets() {
-        deckLabel = new JLabel[4][13];
+        deckLabel = new JLabel[4][13]; // 4 rows & 13 columns; the rows are the suits
         BufferedImage img = null;
-        String path = System.getProperty("user.dir");
+        String path = System.getProperty("user.dir"); // get main folder path
         String[] suit = new String[] { "clubs", "diamonds", "hearts", "spades" };
 
         for (int i = 0; i < 4; i++) {
@@ -220,6 +227,7 @@ public class BlackjackView extends JFrame {
             }
         }
 
+        // Load back of card picture.
         try {
             img = ImageIO.read(new File(path + "/Assets/Blackjack/card-back2.png"));
         }
