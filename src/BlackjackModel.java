@@ -31,6 +31,9 @@ public class BlackjackModel {
         blackjackView = new BlackjackView(this);
         this.money = money;
         round = 1;
+
+        createDeck();
+        shuffle();
     }
 
     /**
@@ -60,58 +63,66 @@ public class BlackjackModel {
         Collections.shuffle(deck);
     }
 
-    public void playerHit(){
+    public void playerHit() {
         player.addCard();
-        if (player.isBlackjack()){
+        int[] c = popPlayerCard();
+        blackjackView.ShowPlayerCard(c);
+
+        if (player.isBlackjack()) {
             currentState = currentState.pWin; //player wins
         }
-        else if (player.hasBusted()){
+        else if (player.hasBusted()) {
             currentState = currentState.dWin; //dealer wins
         }
-        else{
-            currentState = currentState.dTurn;
+        else {
+            //currentState = currentState.dTurn;
         }
     }
 
-    public void playerStand(){              //player stands which makes it the dealer's turn
+    public void playerStand() {              //player stands which makes it the dealer's turn
         currentState = currentState.dTurn;
         player.setToStanding(true);
-        //dealerTurn();
+        blackjackView.ShowDealerCard(hidden_card);
+        blackjackView.ShowBackCard(false);
+        dealerTurn();
     }
 
-    public void dealerHit(){
+    public void dealerHit() {
         dealer.addCard();
-        if(dealer.isBlackjack()){
+        int[] c = popDealerCard();
+        blackjackView.ShowDealerCard(c);
+
+        if(dealer.isBlackjack()) {
             currentState = currentState.dWin; //dealer has blackjack and wins
         }
-        else if(dealer.hasBusted()){
+        else if(dealer.hasBusted()) {
             currentState = currentState.pWin; //dealer busted and player wins
         }
         else if (player.isStanding()) { //dealer neither has blackjack nor busted and loops back to check if at 17
-            //dealerTurn();
+            dealerTurn();
         }
         else {
             currentState = currentState.pTurn;
         }
     }
 
-    public void dealerStand(){
+    public void dealerStand() {
         currentState = currentState.pTurn;
         dealer.setToStanding(true);                         // if both player and dealer are standing then do this
-        if(player.isStanding()){
-            if(player.getTotal() == dealer.getTotal()){     //player and dealer have same total, draw
+        if (player.isStanding()) {
+            if (player.getTotal() == dealer.getTotal()) {     //player and dealer have same total, draw
                 currentState = currentState.draw;
             }
-            else if(player.getTotal() < dealer.getTotal()){     //dealer has higher total than player, dealer wins
+            else if (player.getTotal() < dealer.getTotal()) {     //dealer has higher total than player, dealer wins
                 currentState = currentState.dWin;
             }
-            else{                                               //otherwise player has higher total and wins
+            else {                                               //otherwise player has higher total and wins
                 currentState = currentState.pWin;
             }
         }
     }
 
-    public void dealerTurn(){               //dealer's turn
+    public void dealerTurn() {               //dealer's turn
         if (dealer.getTotal() < 17){        //if dealer has less than 17 they hit
             dealerHit();
         }
