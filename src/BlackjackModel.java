@@ -147,6 +147,7 @@ public class BlackjackModel {
     int getPlayerTotal() { return player.getTotal(); }
 
     public void exit() {
+        MainMenuModel.money = money;
         menuModel.setVisible();
     }
 

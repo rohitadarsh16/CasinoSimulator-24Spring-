@@ -79,6 +79,7 @@ public class SlotModel {
 
 
     public void exit() {
+        MainMenuModel.money = money;
         menuModel.setVisible();
     }
 }
