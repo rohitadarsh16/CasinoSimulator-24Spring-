@@ -191,6 +191,9 @@ public class BlackjackModel {
         deck.forEach(element -> System.out.println(element.value + " " + element.suit + "\n"));
     }
 
+    /**
+     * Card class; represents a card.
+     */
     private class Card {
         int value;
         int suit;
@@ -209,6 +212,9 @@ public class BlackjackModel {
         }
     }
 
+    /**
+     * Player class.
+     */
     private class Player {
         Card[] hand;
         int i; // hand index
@@ -228,19 +234,19 @@ public class BlackjackModel {
             total += c.points;
         }
 
-        public boolean hasBusted(){
+        public boolean hasBusted() {
             return total > 21;
         }
 
-        public boolean isBlackjack(){
+        public boolean isBlackjack() {
             return total == 21;
         }
 
-        public boolean isStanding(){
+        public boolean isStanding() {
             return stand;
         }
 
-        public void setToStanding(boolean stand){
+        public void setToStanding(boolean stand) {
              this.stand = stand;
         }
 

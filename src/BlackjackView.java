@@ -10,7 +10,6 @@ public class BlackjackView extends JFrame {
     private BlackjackModel blackjackModel;
     private JLabel[][] deckLabel; // holds all pictures of cards
     private JLabel cardBack; // back of card picture
-    private int[] hiddenCard; // the last card dealt to the dealer is turned face down
 
     private JLabel playerTotal;
     private JLabel dealerTotal;
@@ -23,9 +22,7 @@ public class BlackjackView extends JFrame {
     public BlackjackView(BlackjackModel black) {
         super("CasinoSimulator - Blackjack");
         blackjackModel = black;
-
         x_dealer = x_player = 30;
-        hiddenCard = new int[2];
 
         // init window
         setSize(600, 800);
@@ -33,17 +30,17 @@ public class BlackjackView extends JFrame {
         setResizable(false);
         setLayout(null);
 
-        // Dealer wins
+        // Dealer wins label
         JLabel dealerWin = new JLabel( "Dealer Wins!");
         dealerWin.setBounds(260, 500, 100, 70);
         dealerWin.setVisible(false);
 
-        // Player wins
+        // Player wins label
         JLabel playerWin = new JLabel("Player Wins!");
         playerWin.setBounds(260, 500, 100, 70);
         playerWin.setVisible(false);
 
-        // It's a tie
+        // It's a tie label
         JLabel draw = new JLabel("It's a Draw");
         draw.setBounds(260, 450, 100, 70);
         draw.setVisible(false);
@@ -157,6 +154,9 @@ public class BlackjackView extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Show the player's card after it was dealt.
+     */
     public void ShowPlayerCard(int[] c) {
         deckLabel[c[0]][c[1]].setBounds(x_player, Y_PLAYER, 96, 144);
         x_player += 96;
@@ -164,6 +164,9 @@ public class BlackjackView extends JFrame {
         playerTotal.setText(String.valueOf(blackjackModel.getPlayerTotal()));
     }
 
+    /**
+     * Show the dealer's card after it was dealt.
+     */
     public void ShowDealerCard(int[] c) {
         deckLabel[c[0]][c[1]].setBounds(x_dealer, Y_DEALER, 96, 144);
         x_dealer += 96;
@@ -171,6 +174,9 @@ public class BlackjackView extends JFrame {
         dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
     }
 
+    /**
+     * Show the back of a card.
+     */
     public void ShowBackCard(boolean visible) {
         if (visible) {
             cardBack.setBounds(x_dealer, Y_DEALER, 96, 144);
