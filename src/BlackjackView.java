@@ -4,6 +4,8 @@ import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
@@ -13,7 +15,8 @@ public class BlackjackView extends JFrame {
     private JLabel[][] deckLabel; // holds all pictures of cards
     private LinkedList<JLabel> cards; // holds the currently dealt cards
     private JLabel cardBack; // back of card picture
-    private JLabel background;
+    private JLabel background; // background picture
+    private JLabel[] betLabels; // chips pictures
 
     private JLabel balanceTotal;
     private JLabel betTotal;
@@ -38,6 +41,7 @@ public class BlackjackView extends JFrame {
         blackjackModel = black;
         x_dealer = x_player = 30;
         cards = new LinkedList<>();
+        betLabels = new JLabel[5];
 
         // init window
         setSize(600, 800);
@@ -113,6 +117,8 @@ public class BlackjackView extends JFrame {
         exitBtn.setBounds(250, 730, 100, 30);
 
         LoadAssets(); // load card images
+        InitBetLabels(); // init mouse click events for each chip label
+        ShowBetLabels(true);
 
         // Deal button code
         dealBtn.addActionListener(new ActionListener() {
@@ -121,6 +127,7 @@ public class BlackjackView extends JFrame {
                 dealBtn.setEnabled(false);
                 standBtn.setEnabled(true);
                 hitBtn.setEnabled(true);
+                ShowBetLabels(false);
                 blackjackModel.deal();
                 repaint();
             }
@@ -155,6 +162,7 @@ public class BlackjackView extends JFrame {
             }
         });
 
+        // Add all assets
         add(background);
         background.add(cardBack);
         background.add(balanceLabel);
@@ -204,8 +212,17 @@ public class BlackjackView extends JFrame {
      */
     public void ShowBackCard(boolean visible) { cardBack.setVisible(visible); }
 
+    /*
+     * Update balance and current bet
+     */
+    public void UpdateBalance() { balanceTotal.setText(String.valueOf(blackjackModel.getBalance())); }
+    public void UpdateBet() { betTotal.setText(String.valueOf(blackjackModel.getBet())); }
+
+    /**
+     * Get variables ready for another game.
+     */
     public void Reset(JLabel l) {
-        ActionListener a = new ActionListener() {
+        ActionListener ac = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 l.setVisible(false);
@@ -216,6 +233,7 @@ public class BlackjackView extends JFrame {
                     background.remove(j);
                 cards.clear();
 
+                ShowBetLabels(true);
                 dealBtn.setEnabled(true);
                 repaint();
             }
@@ -225,14 +243,42 @@ public class BlackjackView extends JFrame {
         hitBtn.setEnabled(false);
         x_dealer = x_player = 30;
 
-        Timer t = new Timer(2000, a);
+        Timer t = new Timer(2000, ac); // wait 2 seconds before executing ac
         t.setRepeats(false);
         t.start();
     }
 
+    /*
+     * Show who won.
+     */
     public void ShowDealerWin() { dealerWin.setVisible(true); Reset(dealerWin); }
     public void ShowPlayerWin() { playerWin.setVisible(true); Reset(playerWin); }
     public void ShowDraw() { draw.setVisible(true); Reset(draw); }
+
+    /**
+     * Set each betLabel's visibility to visible.
+     */
+    public void ShowBetLabels(boolean visible) {
+        for (JLabel l : betLabels) l.setVisible(visible);
+    }
+
+    /**
+     * Assign a MouseListener for each betLabel so it can be clicked.
+     */
+    private void InitBetLabels() {
+        int bet = 5;
+        for (JLabel l : betLabels) {
+            int finalBet = bet;
+            l.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    blackjackModel.playerBet(finalBet);
+                }
+            });
+            bet += 5;
+        }
+    }
 
     /**
      * Load all pictures from Assets folder.
@@ -270,5 +316,24 @@ public class BlackjackView extends JFrame {
         catch (Exception e) { System.out.println("Cannot load background image!"); }
         background = new JLabel(new ImageIcon(img));
         background.setBounds(0, 0, 600, 800);
+
+        // Load chips
+        int index = 5;
+        int x_chip = 30;
+        for (int i = 0; i < 5; i++) {
+
+            try {
+                img = ImageIO.read(new File(path + "/Assets/Blackjack/chip" + index + ".png"));
+            } catch (Exception e) {
+                System.out.println("Cannot load chip5 image!");
+            }
+            JLabel l = new JLabel(new ImageIcon(img));
+            l.setBounds(x_chip, 500, 63, 70);
+            background.add(l);
+            l.setVisible(false);
+            betLabels[i] = l;
+            index += 5;
+            x_chip += 70;
+        }
     }
 }

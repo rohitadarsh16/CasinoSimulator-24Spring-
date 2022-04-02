@@ -10,7 +10,8 @@ public class BlackjackModel {
     private Player player;
 
     private int money;
-    private int cards_played;
+    private int bet;
+    private int cards_played; // how many cards were removed from the deck so far
 
     private int[] hidden_card; // dealer's hidden card
 
@@ -30,8 +31,10 @@ public class BlackjackModel {
         player = new Player();
         blackjackView = new BlackjackView(this);
         this.money = money;
+        bet = 0;
         cards_played = 0;
 
+        blackjackView.UpdateBalance();
         createDeck();
         shuffle();
     }
@@ -63,6 +66,9 @@ public class BlackjackModel {
         Collections.shuffle(deck);
     }
 
+    /**
+     * Player hits.
+     */
     public void playerHit() {
         player.addCard();
         int[] c = popPlayerCard();
@@ -85,6 +91,9 @@ public class BlackjackModel {
         //}
     }
 
+    /**
+     * Player stands.
+     */
     public void playerStand() {              //player stands which makes it the dealer's turn
         currentState = currentState.dTurn;
         player.setToStanding(true);
@@ -93,6 +102,9 @@ public class BlackjackModel {
         dealerTurn();
     }
 
+    /**
+     * Dealer hits.
+     */
     public void dealerHit() {
         dealer.addCard();
         int[] c = popDealerCard();
@@ -114,6 +126,9 @@ public class BlackjackModel {
 //        }
     }
 
+    /**
+     * Dealer stands.
+     */
     public void dealerStand() {
         currentState = currentState.pTurn;
         dealer.setToStanding(true);                         // if both player and dealer are standing then do this
@@ -131,6 +146,9 @@ public class BlackjackModel {
         }
     }
 
+    /**
+     * Dealer's turn.
+     */
     public void dealerTurn() {               //dealer's turn
         if (dealer.getTotal() < 17) {        //if dealer has less than 17 they hit
             dealerHit();
@@ -139,6 +157,9 @@ public class BlackjackModel {
             dealerStand();
     }
 
+    /**
+     * Update BlackjackView and reset players.
+     */
     public void win() {
         switch (currentState) {
             case pWin -> blackjackView.ShowPlayerWin();
@@ -151,7 +172,20 @@ public class BlackjackModel {
     }
 
     /**
+     * Player places a bet.
+     */
+    public void playerBet(int bet) {
+        if (money >= bet) {
+            this.bet += bet;
+            money -= bet;
+            blackjackView.UpdateBalance();
+            blackjackView.UpdateBet();
+        }
+    }
+
+    /**
      * Initial deal of cards. The order is player, dealer, player, dealer.
+     * The dealer's last card is face down.
      */
     public void deal() {
         int[] c;
@@ -166,7 +200,7 @@ public class BlackjackModel {
                 c = popDealerCard();
                 if (i < 3)
                     blackjackView.ShowDealerCard(c);
-                else {
+                else { // dealer's last card is face down
                     hidden_card = c;
                     blackjackView.ShowBackCard(true);
                 }
@@ -174,6 +208,10 @@ public class BlackjackModel {
         }
     }
 
+    /**
+     * Get dealer's top card.
+     * @return The card's suit, value, and points in an integer array.
+     */
     int[] popDealerCard() {
         int[] ret = new int[3];
         Card c = dealer.popCard();
@@ -185,6 +223,10 @@ public class BlackjackModel {
         return ret;
     }
 
+    /**
+     * Get player's top card.
+     * @return The card's suit, value, and points in an integer array.
+     */
     int[] popPlayerCard() {
         int[] ret = new int[3];
         Card c = player.popCard();
@@ -196,8 +238,13 @@ public class BlackjackModel {
         return ret;
     }
 
-    int getDealerTotal() { return dealer.getTotal(); }
-    int getPlayerTotal() { return player.getTotal(); }
+    /*
+     * Get current numbers.
+     */
+    public int getDealerTotal() { return dealer.getTotal(); }
+    public int getPlayerTotal() { return player.getTotal(); }
+    public int getBalance() { return money; }
+    public int getBet() { return bet; }
 
     /**
      * Quit game.
@@ -248,7 +295,11 @@ public class BlackjackModel {
             i = j = total = 0;
         }
 
+        /**
+         * Add card to the hand.
+         */
         void addCard() {
+            // if all cards are dealt create a new deck and shuffle before continuing
             if (cards_played == 52) { createDeck(); shuffle(); cards_played = 0; }
             Card c = new Card(deck.pollFirst()); // get top card from deck
             cards_played++;
@@ -256,21 +307,13 @@ public class BlackjackModel {
             total += c.points;
         }
 
-        public boolean hasBusted() {
-            return total > 21;
-        }
+        public boolean hasBusted() { return total > 21; }
 
-        public boolean isBlackjack() {
-            return total == 21;
-        }
+        public boolean isBlackjack() { return total == 21; }
 
-        public boolean isStanding() {
-            return stand;
-        }
+        public boolean isStanding() { return stand; }
 
-        public void setToStanding(boolean stand) {
-             this.stand = stand;
-        }
+        public void setToStanding(boolean stand) { this.stand = stand; }
 
         Card popCard() { return hand[j++]; }
 
