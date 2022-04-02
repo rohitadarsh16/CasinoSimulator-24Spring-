@@ -10,7 +10,7 @@ public class BlackjackModel {
     private Player player;
 
     private int money;
-    private int round;
+    private int cards_played;
 
     private int[] hidden_card; // dealer's hidden card
 
@@ -30,7 +30,7 @@ public class BlackjackModel {
         player = new Player();
         blackjackView = new BlackjackView(this);
         this.money = money;
-        round = 1;
+        cards_played = 0;
 
         createDeck();
         shuffle();
@@ -70,13 +70,19 @@ public class BlackjackModel {
 
         if (player.isBlackjack()) {
             currentState = currentState.pWin; //player wins
+            blackjackView.ShowDealerCard(hidden_card);
+            blackjackView.ShowBackCard(false);
+            win();
         }
         else if (player.hasBusted()) {
             currentState = currentState.dWin; //dealer wins
+            blackjackView.ShowDealerCard(hidden_card);
+            blackjackView.ShowBackCard(false);
+            win();
         }
-        else {
+        //else {
             //currentState = currentState.dTurn;
-        }
+        //}
     }
 
     public void playerStand() {              //player stands which makes it the dealer's turn
@@ -94,16 +100,18 @@ public class BlackjackModel {
 
         if(dealer.isBlackjack()) {
             currentState = currentState.dWin; //dealer has blackjack and wins
+            win();
         }
         else if(dealer.hasBusted()) {
             currentState = currentState.pWin; //dealer busted and player wins
+            win();
         }
         else if (player.isStanding()) { //dealer neither has blackjack nor busted and loops back to check if at 17
             dealerTurn();
         }
-        else {
-            currentState = currentState.pTurn;
-        }
+//        else {
+//            currentState = currentState.pTurn;
+//        }
     }
 
     public void dealerStand() {
@@ -119,15 +127,27 @@ public class BlackjackModel {
             else {                                               //otherwise player has higher total and wins
                 currentState = currentState.pWin;
             }
+            win();
         }
     }
 
     public void dealerTurn() {               //dealer's turn
-        if (dealer.getTotal() < 17){        //if dealer has less than 17 they hit
+        if (dealer.getTotal() < 17) {        //if dealer has less than 17 they hit
             dealerHit();
         }
         else                                //otherwise they stand
             dealerStand();
+    }
+
+    public void win() {
+        switch (currentState) {
+            case pWin -> blackjackView.ShowPlayerWin();
+            case dWin -> blackjackView.ShowDealerWin();
+            case draw -> blackjackView.ShowDraw();
+        }
+
+        dealer.reset();
+        player.reset();
     }
 
     /**
@@ -229,7 +249,9 @@ public class BlackjackModel {
         }
 
         void addCard() {
+            if (cards_played == 52) { createDeck(); shuffle(); cards_played = 0; }
             Card c = new Card(deck.pollFirst()); // get top card from deck
+            cards_played++;
             hand[i++] = c;
             total += c.points;
         }
@@ -253,5 +275,10 @@ public class BlackjackModel {
         Card popCard() { return hand[j++]; }
 
         int getTotal() { return total; }
+
+        void reset() {
+            i = j = total = 0;
+            stand = false;
+        }
     }
 }
