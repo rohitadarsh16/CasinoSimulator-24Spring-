@@ -51,7 +51,7 @@ public class SlotView extends JFrame {
         }
 
         JButton exitBtn = new JButton("Exit");
-        exitBtn.setBounds(140, 50, 50, 20);
+        exitBtn.setBounds(690, 162, 88, 82);
         add(exitBtn);
 
         exitBtn.addActionListener(new ActionListener() {
@@ -63,18 +63,18 @@ public class SlotView extends JFrame {
         });
 
         JLabel slotlabel = new JLabel();
-        JLabel handlelabel = new JLabel();
+        //JLabel handlelabel = new JLabel();
 
         slotlabel.setBounds(-70, -20, 900, 800);
-        handlelabel.setBounds(675, 250, 300, 500);
+        //handlelabel.setBounds(675, 250, 300, 500);
 
         ImageIcon slotmachine = new ImageIcon("Assets/SlotMachineGUI/" + "slotframe.png");
-        ImageIcon handle = new ImageIcon("Assets/SlotMachineGUI/" + "handle.png");
+        //ImageIcon handle = new ImageIcon("Assets/SlotMachineGUI/" + "handle.png");
 
         slotlabel.setIcon(slotmachine);
-        handlelabel.setIcon(handle);
+        //handlelabel.setIcon(handle);
 
-        add(handlelabel);
+        //add(handlelabel);
         //add(slotlabel);
 
         label[0].setBounds(210, 300, 100, 80);
@@ -94,11 +94,15 @@ public class SlotView extends JFrame {
             add(label[i]);
         }
 
-        JButton pullLever = new JButton("Pull");
+        JButton pullLever = new JButton(new ImageIcon("Assets/SlotMachineGUI/" + "handle.png"));
         JLabel resultLabel = new JLabel();
         resultLabel.setFont(new Font("Arial", Font.PLAIN, 36));
-        resultLabel.setBounds(250, 580, 300, 50);
-        pullLever.setBounds(690, 362, 88, 82);
+        resultLabel.setBounds(250, 580, 300, 50);   //result label size
+        pullLever.setBounds(675, 350, 120, 320);  //Pull button size
+
+        pullLever.setBorder(BorderFactory.createEmptyBorder());
+        pullLever.setContentAreaFilled(false);
+
         add(pullLever);
         pullLever.addActionListener(new ActionListener() {
             @Override
