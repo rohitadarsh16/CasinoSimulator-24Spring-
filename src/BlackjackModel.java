@@ -78,12 +78,14 @@ public class BlackjackModel {
             currentState = currentState.pWin; //player wins
             blackjackView.ShowDealerCard(hidden_card);
             blackjackView.ShowBackCard(false);
+            playerWins();
             win();
         }
         else if (player.hasBusted()) {
             currentState = currentState.dWin; //dealer wins
             blackjackView.ShowDealerCard(hidden_card);
             blackjackView.ShowBackCard(false);
+            playerLoses();
             win();
         }
         //else {
@@ -112,10 +114,12 @@ public class BlackjackModel {
 
         if(dealer.isBlackjack()) {
             currentState = currentState.dWin; //dealer has blackjack and wins
+            playerLoses();
             win();
         }
         else if(dealer.hasBusted()) {
             currentState = currentState.pWin; //dealer busted and player wins
+            playerWins();
             win();
         }
         else if (player.isStanding()) { //dealer neither has blackjack nor busted and loops back to check if at 17
@@ -135,12 +139,15 @@ public class BlackjackModel {
         if (player.isStanding()) {
             if (player.getTotal() == dealer.getTotal()) {     //player and dealer have same total, draw
                 currentState = currentState.draw;
+                playerDraws();
             }
             else if (player.getTotal() < dealer.getTotal()) {     //dealer has higher total than player, dealer wins
                 currentState = currentState.dWin;
+                playerLoses();
             }
             else {                                               //otherwise player has higher total and wins
                 currentState = currentState.pWin;
+                playerWins();
             }
             win();
         }
@@ -169,6 +176,34 @@ public class BlackjackModel {
 
         dealer.reset();
         player.reset();
+    }
+
+    /**
+     * Update bet and money balance where player wins
+     */
+    public void playerWins(){
+        money = money + (bet * 2);
+        bet = 0;
+        blackjackView.UpdateBalance();
+        blackjackView.UpdateBet();
+    }
+
+    /**
+     * Update bet and money balance where player loses
+     */
+    public void playerLoses(){
+        bet = 0;
+        blackjackView.UpdateBalance();
+        blackjackView.UpdateBet();
+    }
+
+    /**
+     * Update bet and money balance where player draws
+     */
+    public void playerDraws(){
+        money = money + bet;
+        blackjackView.UpdateBalance();
+        blackjackView.UpdateBet();
     }
 
     /**
@@ -304,7 +339,12 @@ public class BlackjackModel {
             Card c = new Card(deck.pollFirst()); // get top card from deck
             cards_played++;
             hand[i++] = c;
-            total += c.points;
+            if(c.points == 1 && total < 11){ //if card is ace add 10 points as long as it won't cause player to bust
+                total += c.points + 10;
+            }
+            else{                           // otherwise all cards are normal values
+                total += c.points;
+            }
         }
 
         public boolean hasBusted() { return total > 21; }

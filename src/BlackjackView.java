@@ -104,6 +104,7 @@ public class BlackjackView extends JFrame {
         // Game buttons
         dealBtn = new JButton("Deal");
         dealBtn.setBounds(145, 630, 100, 30);
+        dealBtn.setEnabled(false);
 
         standBtn = new JButton("Stand");
         standBtn.setBounds(250, 630, 100, 30);
@@ -225,19 +226,26 @@ public class BlackjackView extends JFrame {
         ActionListener ac = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                l.setVisible(false);
-                dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
-                playerTotal.setText(String.valueOf(blackjackModel.getPlayerTotal()));
+                if(blackjackModel.getBalance() <= 0){   //if player money is zero then exit
+                    blackjackModel.exit();
+                    dispose();
+                }
+                else {
+                    l.setVisible(false);
+                    dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
+                    playerTotal.setText(String.valueOf(blackjackModel.getPlayerTotal()));
 
-                for (JLabel j : cards)
-                    background.remove(j);
-                cards.clear();
+                    for (JLabel j : cards)
+                        background.remove(j);
+                    cards.clear();
 
-                ShowBetLabels(true);
-                dealBtn.setEnabled(true);
-                repaint();
+                    ShowBetLabels(true);
+                    dealBtn.setEnabled(true);
+                    repaint();
+                }
             }
         };
+
 
         standBtn.setEnabled(false);
         hitBtn.setEnabled(false);
@@ -274,6 +282,7 @@ public class BlackjackView extends JFrame {
                 public void mouseClicked(MouseEvent e) {
                     super.mouseClicked(e);
                     blackjackModel.playerBet(finalBet);
+                    dealBtn.setEnabled(true);
                 }
             });
             bet += 5;
