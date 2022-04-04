@@ -15,7 +15,7 @@ public class SlotView extends JFrame {
         super("CasinoSimulator - Slot Machine");
         slotModel = slot;
 
-        setSize(800, 700);
+        setSize(800, 800);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
 
@@ -50,17 +50,42 @@ public class SlotView extends JFrame {
             }
         }
 
-        label[0].setBounds(150, 50, 100, 80);
-        label[1].setBounds(300, 50, 100, 80);
-        label[2].setBounds(450, 50, 100, 80);
+        JButton exitBtn = new JButton("Exit");
+        exitBtn.setBounds(140, 50, 50, 20);
+        add(exitBtn);
 
-        label[3].setBounds(150, 150, 100, 80);
-        label[4].setBounds(300, 150, 100, 80);
-        label[5].setBounds(450, 150, 100, 80);
+        exitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                slotModel.exit();
+                dispose();
+            }
+        });
 
-        label[6].setBounds(150, 250, 100, 80);
-        label[7].setBounds(300, 250, 100, 80);
-        label[8].setBounds(450, 250, 100, 80);
+        JLabel slotlabel = new JLabel();
+        JLabel handlelabel = new JLabel();
+
+        slotlabel.setBounds(-70, -20, 900, 800);
+        handlelabel.setBounds(675, 250, 300, 500);
+
+        ImageIcon slotmachine = new ImageIcon("Assets/SlotMachineGUI/" + "slotframe.png");
+        ImageIcon handle = new ImageIcon("Assets/SlotMachineGUI/" + "handle.png");
+
+        slotlabel.setIcon(slotmachine);
+        handlelabel.setIcon(handle);
+
+        add(handlelabel);
+        //add(slotlabel);
+
+        label[0].setBounds(210, 300, 100, 80);
+        label[1].setBounds(210, 380, 100, 80);
+        label[2].setBounds(210, 460, 100, 80);
+        label[3].setBounds(355, 300, 100, 80);
+        label[4].setBounds(355, 380, 100, 80);
+        label[5].setBounds(355, 460, 100, 80);
+        label[6].setBounds(500, 300, 100, 80);
+        label[7].setBounds(500, 380, 100, 80);
+        label[8].setBounds(500, 460, 100, 80);
 
         //There will be 7 icons for each label
         for(int i = 0; i < 9; i++) {
@@ -71,8 +96,9 @@ public class SlotView extends JFrame {
 
         JButton pullLever = new JButton("Pull");
         JLabel resultLabel = new JLabel();
-        resultLabel.setBounds(300, 400, 100, 50);
-        pullLever.setBounds(100, 500, 100, 100);
+        resultLabel.setFont(new Font("Arial", Font.PLAIN, 36));
+        resultLabel.setBounds(250, 580, 300, 50);
+        pullLever.setBounds(690, 362, 88, 82);
         add(pullLever);
         pullLever.addActionListener(new ActionListener() {
             @Override
@@ -90,20 +116,7 @@ public class SlotView extends JFrame {
             }
         });
         add(resultLabel);
-
-
-
-        JButton exitBtn = new JButton("Exit");
-        exitBtn.setBounds(500, 500, 100, 100);
-        add(exitBtn);
-
-        exitBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                slotModel.exit();
-                dispose();
-            }
-        });
+        add(slotlabel);
 
         setLayout(null);
         setLocationRelativeTo(null);
