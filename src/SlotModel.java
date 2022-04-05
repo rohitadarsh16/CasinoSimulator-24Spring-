@@ -76,31 +76,49 @@ public class SlotModel {
 
     //simple rules for 1by3 slots
     public String matchCheck1() {
-
-        //Some simple winning rules, modify if needed
-        if (slot[0] == slot[1] && slot[1] == slot[2]) {
-            //if 7 symbol is 3 in the row, then jackpot winner
-            if (slot[0] == 0) {
-                money += 100;
-                return "Jackpot Winner!!!";
-            //Other 3 in the row
+        if (MainMenuView.gamemode == "Simulated Casino") {
+            //Some simple winning rules, modify if needed
+            if (slot1 == slot2 && slot2 == slot3) {
+                //if 7 symbol is 3 in the row, then jackpot winner
+                if (slot1 == 0) {
+                    money += 100;
+                    return "Jackpot Winner!!!";
+                    //Other 3 in the row
+                } else {
+                    money += 50;
+                    return "Winner!!";
+                }
+                //2 in the row
+            } else if (slot1 == slot2 || slot2 == slot3 || slot3 == slot1) {
+                return "Free Spin!";
+                //No matches
             } else {
-                money += 50;
-                return "Winner!!";
+                return "Bad luck!";
             }
-        //2 in the row
-        } else if (slot[0] == slot[1] || slot[1] == slot[2] || slot[2] == slot[0]) {
-            return "Free Spin!";
-        //No matches
-        } else {
-            return "Bad luck!";
         }
-
+        //If the gamemode is in freeplay
+        else {
+            if (slot1 == slot2 && slot2 == slot3) {
+                //if 7 symbol is 3 in the row, then jackpot winner
+                if (slot1 == 0) {
+                    return "Jackpot Winner!!!";
+                    //Other 3 in the row
+                } else {
+                    return "Winner!!";
+                }
+                //2 in the row
+            } else if (slot1 == slot2 || slot2 == slot3 || slot3 == slot1) {
+                return "Free Spin!";
+                //No matches
+            } else {
+                return "Bad luck!";
+            }
+        }
     }
 
 
-
     public void exit() {
+        MainMenuModel.money = money;
         menuModel.setVisible();
     }
 }
