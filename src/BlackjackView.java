@@ -119,7 +119,16 @@ public class BlackjackView extends JFrame {
 
         LoadAssets(); // load card images
         InitBetLabels(); // init mouse click events for each chip label
-        ShowBetLabels(true);
+
+        if(MainMenuView.gamemode == "Simulated Casino") {
+            ShowBetLabels(true);
+        }
+        else { //Gamemode is set to freeplay
+            dealBtn.setEnabled(true);
+            standBtn.setEnabled(false);
+            hitBtn.setEnabled(false);
+            ShowBetLabels(false);
+        }
 
         // Deal button code
         dealBtn.addActionListener(new ActionListener() {
@@ -239,7 +248,8 @@ public class BlackjackView extends JFrame {
                         background.remove(j);
                     cards.clear();
 
-                    ShowBetLabels(true);
+                    if(MainMenuView.gamemode == "Simulated Casino")
+                        ShowBetLabels(true);
                     dealBtn.setEnabled(true);
                     repaint();
                 }
