@@ -324,6 +324,7 @@ public class BlackjackModel {
      * Quit game.
      */
     public void exit() {
+        MainMenuModel.money = money;
         menuModel.setVisible();
     }
 

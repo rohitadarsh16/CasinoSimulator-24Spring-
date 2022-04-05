@@ -5,9 +5,7 @@ public class SlotModel {
     private SlotView slotView;
     private int money;
 
-    private int slot1;
-    private int slot2;
-    private int slot3;
+    private int[] slot = new int[9];
 
     public SlotModel(MainMenuModel menu, int money) {
         menuModel = menu;
@@ -15,52 +13,112 @@ public class SlotModel {
         slotView = new SlotView(this);
     }
 
+    public int getMoney() {
+        return money;
+    }
+
     public void pullLever() {
-        //random number from 0-6, represent for 7 symbols: apple, grape, orange, cherry, “7”, diamond, heart
         Random ramdomNumber = new Random();
-        slot1 = ramdomNumber.nextInt(7);
-        slot2 = ramdomNumber.nextInt(7);
-        slot3 = ramdomNumber.nextInt(7);
-
-
-    }
-    //Get slot number methods. There should be a better way to do it because if we need 9 slots, then there are 9 get methods.
-    public int getSlot1 () {
-        return slot1;
-    }
-    public int getSlot2 () {
-        return slot2;
-    }
-    public int getSlot3 () {
-        return slot3;
-    }
-
-    public String matchCheck() {
-
-        //Some simple winning rules, modify if needed
-        if (slot1 == slot2 && slot2 == slot3) {
-            //if 7 symbol is 3 in the row, then jackpot winner
-            if (slot1 == 0) {
-                money += 100;
-                return "Jackpot Winner!!!";
-            //Other 3 in the row
-            } else {
-                money += 50;
-                return "Winner!!";
-            }
-        //2 in the row
-        } else if (slot1 == slot2 || slot2 == slot3 || slot3 == slot1) {
-            return "Free Spin!";
-        //No matches
-        } else {
-            return "Bad luck!";
+        for (int i = 0; i < 9; i++) {
+            slot[i] = ramdomNumber.nextInt(7);
         }
-
     }
 
+    //Get slot number methods. There should be a better way to do it because if we need 9 slots, then there are 9 get methods.
+    public int getSlot (int a) {
+        return slot[a];
+    }
+
+    //simple rules for 3by3 slots
+    public String matchCheck2() {
+        int result= 0;
+        //first row
+        if (slot[0] == slot[1] && slot[1] == slot[2]) {
+            result ++;
+        }
+        //second row
+        if (slot[3] == slot[4] && slot[4] == slot[5]) {
+            result ++;
+        }
+        //third row
+        if (slot[6] == slot[7] && slot[7] == slot[8]) {
+            result ++;
+        }
+        //first column
+        if (slot[0] == slot[3] && slot[3] == slot[6]) {
+            result ++;
+        }
+        //second column
+        if (slot[1] == slot[4] && slot[4] == slot[7]) {
+            result ++;
+        }
+        //third column
+        if (slot[2] == slot[5] && slot[5] == slot[8]) {
+            result ++;
+        }
+        //top left to bottom right diagonal
+        if (slot[0] == slot[4] && slot[4] == slot[8]) {
+            result ++;
+        }
+        //bottom left to top right diagonal
+        if (slot[6] == slot[4] && slot[4] == slot[2]) {
+            result ++;
+        }
+        if (result > 0) {
+            money+=5;
+            return "Winner!!";
+        }
+        else {
+            money--;
+            return "Bad Luck!!";
+        }
+    }
+
+    //simple rules for 1by3 slots
+    public String matchCheck1() {
+        if (MainMenuView.gamemode == "Simulated Casino") {
+            //Some simple winning rules, modify if needed
+            if (slot[1] == slot[2] && slot[2] == slot[3]) {
+                //if 7 symbol is 3 in the row, then jackpot winner
+                if (slot[1] == 0) {
+                    money += 100;
+                    return "Jackpot Winner!!!";
+                    //Other 3 in the row
+                } else {
+                    money += 50;
+                    return "Winner!!";
+                }
+                //2 in the row
+            } else if (slot[1] == slot[2] || slot[2] == slot[3] || slot[3] == slot[1]) {
+                return "Free Spin!";
+                //No matches
+            } else {
+                return "Bad luck!";
+            }
+        }
+        //If the gamemode is in freeplay
+        else {
+            if (slot[1] == slot[2] && slot[2] == slot[3]) {
+                //if 7 symbol is 3 in the row, then jackpot winner
+                if (slot[1] == 0) {
+                    return "Jackpot Winner!!!";
+                    //Other 3 in the row
+                } else {
+                    return "Winner!!";
+                }
+                //2 in the row
+            } else if (slot[1] == slot[2] || slot[2] == slot[3] || slot[3] == slot[1]) {
+                return "Free Spin!";
+                //No matches
+            } else {
+                return "Bad luck!";
+            }
+        }
+    }
 
 
     public void exit() {
+        MainMenuModel.money = money;
         menuModel.setVisible();
     }
 }
