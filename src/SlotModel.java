@@ -78,9 +78,9 @@ public class SlotModel {
     public String matchCheck1() {
         if (MainMenuView.gamemode == "Simulated Casino") {
             //Some simple winning rules, modify if needed
-            if (slot1 == slot2 && slot2 == slot3) {
+            if (slot[1] == slot[2] && slot[2] == slot[3]) {
                 //if 7 symbol is 3 in the row, then jackpot winner
-                if (slot1 == 0) {
+                if (slot[1] == 0) {
                     money += 100;
                     return "Jackpot Winner!!!";
                     //Other 3 in the row
@@ -89,7 +89,7 @@ public class SlotModel {
                     return "Winner!!";
                 }
                 //2 in the row
-            } else if (slot1 == slot2 || slot2 == slot3 || slot3 == slot1) {
+            } else if (slot[1] == slot[2] || slot[2] == slot[3] || slot[3] == slot[1]) {
                 return "Free Spin!";
                 //No matches
             } else {
@@ -98,16 +98,16 @@ public class SlotModel {
         }
         //If the gamemode is in freeplay
         else {
-            if (slot1 == slot2 && slot2 == slot3) {
+            if (slot[1] == slot[2] && slot[2] == slot[3]) {
                 //if 7 symbol is 3 in the row, then jackpot winner
-                if (slot1 == 0) {
+                if (slot[1] == 0) {
                     return "Jackpot Winner!!!";
                     //Other 3 in the row
                 } else {
                     return "Winner!!";
                 }
                 //2 in the row
-            } else if (slot1 == slot2 || slot2 == slot3 || slot3 == slot1) {
+            } else if (slot[1] == slot[2] || slot[2] == slot[3] || slot[3] == slot[1]) {
                 return "Free Spin!";
                 //No matches
             } else {
