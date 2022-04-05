@@ -25,11 +25,17 @@ public class BlackjackView extends JFrame {
     private JLabel dealerWin;
     private JLabel playerWin;
     private JLabel draw;
+    private JLabel chip5;
+    private JLabel chip10;
+    private JLabel chip15;
+    private JLabel chip20;
+    private JLabel chip25;
 
     private JButton dealBtn;
     private JButton standBtn;
     private JButton hitBtn;
     private JButton exitBtn;
+    private JButton dblDownBtn;
 
     private int x_player; // x position for player cards
     private int x_dealer; // x position for dealer cards
@@ -101,21 +107,51 @@ public class BlackjackView extends JFrame {
         playerTotal.setBounds(330, 234, 50, 30);
         playerTotal.setForeground(Color.WHITE);
 
+        //chip labels
+        chip5 = new JLabel("$5");
+        chip5.setBounds(52, 570, 50, 30);
+        chip5.setForeground(Color.WHITE);
+        chip5.setFont(new Font("Dialog", Font.PLAIN, 14));
+
+        chip10 = new JLabel("$10");
+        chip10.setBounds(118, 570, 50, 30);
+        chip10.setForeground(Color.WHITE);
+        chip10.setFont(new Font("Dialog", Font.PLAIN, 14));
+
+        chip15 = new JLabel("$15");
+        chip15.setBounds(188, 570, 50, 30);
+        chip15.setForeground(Color.WHITE);
+        chip15.setFont(new Font("Dialog", Font.PLAIN, 14));
+
+        chip20 = new JLabel("$20");
+        chip20.setBounds(258, 570, 50, 30);
+        chip20.setForeground(Color.WHITE);
+        chip20.setFont(new Font("Dialog", Font.PLAIN, 14));
+
+        chip25 = new JLabel("$25");
+        chip25.setBounds(330, 570, 50, 30);
+        chip25.setForeground(Color.WHITE);
+        chip25.setFont(new Font("Dialog", Font.PLAIN, 14));
+
         // Game buttons
         dealBtn = new JButton("Deal");
-        dealBtn.setBounds(145, 630, 100, 30);
+        dealBtn.setBounds(95, 630, 100, 30);
         dealBtn.setEnabled(false);
 
         standBtn = new JButton("Stand");
-        standBtn.setBounds(250, 630, 100, 30);
+        standBtn.setBounds(200, 630, 100, 30);
         standBtn.setEnabled(false);
 
         hitBtn = new JButton("Hit");
-        hitBtn.setBounds(355, 630, 100, 30);
+        hitBtn.setBounds(305, 630, 100, 30);
         hitBtn.setEnabled(false);
 
         exitBtn = new JButton("Exit");
         exitBtn.setBounds(250, 730, 100, 30);
+
+        dblDownBtn = new JButton("Double Down");
+        dblDownBtn.setBounds(410,630,120,30);
+        dblDownBtn.setEnabled(false);
 
         LoadAssets(); // load card images
         InitBetLabels(); // init mouse click events for each chip label
@@ -137,7 +173,9 @@ public class BlackjackView extends JFrame {
                 dealBtn.setEnabled(false);
                 standBtn.setEnabled(true);
                 hitBtn.setEnabled(true);
+                hideChipValues();
                 ShowBetLabels(false);
+                dblDownBtn.setEnabled(true);
                 blackjackModel.deal();
                 repaint();
             }
@@ -149,6 +187,7 @@ public class BlackjackView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 hitBtn.setEnabled(false);
                 standBtn.setEnabled(false);
+                dblDownBtn.setEnabled(false);
                 blackjackModel.playerStand();
                 repaint();
             }
@@ -167,8 +206,24 @@ public class BlackjackView extends JFrame {
         hitBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                dblDownBtn.setEnabled(false);
                 blackjackModel.playerHit();
                 repaint();
+            }
+        });
+
+        //Double Down Button Code
+        dblDownBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(blackjackModel.getBalance() >= blackjackModel.getBet()) {
+                    blackjackModel.doubleDown();
+                    blackjackModel.playerStand();
+                    dblDownBtn.setEnabled(false);
+                }
+                else{
+                    dblDownBtn.setEnabled(false);
+                }
             }
         });
 
@@ -190,9 +245,31 @@ public class BlackjackView extends JFrame {
         background.add(dealerWin);
         background.add(playerWin);
         background.add(draw);
+        background.add(dblDownBtn);
+        background.add(chip5);
+        background.add(chip10);
+        background.add(chip15);
+        background.add(chip20);
+        background.add(chip25);
 
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    public void hideChipValues(){
+        chip5.setVisible(false);
+        chip10.setVisible(false);
+        chip15.setVisible(false);
+        chip20.setVisible(false);
+        chip25.setVisible(false);
+    }
+
+    public void showChipValues(){
+        chip5.setVisible(true);
+        chip10.setVisible(true);
+        chip15.setVisible(true);
+        chip20.setVisible(true);
+        chip25.setVisible(true);
     }
 
     /**
@@ -251,7 +328,9 @@ public class BlackjackView extends JFrame {
                     if(MainMenuView.gamemode == "Simulated Casino")
                         ShowBetLabels(true);
                     dealBtn.setEnabled(true);
+
                     repaint();
+                    showChipValues();
                 }
             }
         };
@@ -264,7 +343,11 @@ public class BlackjackView extends JFrame {
         Timer t = new Timer(2000, ac); // wait 2 seconds before executing ac
         t.setRepeats(false);
         t.start();
+
+
     }
+
+
 
     /*
      * Show who won.

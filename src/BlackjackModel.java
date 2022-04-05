@@ -12,6 +12,7 @@ public class BlackjackModel {
     private int money;
     private int bet;
     private int cards_played; // how many cards were removed from the deck so far
+    private int cardsPerRound; //counts number of cards played per round
 
     private int[] hidden_card; // dealer's hidden card
 
@@ -105,6 +106,33 @@ public class BlackjackModel {
     }
 
     /**
+     * Player doubles down (doubles bet but only gets one more card)
+     */
+    public void doubleDown(){
+        money = money - bet;
+        bet = bet + bet;
+        player.addCard();
+        int[] c = popPlayerCard();
+        blackjackView.ShowPlayerCard(c);
+
+        if (player.isBlackjack()) {
+            currentState = currentState.pWin; //player wins
+            blackjackView.ShowDealerCard(hidden_card);
+            blackjackView.ShowBackCard(false);
+            playerWins();
+            win();
+        }
+        else if (player.hasBusted()) {
+            currentState = currentState.dWin; //dealer wins
+            blackjackView.ShowDealerCard(hidden_card);
+            blackjackView.ShowBackCard(false);
+            playerLoses();
+            win();
+        }
+        //playerStand();
+    }
+
+    /**
      * Dealer hits.
      */
     public void dealerHit() {
@@ -186,6 +214,7 @@ public class BlackjackModel {
         bet = 0;
         blackjackView.UpdateBalance();
         blackjackView.UpdateBet();
+        cardsPerRound = 0;
     }
 
     /**
@@ -195,6 +224,7 @@ public class BlackjackModel {
         bet = 0;
         blackjackView.UpdateBalance();
         blackjackView.UpdateBet();
+        cardsPerRound = 0;
     }
 
     /**
@@ -202,8 +232,10 @@ public class BlackjackModel {
      */
     public void playerDraws(){
         money = money + bet;
+        bet = 0;
         blackjackView.UpdateBalance();
         blackjackView.UpdateBet();
+        cardsPerRound = 0;
     }
 
     /**
@@ -240,6 +272,13 @@ public class BlackjackModel {
                     blackjackView.ShowBackCard(true);
                 }
             }
+        }
+        if (player.isBlackjack()) {
+            currentState = currentState.pWin; //player wins
+            blackjackView.ShowDealerCard(hidden_card);
+            blackjackView.ShowBackCard(false);
+            playerWins();
+            win();
         }
     }
 
@@ -336,14 +375,18 @@ public class BlackjackModel {
          */
         void addCard() {
             // if all cards are dealt create a new deck and shuffle before continuing
-            if (cards_played == 52) { createDeck(); shuffle(); cards_played = 0; }
+            //int cardCount = 0;
+            if (cards_played == 52) {
+                createDeck();
+                shuffle();
+                cards_played = 0;
+            }
             Card c = new Card(deck.pollFirst()); // get top card from deck
             cards_played++;
             hand[i++] = c;
-            if(c.points == 1 && total < 11){ //if card is ace add 10 points as long as it won't cause player to bust
+            if (c.points == 1 && total < 11) { //if card is ace add 10 points as long as it won't cause player to bust
                 total += c.points + 10;
-            }
-            else{                           // otherwise all cards are normal values
+            } else {                           // otherwise all cards are normal values
                 total += c.points;
             }
         }
