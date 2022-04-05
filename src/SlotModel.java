@@ -13,6 +13,10 @@ public class SlotModel {
         slotView = new SlotView(this);
     }
 
+    public int getMoney() {
+        return money;
+    }
+
     public void pullLever() {
         Random ramdomNumber = new Random();
         for (int i = 0; i < 9; i++) {
@@ -61,9 +65,11 @@ public class SlotModel {
             result ++;
         }
         if (result > 0) {
+            money+=5;
             return "Winner!!";
         }
         else {
+            money--;
             return "Bad Luck!!";
         }
     }
