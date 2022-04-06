@@ -27,15 +27,14 @@ public class MainMenuView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        JLabel jLabel = new JLabel();
-        jLabel.setBounds(20, 0, 100, 60);
-        jLabel.setText("Gamemode: ");
-        jLabel.setForeground(Color.WHITE);
+        JLabel gamemodeTxt = new JLabel();
+        gamemodeTxt.setBounds(20, 0, 100, 60);
+        gamemodeTxt.setText("Gamemode: ");
+        gamemodeTxt.setForeground(Color.WHITE);
         String[] playOptions = {"Freeplay", "Simulated Casino"};
-        JComboBox<String> jComboBox = new JComboBox<>(playOptions);
-        jComboBox.setBounds(100, 0, 100, 60);
-        add(jComboBox);
-        add(jLabel);
+        JComboBox<String> gamemodeSelect = new JComboBox<>(playOptions);
+        gamemodeSelect.setBounds(100, 0, 100, 60);
+
 
         LoadAssets();
 
@@ -58,9 +57,18 @@ public class MainMenuView extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                gamemode = jComboBox.getItemAt(jComboBox.getSelectedIndex());
-                setVisible(false);
-                menuModel.startSlot();
+                if(MainMenuModel.getMoney() <= 0){              //if player has no money, add 100 and notify
+                    MainMenuModel.addMoney();
+                    infoBox("$100 has been added", "You Ran Out of Money!");
+                    gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
+                    setVisible(false);
+                    menuModel.startSlot();
+                }
+                else{
+                    gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
+                    setVisible(false);
+                    menuModel.startSlot();
+                }
             }
         });
 
@@ -83,9 +91,18 @@ public class MainMenuView extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                gamemode = jComboBox.getItemAt(jComboBox.getSelectedIndex());
-                setVisible(false);
-                menuModel.startBlackjack();
+                if(MainMenuModel.getMoney() <= 0) {
+                    MainMenuModel.addMoney();
+                    infoBox("$100 has been added", "You Ran Out of Money!");
+                    gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
+                    setVisible(false);
+                    menuModel.startBlackjack();
+                }
+                else {
+                    gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
+                    setVisible(false);
+                    menuModel.startBlackjack();
+                }
             }
         });
 
@@ -102,6 +119,7 @@ public class MainMenuView extends JFrame {
                 blackjackText.setVisible(false);
             }
         });
+
 
         //exit button
         JButton exitBtn = new JButton("Exit");
@@ -120,9 +138,17 @@ public class MainMenuView extends JFrame {
         setVisible(true);
 
         add(background);
+        background.add(gamemodeSelect);
+        background.add(gamemodeTxt);
         background.add(blackjackText);
         background.add(slotText);
     }
+
+    public static void infoBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
     /**
      * Loads all pictures from the assets folder

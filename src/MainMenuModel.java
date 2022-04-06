@@ -42,6 +42,10 @@ public class MainMenuModel {
         blackjackModel = new BlackjackModel(this, money);
     }
 
+    public static int getMoney(){return money;}
+
+    public static void addMoney(){money = 100;}
+
     public void exit() {
         //Create a new file called savedata.txt if it does not already exist
         try {
