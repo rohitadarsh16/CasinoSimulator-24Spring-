@@ -91,6 +91,7 @@ public class MainMenuView extends JFrame {
         moneyTotal.setBounds(10, 480, 150, 50);
         moneyTotal.setFont(new Font("Dialog", Font.BOLD, 16));
 
+
         //save button code
         saveButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -142,6 +143,7 @@ public class MainMenuView extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
+                difficulty = difficultySelect.getItemAt(difficultySelect.getSelectedIndex());
                 if(MainMenuModel.getMoney() <= 0 && gamemode == "Simulated Casino"){   //if player has no money and wants to play simulated casino, add 100 and notify
                     MainMenuModel.addMoney();
                     infoBox("$100 has been added", "You Ran Out of Money!");
@@ -150,6 +152,7 @@ public class MainMenuView extends JFrame {
                 }
                 else{
                     gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
+                    difficulty = difficultySelect.getItemAt(difficultySelect.getSelectedIndex());
                     setVisible(false);
                     menuModel.startSlot();
                 }
@@ -177,6 +180,7 @@ public class MainMenuView extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
+                difficulty = difficultySelect.getItemAt(difficultySelect.getSelectedIndex());
                 if(MainMenuModel.getMoney() <= 0 && gamemode == "Simulated Casino") { //if player has no money and wants to play simulated casino, add 100 and notify
                     MainMenuModel.addMoney();
                     infoBox("$100 has been added", "You Ran Out of Money!");
@@ -185,6 +189,7 @@ public class MainMenuView extends JFrame {
                 }
                 else {
                     gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
+                    difficulty = difficultySelect.getItemAt(difficultySelect.getSelectedIndex());
                     setVisible(false);
                     menuModel.startBlackjack();
                 }

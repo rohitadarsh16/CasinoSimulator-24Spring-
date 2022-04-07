@@ -30,9 +30,7 @@ public class MainMenuModel {
     /**
      * Make MainMenu window visible.
      */
-    public void setVisible() {
-        menuView.setVisible(true);
-    }
+    public void setVisible() {menuView.setVisible(true);}
 
     public void startSlot() {
         slotModel = new SlotModel(this, money);
