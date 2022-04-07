@@ -8,7 +8,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-
 public class MainMenuView extends JFrame {
     private MainMenuModel menuModel;
     public static String gamemode;
@@ -17,7 +16,8 @@ public class MainMenuView extends JFrame {
     private JLabel slotMenu;
     private JLabel blackjackText;
     private JLabel slotText;
-
+    private JLabel saveButton;
+    private JLabel saveText;
 
     public MainMenuView(MainMenuModel menu) {
         super("CasinoSimulator");
@@ -35,7 +35,6 @@ public class MainMenuView extends JFrame {
         JComboBox<String> gamemodeSelect = new JComboBox<>(playOptions);
         gamemodeSelect.setBounds(100, 0, 100, 60);
 
-
         LoadAssets();
 
         //blackjack label
@@ -51,6 +50,33 @@ public class MainMenuView extends JFrame {
         slotText.setBounds(115, 150, 110, 50);
         slotText.setFont(new Font("Dialog", Font.BOLD, 16));
         slotText.setVisible(false);
+
+        saveText = new JLabel("Save");
+        saveText.setForeground(Color.WHITE);
+        saveText.setBounds(500, 65, 80, 20);
+        saveText.setFont(new Font("Dialog", Font.BOLD, 16));
+        saveText.setVisible(false);
+
+        saveButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                menuModel.save();
+            }
+        });
+
+        saveButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                saveText.setVisible(true);
+            }
+            public void mouseExited(MouseEvent e){
+                super.mouseExited(e);
+                saveText.setVisible(false);
+            }
+        });
+
 
         //code to click slot image
         slotMenu.addMouseListener(new MouseAdapter() {
@@ -122,6 +148,7 @@ public class MainMenuView extends JFrame {
 
 
         //exit button
+        /*
         JButton exitBtn = new JButton("Exit");
         exitBtn.setBounds(435, 450, 100, 100);
         add(exitBtn);
@@ -132,6 +159,7 @@ public class MainMenuView extends JFrame {
                 menuModel.exit();
             }
         });
+        */
 
         setLayout(null);
         setLocationRelativeTo(null);
@@ -142,13 +170,13 @@ public class MainMenuView extends JFrame {
         background.add(gamemodeTxt);
         background.add(blackjackText);
         background.add(slotText);
+        background.add(saveText);
     }
 
     public static void infoBox(String infoMessage, String titleBar)
     {
         JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
     }
-
 
     /**
      * Loads all pictures from the assets folder
@@ -186,6 +214,15 @@ public class MainMenuView extends JFrame {
         slotMenu.setBounds(50, 160, 250, 200);
         background.add(slotMenu);
 
-    }
+        //load save button
+        try {
+            img = ImageIO.read(new File(path + "/Assets/MainMenu/SaveButtonResized2.png"));
+        } catch (Exception e) {
+            System.out.println("Cannot load SaveButton image!");
+        }
+        saveButton = new JLabel(new ImageIcon(img));
+        saveButton.setBounds(500, 20, 40, 40);
+        background.add(saveButton);
 
+    }
 }
