@@ -86,11 +86,21 @@ public class MainMenuView extends JFrame {
         difficultyText.setFont(new Font("Dialiog", Font.BOLD, 16));
 
         //total balance text
+        MainMenuModel.getMoney();
         moneyTotal = new JLabel("Total balance: $" + MainMenuModel.getMoney());
         moneyTotal.setForeground(Color.WHITE);
         moneyTotal.setBounds(10, 480, 150, 50);
         moneyTotal.setFont(new Font("Dialog", Font.BOLD, 16));
 
+
+        //updates money value when player mouses over background
+        background.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                moneyTotal.setText("Total balance: $" + MainMenuModel.getMoney());
+            }
+        });
 
         //save button code
         saveButton.addMouseListener(new MouseAdapter() {
