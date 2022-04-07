@@ -20,6 +20,7 @@ public class MainMenuView extends JFrame {
     private JLabel saveText;
     private JLabel helpButton;
     private JLabel helpText;
+    private JLabel difficultyText;
 
     public MainMenuView(MainMenuModel menu) {
         super("CasinoSimulator");
@@ -33,23 +34,24 @@ public class MainMenuView extends JFrame {
         gamemodeTxt.setBounds(20, 0, 100, 60);
         gamemodeTxt.setText("Gamemode: ");
         gamemodeTxt.setForeground(Color.WHITE);
+        gamemodeTxt.setFont(new Font("Dialog", Font.BOLD, 16));
         String[] playOptions = {"Freeplay", "Simulated Casino"};
         JComboBox<String> gamemodeSelect = new JComboBox<>(playOptions);
-        gamemodeSelect.setBounds(100, 0, 100, 60);
+        gamemodeSelect.setBounds(120, 0, 100, 60);
 
         LoadAssets();
 
         //blackjack label
         blackjackText = new JLabel("Blackjack");
         blackjackText.setForeground(Color.WHITE);
-        blackjackText.setBounds(365, 150, 80, 50);
+        blackjackText.setBounds(365, 160, 80, 50);
         blackjackText.setFont(new Font("Dialog", Font.BOLD, 16));
         blackjackText.setVisible(false);
 
         //slot machine text
         slotText = new JLabel("Slot Machine");
         slotText.setForeground(Color.WHITE);
-        slotText.setBounds(115, 150, 110, 50);
+        slotText.setBounds(115, 160, 110, 50);
         slotText.setFont(new Font("Dialog", Font.BOLD, 16));
         slotText.setVisible(false);
 
@@ -64,6 +66,11 @@ public class MainMenuView extends JFrame {
         helpText.setBounds(505, 512, 80, 20);
         helpText.setFont(new Font("Dialog", Font.BOLD, 16));
         helpText.setVisible(false);
+
+        difficultyText = new JLabel("Difficulty:");
+        difficultyText.setForeground(Color.WHITE);
+        difficultyText.setBounds(20, 60, 100, 60);
+        difficultyText.setFont(new Font("Dialiog", Font.BOLD, 16));
 
         saveButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -92,6 +99,7 @@ public class MainMenuView extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 helpText.setVisible(true);
+
             }
             @Override
             public void mouseExited(MouseEvent e) {
@@ -113,10 +121,10 @@ public class MainMenuView extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(MainMenuModel.getMoney() <= 0){              //if player has no money, add 100 and notify
+                gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
+                if(MainMenuModel.getMoney() <= 0 && gamemode == "Simulated Casino"){   //if player has no money and wants to play simulated casino, add 100 and notify
                     MainMenuModel.addMoney();
                     infoBox("$100 has been added", "You Ran Out of Money!");
-                    gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
                     setVisible(false);
                     menuModel.startSlot();
                 }
@@ -147,10 +155,10 @@ public class MainMenuView extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(MainMenuModel.getMoney() <= 0) {
+                gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
+                if(MainMenuModel.getMoney() <= 0 && gamemode == "Simulated Casino") { //if player has no money and wants to play simulated casino, add 100 and notify
                     MainMenuModel.addMoney();
                     infoBox("$100 has been added", "You Ran Out of Money!");
-                    gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
                     setVisible(false);
                     menuModel.startBlackjack();
                 }
@@ -202,6 +210,7 @@ public class MainMenuView extends JFrame {
         background.add(slotText);
         background.add(saveText);
         background.add(helpText);
+        background.add(difficultyText);
     }
 
     public static void infoBox(String infoMessage, String titleBar)
@@ -256,7 +265,7 @@ public class MainMenuView extends JFrame {
             System.out.println("Cannot load BlackjackMenu image!");
         }
         blackjackMenu = new JLabel(new ImageIcon(img));
-        blackjackMenu.setBounds(320, 200, 200, 200);
+        blackjackMenu.setBounds(320, 210, 200, 200);
         background.add(blackjackMenu);
 
         //load Slotmachine Icon
@@ -266,7 +275,7 @@ public class MainMenuView extends JFrame {
             System.out.println("Cannot load SlotMachineMenu image!");
         }
         slotMenu = new JLabel(new ImageIcon(img));
-        slotMenu.setBounds(50, 160, 250, 200);
+        slotMenu.setBounds(50, 170, 250, 200);
         background.add(slotMenu);
 
         //load save button
