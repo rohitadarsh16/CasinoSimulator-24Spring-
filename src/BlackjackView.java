@@ -112,26 +112,31 @@ public class BlackjackView extends JFrame {
         chip5.setBounds(52, 570, 50, 30);
         chip5.setForeground(Color.WHITE);
         chip5.setFont(new Font("Dialog", Font.PLAIN, 14));
+        chip5.setVisible(false);
 
         chip10 = new JLabel("$10");
         chip10.setBounds(118, 570, 50, 30);
         chip10.setForeground(Color.WHITE);
         chip10.setFont(new Font("Dialog", Font.PLAIN, 14));
+        chip10.setVisible(false);
 
         chip15 = new JLabel("$15");
         chip15.setBounds(188, 570, 50, 30);
         chip15.setForeground(Color.WHITE);
         chip15.setFont(new Font("Dialog", Font.PLAIN, 14));
+        chip15.setVisible(false);
 
         chip20 = new JLabel("$20");
         chip20.setBounds(258, 570, 50, 30);
         chip20.setForeground(Color.WHITE);
         chip20.setFont(new Font("Dialog", Font.PLAIN, 14));
+        chip20.setVisible(false);
 
         chip25 = new JLabel("$25");
         chip25.setBounds(330, 570, 50, 30);
         chip25.setForeground(Color.WHITE);
         chip25.setFont(new Font("Dialog", Font.PLAIN, 14));
+        chip25.setVisible(false);
 
         // Game buttons
         dealBtn = new JButton("Deal");
@@ -158,12 +163,14 @@ public class BlackjackView extends JFrame {
 
         if(MainMenuView.gamemode == "Simulated Casino") {
             ShowBetLabels(true);
+            showChipValues();
         }
         else { //Gamemode is set to freeplay
             dealBtn.setEnabled(true);
             standBtn.setEnabled(false);
             hitBtn.setEnabled(false);
             ShowBetLabels(false);
+            hideChipValues();
         }
 
         // Deal button code
@@ -325,12 +332,13 @@ public class BlackjackView extends JFrame {
                         background.remove(j);
                     cards.clear();
 
-                    if(MainMenuView.gamemode == "Simulated Casino")
+                    if(MainMenuView.gamemode == "Simulated Casino") {
                         ShowBetLabels(true);
-                    dealBtn.setEnabled(true);
+                        dealBtn.setEnabled(false);
+                        showChipValues();
+                    }
 
                     repaint();
-                    showChipValues();
                 }
             }
         };
