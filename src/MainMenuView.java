@@ -11,6 +11,7 @@ import java.io.File;
 public class MainMenuView extends JFrame {
     private MainMenuModel menuModel;
     public static String gamemode;
+    public static String difficulty;
     private JLabel background;
     private JLabel blackjackMenu;
     private JLabel slotMenu;
@@ -21,23 +22,32 @@ public class MainMenuView extends JFrame {
     private JLabel helpButton;
     private JLabel helpText;
     private JLabel difficultyText;
+    private JLabel moneyTotal;
+    private JLabel gameRules;
 
     public MainMenuView(MainMenuModel menu) {
         super("CasinoSimulator");
         menuModel = menu;
 
+
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
+        //gamemode dropdown code
         JLabel gamemodeTxt = new JLabel();
         gamemodeTxt.setBounds(20, 0, 100, 60);
         gamemodeTxt.setText("Gamemode: ");
         gamemodeTxt.setForeground(Color.WHITE);
         gamemodeTxt.setFont(new Font("Dialog", Font.BOLD, 16));
-        String[] playOptions = {"Freeplay", "Simulated Casino"};
+        String[] playOptions = {"Simulated Casino", "Freeplay"};
         JComboBox<String> gamemodeSelect = new JComboBox<>(playOptions);
-        gamemodeSelect.setBounds(120, 0, 100, 60);
+        gamemodeSelect.setBounds(120, 0, 140, 60);
+
+        //difficulty dropdown code
+        String[] difficultyOptions = {"Hard", "Medium", "Easy"};
+        JComboBox<String> difficultySelect = new JComboBox<>(difficultyOptions);
+        difficultySelect.setBounds(120, 60, 140, 60);
 
         LoadAssets();
 
@@ -55,23 +65,33 @@ public class MainMenuView extends JFrame {
         slotText.setFont(new Font("Dialog", Font.BOLD, 16));
         slotText.setVisible(false);
 
+        //save text
         saveText = new JLabel("Save");
         saveText.setForeground(Color.WHITE);
         saveText.setBounds(500, 65, 80, 20);
         saveText.setFont(new Font("Dialog", Font.BOLD, 16));
         saveText.setVisible(false);
 
+        //rules text
         helpText = new JLabel("Rules");
         helpText.setForeground(Color.WHITE);
         helpText.setBounds(505, 512, 80, 20);
         helpText.setFont(new Font("Dialog", Font.BOLD, 16));
         helpText.setVisible(false);
 
+        //difficulty text
         difficultyText = new JLabel("Difficulty:");
         difficultyText.setForeground(Color.WHITE);
         difficultyText.setBounds(20, 60, 100, 60);
         difficultyText.setFont(new Font("Dialiog", Font.BOLD, 16));
 
+        //total balance text
+        moneyTotal = new JLabel("Total balance: $" + MainMenuModel.getMoney());
+        moneyTotal.setForeground(Color.WHITE);
+        moneyTotal.setBounds(10, 480, 150, 50);
+        moneyTotal.setFont(new Font("Dialog", Font.BOLD, 16));
+
+        //save button code
         saveButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -80,7 +100,6 @@ public class MainMenuView extends JFrame {
             }
         });
 
-        //saveButton Code
         saveButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -116,6 +135,7 @@ public class MainMenuView extends JFrame {
             }
         });
 
+        //slot machine code
         //code to click slot image
         slotMenu.addMouseListener(new MouseAdapter() {
             @Override
@@ -150,6 +170,7 @@ public class MainMenuView extends JFrame {
             }
         });
 
+        //blackjack code
         //Cards when clicked now start blackjack game
         blackjackMenu.addMouseListener(new MouseAdapter() {
             @Override
@@ -211,8 +232,15 @@ public class MainMenuView extends JFrame {
         background.add(saveText);
         background.add(helpText);
         background.add(difficultyText);
+        background.add(difficultySelect);
+        background.add(moneyTotal);
     }
 
+    /**
+     * creates pop-up window for running out of money
+     * @param infoMessage (what the message will say)
+     * @param titleBar    (text in the title)
+     */
     public static void infoBox(String infoMessage, String titleBar)
     {
         JOptionPane.showMessageDialog(null, infoMessage, "Attention! " + titleBar, JOptionPane.INFORMATION_MESSAGE);
@@ -221,14 +249,26 @@ public class MainMenuView extends JFrame {
     /**
      * creates pop-up window with rules
      */
-    public static void rulesBox(){
+    public void rulesBox(){
+        BufferedImage img = null;
+        String path = System.getProperty("user.dir"); // get main folder path
+
+        //create pop-up frame
         JFrame ruleFrame = new JFrame();
         JDialog jd = new JDialog(ruleFrame);
         jd.setLayout(new FlowLayout());
-        jd.setBounds(375, 275, 500, 500);
+        jd.setBounds(375, 275, 550, 600);
 
-        JLabel bTitle = new JLabel("Blackjack:");
+        //load picture of rules
+        try {
+            img = ImageIO.read(new File(path + "/Assets/MainMenu/GameRules.png"));
+        } catch (Exception e) {
+            System.out.println("Cannot load BlackjackMenu image!");
+        }
+        gameRules = new JLabel(new ImageIcon(img));
+        gameRules.setBounds(5, 5, 200, 200);
 
+        //close button
         JButton close = new JButton("Close");
         close.setBounds(400, 400, 100, 100);
         close.addActionListener(new ActionListener() {
@@ -237,7 +277,7 @@ public class MainMenuView extends JFrame {
                 jd.setVisible(false);
             }
         });
-        jd.add(bTitle);
+        jd.add(gameRules);
         jd.add(close);
         jd.setVisible(true);
     }
