@@ -18,6 +18,8 @@ public class MainMenuView extends JFrame {
     private JLabel slotText;
     private JLabel saveButton;
     private JLabel saveText;
+    private JLabel helpButton;
+    private JLabel helpText;
 
     public MainMenuView(MainMenuModel menu) {
         super("CasinoSimulator");
@@ -57,6 +59,12 @@ public class MainMenuView extends JFrame {
         saveText.setFont(new Font("Dialog", Font.BOLD, 16));
         saveText.setVisible(false);
 
+        helpText = new JLabel("Rules");
+        helpText.setForeground(Color.WHITE);
+        helpText.setBounds(505, 512, 80, 20);
+        helpText.setFont(new Font("Dialog", Font.BOLD, 16));
+        helpText.setVisible(false);
+
         saveButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -65,6 +73,7 @@ public class MainMenuView extends JFrame {
             }
         });
 
+        //saveButton Code
         saveButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -77,6 +86,27 @@ public class MainMenuView extends JFrame {
             }
         });
 
+        //Help Button Code
+        helpButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                helpText.setVisible(true);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                helpText.setVisible(false);
+            }
+        });
+
+        helpButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                rulesBox();
+            }
+        });
 
         //code to click slot image
         slotMenu.addMouseListener(new MouseAdapter() {
@@ -171,11 +201,36 @@ public class MainMenuView extends JFrame {
         background.add(blackjackText);
         background.add(slotText);
         background.add(saveText);
+        background.add(helpText);
     }
 
     public static void infoBox(String infoMessage, String titleBar)
     {
-        JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, infoMessage, "Attention! " + titleBar, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * creates pop-up window with rules
+     */
+    public static void rulesBox(){
+        JFrame ruleFrame = new JFrame();
+        JDialog jd = new JDialog(ruleFrame);
+        jd.setLayout(new FlowLayout());
+        jd.setBounds(375, 275, 500, 500);
+
+        JLabel bTitle = new JLabel("Blackjack:");
+
+        JButton close = new JButton("Close");
+        close.setBounds(400, 400, 100, 100);
+        close.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jd.setVisible(false);
+            }
+        });
+        jd.add(bTitle);
+        jd.add(close);
+        jd.setVisible(true);
     }
 
     /**
@@ -223,6 +278,16 @@ public class MainMenuView extends JFrame {
         saveButton = new JLabel(new ImageIcon(img));
         saveButton.setBounds(500, 20, 40, 40);
         background.add(saveButton);
+
+        //load help button
+        try {
+            img = ImageIO.read(new File(path + "/Assets/MainMenu/HelpButton2.png"));
+        } catch (Exception e) {
+            System.out.println("Cannot load HelpButton image!");
+        }
+        helpButton = new JLabel(new ImageIcon(img));
+        helpButton.setBounds(495, 450, 60, 60);
+        background.add(helpButton);
 
     }
 }
