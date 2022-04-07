@@ -30,9 +30,7 @@ public class MainMenuModel {
     /**
      * Make MainMenu window visible.
      */
-    public void setVisible() {
-        menuView.setVisible(true);
-    }
+    public void setVisible() {menuView.setVisible(true);}
 
     public void startSlot() {
         slotModel = new SlotModel(this, money);
@@ -42,7 +40,16 @@ public class MainMenuModel {
         blackjackModel = new BlackjackModel(this, money);
     }
 
+    public static int getMoney(){return money;}
+
+    public static void addMoney(){money = 100;}
+
     public void exit() {
+        save();
+        System.exit(0);
+    }
+
+    public void save(){
         //Create a new file called savedata.txt if it does not already exist
         try {
             File savedata = new File("savedata.txt");
@@ -63,6 +70,7 @@ public class MainMenuModel {
         } catch (IOException exx) {
             exx.printStackTrace();
         }
-    System.exit(0);
     }
+
+
 }
