@@ -18,10 +18,29 @@ public class SlotModel {
     }
 
     public void pullLever() {
-        Random ramdomNumber = new Random();
-        for (int i = 0; i < 9; i++) {
-            slot[i] = ramdomNumber.nextInt(7);
+        Random randomNumber = new Random();
+        if(MainMenuView.difficulty == "Hard") {
+            for (int i = 0; i < 9; i++) {
+                slot[i] = randomNumber.nextInt(7);
+            }
         }
+        else if(MainMenuView.difficulty == "Medium") {
+            for (int i = 0; i < 9; i++) {
+                int val = randomNumber.nextInt(8);
+                if(val == 7) //Double the chance to get a "7" icon
+                    val = 0;
+                slot[i] = val;
+            }
+        }
+        else {//Difficuly is set to easy...
+            for (int i = 0; i < 9; i++) {
+                int val = randomNumber.nextInt(9);
+                if (val >= 7) //Triple the chance to get a "7" icon
+                    val = 0;
+                slot[i] = val;
+            }
+        }
+
     }
 
     //Get slot number methods. There should be a better way to do it because if we need 9 slots, then there are 9 get methods.
@@ -65,12 +84,15 @@ public class SlotModel {
             result ++;
         }
         if (result > 0) {
-            money+=5;
+            if(MainMenuView.gamemode == "Simulated Casino")
+                money += 5;
             return "Winner!!";
         }
         else {
-            money--;
+            if(MainMenuView.gamemode == "Simulated Casino")
+                money--;
             return "Bad Luck!!";
+
         }
     }
 
