@@ -42,6 +42,9 @@ public class BlackjackView extends JFrame {
     private final int Y_DEALER = 70; // y position for dealer cards
     private final int Y_PLAYER = 304; // y position for player cards
 
+    Timer timer = null;
+    static final Object WAIT_FOR = new Object();
+
     public BlackjackView(BlackjackModel black) {
         super("CasinoSimulator - Blackjack");
         blackjackModel = black;
@@ -136,7 +139,7 @@ public class BlackjackView extends JFrame {
         // Game buttons
         dealBtn = new JButton("Deal");
         dealBtn.setBounds(95, 630, 100, 30);
-        dealBtn.setEnabled(false);
+        //dealBtn.setEnabled(false);
 
         standBtn = new JButton("Stand");
         standBtn.setBounds(200, 630, 100, 30);
@@ -171,12 +174,12 @@ public class BlackjackView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dealBtn.setEnabled(false);
-                standBtn.setEnabled(true);
-                hitBtn.setEnabled(true);
                 hideChipValues();
                 ShowBetLabels(false);
-                dblDownBtn.setEnabled(true);
                 blackjackModel.deal();
+                standBtn.setEnabled(true);
+                hitBtn.setEnabled(true);
+                dblDownBtn.setEnabled(true);
                 repaint();
             }
         });
@@ -276,9 +279,10 @@ public class BlackjackView extends JFrame {
      * Show the player's card after it was dealt.
      */
     public void ShowPlayerCard(int[] c) {
-        deckLabel[c[0]][c[1]].setBounds(x_player, Y_PLAYER, 96, 144);
-        x_player += 96;
         background.add(deckLabel[c[0]][c[1]]);
+        animate(deckLabel[c[0]][c[1]]);
+
+        //x_player += 96;
         playerTotal.setText(String.valueOf(blackjackModel.getPlayerTotal()));
         cards.add(deckLabel[c[0]][c[1]]);
     }
@@ -335,7 +339,6 @@ public class BlackjackView extends JFrame {
             }
         };
 
-
         standBtn.setEnabled(false);
         hitBtn.setEnabled(false);
         x_dealer = x_player = 30;
@@ -343,11 +346,7 @@ public class BlackjackView extends JFrame {
         Timer t = new Timer(2000, ac); // wait 2 seconds before executing ac
         t.setRepeats(false);
         t.start();
-
-
     }
-
-
 
     /*
      * Show who won.
@@ -437,5 +436,49 @@ public class BlackjackView extends JFrame {
             index += 5;
             x_chip += 70;
         }
+    }
+
+    public void animate(JLabel j) {
+        final int DELAY = 10;
+
+        ActionListener ac = new ActionListener() {
+            int x_anim = 600;
+            int y_anim = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                j.setBounds(x_anim, y_anim, 96, 144);
+                repaint();
+
+                if (x_anim != x_player && y_anim != Y_PLAYER) {
+                    x_anim -= 15;
+                    y_anim += 8;
+                }
+                else {
+                    timer.stop();
+                    synchronized (WAIT_FOR) {
+                        WAIT_FOR.notifyAll();
+                    }
+                }
+            }
+        };
+
+        timer = new Timer(DELAY, ac);
+        //timer.start();
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Thread started!");
+                timer.start();
+            }
+        });
+
+        t.start();
+        try { Thread.sleep(1000); }
+        catch (InterruptedException e) {}
+//        synchronized (WAIT_FOR) {
+//            try { WAIT_FOR.wait(); System.out.println("Timer finished!"); }
+//            catch (InterruptedException e) {}
+//        }
     }
 }
