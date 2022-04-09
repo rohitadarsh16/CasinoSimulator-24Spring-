@@ -3,17 +3,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 public class SlotView extends JFrame {
     private SlotModel slotModel;
-    private boolean is3by3Mode = true;
 
     public SlotView(SlotModel slot) {
         super("CasinoSimulator - Slot Machine");
         slotModel = slot;
+
+
 
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -45,7 +48,8 @@ public class SlotView extends JFrame {
         }
 
         JButton exitBtn = new JButton("Exit");
-        exitBtn.setBounds(690, 162, 88, 82);
+        exitBtn.setBounds(700, 162, 75, 70);
+        exitBtn.setBackground(Color.lightGray);
         add(exitBtn);
 
         exitBtn.addActionListener(new ActionListener() {
@@ -78,10 +82,15 @@ public class SlotView extends JFrame {
             add(label[i]);
         }
 
+
         JButton pullLever = new JButton(new ImageIcon("Assets/SlotMachineGUI/" + "handle.png"));
         JLabel resultLabel = new JLabel();
+
         resultLabel.setFont(new Font("Arial", Font.PLAIN, 36));
         resultLabel.setBounds(250, 580, 300, 50);   //result label size
+
+
+
         pullLever.setBounds(675, 350, 120, 320);  //Pull button size
 
         JLabel moneylabel = new JLabel();
@@ -89,14 +98,40 @@ public class SlotView extends JFrame {
         moneylabel.setBounds(310, 730, 300, 50);
 
         JLabel wagerlabel = new JLabel();
+
+        //add JComboBox for betting options.
+        String[] betOptions = {"1$", "2$", "5$"};
+        JComboBox<String> betSelect = new JComboBox<>(betOptions);
+        betSelect.setBounds(260, 685, 50, 30);
+        betSelect.setBackground(Color.CYAN);
+        betSelect.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    if (e.getItem() == betOptions[0]) {
+                        slot.setBettingMoney(1);
+                    }
+                    if (e.getItem() == betOptions[1]) {
+                        slot.setBettingMoney(2);
+                    }
+                    if (e.getItem() == betOptions[2]) {
+                        slot.setBettingMoney(5);
+                    }
+                }
+            }
+        });
+
+
         wagerlabel.setFont(new Font("Arial", Font.BOLD, 20));
-        wagerlabel.setBounds(240, 675, 300, 50);
-        wagerlabel.setText(("Bet = $1"));
+        wagerlabel.setBounds(200, 675, 300, 50);
+        wagerlabel.setText(("Bet = "));
+
+
 
         JLabel bonuslabel = new JLabel();
-        bonuslabel.setFont(new Font("Arial", Font.BOLD, 20));
+        bonuslabel.setFont(new Font("Arial", Font.BOLD, 15));
         bonuslabel.setBounds(400, 675, 300, 50);
-        bonuslabel.setText(("Bonus = Bet x 5"));
+        bonuslabel.setText(("<html>Bonus = Bet x 2<br>SpecialBonus = bet x 5</html>"));
 
         pullLever.setBorder(BorderFactory.createEmptyBorder());
         pullLever.setContentAreaFilled(false);
@@ -107,17 +142,27 @@ public class SlotView extends JFrame {
         pullLever.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                slotModel.pullLever();
-                for (int i = 0; i < 9; i++) {
-                    label[i].setIcon(icon[slot.getSlot(i)]);
+                if(slot.getMoney() == 0) {
+                    resultLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+                    resultLabel.setText("<html><div style='text-align: center;'>No More money!<br> Add more money in the menu.</div></html>");
 
-                    add(label[i]);
                 }
-                resultLabel.setText(slot.matchCheck2());
-                resultLabel.setHorizontalAlignment(JLabel.CENTER);
-                moneylabel.setText(("TOTAL:" + "$" + slot.getMoney()));
+                else {
+
+                    slotModel.pullLever();
+                    for (int i = 0; i < 9; i++) {
+                        label[i].setIcon(icon[slot.getSlot(i)]);
+
+                        add(label[i]);
+                    }
+                    resultLabel.setText(slot.matchCheck2());
+                    resultLabel.setHorizontalAlignment(JLabel.CENTER);
+                    moneylabel.setText(("TOTAL:" + "$" + slot.getMoney()));
+                }
             }
         });
+        add(betSelect);
+
         add(wagerlabel);
         add(bonuslabel);
         add(moneylabel);
