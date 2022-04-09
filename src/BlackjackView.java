@@ -337,6 +337,11 @@ public class BlackjackView extends JFrame {
                         dealBtn.setEnabled(false);
                         showChipValues();
                     }
+                    else{
+                        ShowBetLabels(false);
+                        dealBtn.setEnabled(true);
+                        hideChipValues();
+                    }
 
                     repaint();
                 }
