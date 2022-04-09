@@ -19,14 +19,14 @@ public class SlotModel {
     }
 
     public void pullLever() {
-        Random ramdomNumber = new Random();
+        //Random randomNumber = new Random();
+        Random randomNumber = new Random();
 
         for (int i = 0; i < 9; i++) {
-            slot[i] = ramdomNumber.nextInt(7);
+            slot[i] = randomNumber.nextInt(7);
         }
 
     }
-
 
     //Get slot number methods. There should be a better way to do it because if we need 9 slots, then there are 9 get methods.
     public int getSlot(int a) {
@@ -36,7 +36,6 @@ public class SlotModel {
     public void setBettingMoney(int a) {
         bettingMoney = a;
     }
-
 
     //simple rules for 3by3 slots
     public String matchCheck2() {
@@ -159,7 +158,6 @@ public class SlotModel {
     }
 
      */
-
 
     public void exit() {
         MainMenuModel.money = money;

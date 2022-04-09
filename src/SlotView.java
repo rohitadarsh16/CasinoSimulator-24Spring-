@@ -16,8 +16,6 @@ public class SlotView extends JFrame {
         super("CasinoSimulator - Slot Machine");
         slotModel = slot;
 
-
-
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -82,14 +80,11 @@ public class SlotView extends JFrame {
             add(label[i]);
         }
 
-
         JButton pullLever = new JButton(new ImageIcon("Assets/SlotMachineGUI/" + "handle.png"));
         JLabel resultLabel = new JLabel();
 
         resultLabel.setFont(new Font("Arial", Font.PLAIN, 36));
         resultLabel.setBounds(250, 580, 300, 50);   //result label size
-
-
 
         pullLever.setBounds(675, 350, 120, 320);  //Pull button size
 
@@ -121,12 +116,9 @@ public class SlotView extends JFrame {
             }
         });
 
-
         wagerlabel.setFont(new Font("Arial", Font.BOLD, 20));
         wagerlabel.setBounds(200, 675, 300, 50);
         wagerlabel.setText(("Bet = "));
-
-
 
         JLabel bonuslabel = new JLabel();
         bonuslabel.setFont(new Font("Arial", Font.BOLD, 15));
