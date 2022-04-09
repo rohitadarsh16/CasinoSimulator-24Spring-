@@ -42,9 +42,6 @@ public class BlackjackView extends JFrame {
     private final int Y_DEALER = 70; // y position for dealer cards
     private final int Y_PLAYER = 304; // y position for player cards
 
-    Timer timer = null;
-    static final Object WAIT_FOR = new Object();
-
     public BlackjackView(BlackjackModel black) {
         super("CasinoSimulator - Blackjack");
         blackjackModel = black;
@@ -279,12 +276,14 @@ public class BlackjackView extends JFrame {
      * Show the player's card after it was dealt.
      */
     public void ShowPlayerCard(int[] c) {
+        deckLabel[c[0]][c[1]].setBounds(600, 0, 96, 144);
         background.add(deckLabel[c[0]][c[1]]);
-        animate(deckLabel[c[0]][c[1]]);
-
-        //x_player += 96;
         playerTotal.setText(String.valueOf(blackjackModel.getPlayerTotal()));
         cards.add(deckLabel[c[0]][c[1]]);
+        animThread a = new animThread(deckLabel[c[0]][c[1]], x_player, Y_PLAYER);
+        x_player += 96;
+        try { Thread.sleep(10); }
+        catch (InterruptedException e) {}
     }
 
     /**
@@ -438,47 +437,44 @@ public class BlackjackView extends JFrame {
         }
     }
 
-    public void animate(JLabel j) {
-        final int DELAY = 10;
+    public class animThread {
+        public animThread(JLabel j, int x, int y) {
+            System.out.println("x = " + x + " y = " + y);
+            int dY = y;
+            int dX = Math.abs(x - 600);
+            int g = gcd(dX, dY);
 
-        ActionListener ac = new ActionListener() {
-            int x_anim = 600;
-            int y_anim = 0;
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                j.setBounds(x_anim, y_anim, 96, 144);
-                repaint();
+            final int delX = dX / g;
+            final int delY = dY / g;
 
-                if (x_anim != x_player && y_anim != Y_PLAYER) {
-                    x_anim -= 15;
-                    y_anim += 8;
-                }
-                else {
-                    timer.stop();
-                    synchronized (WAIT_FOR) {
-                        WAIT_FOR.notifyAll();
+            SwingWorker s = new SwingWorker() {
+                int currX = 600;
+                int currY = 0;
+
+                @Override
+                protected Object doInBackground() throws Exception {
+                    while (true) {
+                        j.setBounds(currX, currY, 96, 144);
+                        repaint();
+
+                        if (currX != x && currY != y) {
+                            currX -= delX;
+                            currY += delY;
+                        } else break;
+
+                        Thread.sleep(10);
                     }
+
+                    return null;
                 }
-            }
-        };
+            };
 
-        timer = new Timer(DELAY, ac);
-        //timer.start();
+            s.execute();
+        }
+    }
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Thread started!");
-                timer.start();
-            }
-        });
-
-        t.start();
-        try { Thread.sleep(1000); }
-        catch (InterruptedException e) {}
-//        synchronized (WAIT_FOR) {
-//            try { WAIT_FOR.wait(); System.out.println("Timer finished!"); }
-//            catch (InterruptedException e) {}
-//        }
+    public int gcd(int a, int b) {
+        if (b == 0) return a;
+        return gcd(b, a % b);
     }
 }
