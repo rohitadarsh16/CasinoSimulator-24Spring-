@@ -29,7 +29,7 @@ public class SlotModel {
 
 
     //Get slot number methods. There should be a better way to do it because if we need 9 slots, then there are 9 get methods.
-    public int getSlot (int a) {
+    public int getSlot(int a) {
         return slot[a];
     }
 
@@ -40,85 +40,76 @@ public class SlotModel {
 
     //simple rules for 3by3 slots
     public String matchCheck2() {
-        int winningMoney= 0;
+        int winningMoney = 0;
         //first row
         if (slot[0] == slot[1] && slot[1] == slot[2]) {
-            if(slot[0] == 0) {
+            if (slot[0] == 0) {
                 winningMoney = bettingMoney * 5;
-            }
-            else {
+            } else {
                 winningMoney = bettingMoney * 2;
             }
 
         }
         //second row
         if (slot[3] == slot[4] && slot[4] == slot[5]) {
-            if(slot[3] == 0) {
+            if (slot[3] == 0) {
                 winningMoney = bettingMoney * 5;
-            }
-            else {
+            } else {
                 winningMoney = bettingMoney * 2;
             }
         }
         //third row
         if (slot[6] == slot[7] && slot[7] == slot[8]) {
-            if(slot[6] == 0) {
+            if (slot[6] == 0) {
                 winningMoney = bettingMoney * 5;
-            }
-            else {
+            } else {
                 winningMoney = bettingMoney * 2;
             }
         }
         //first column
         if (slot[0] == slot[3] && slot[3] == slot[6]) {
-            if(slot[0] == 0) {
+            if (slot[0] == 0) {
                 winningMoney = bettingMoney * 5;
-            }
-            else {
+            } else {
                 winningMoney = bettingMoney * 2;
             }
         }
         //second column
         if (slot[1] == slot[4] && slot[4] == slot[7]) {
-            if(slot[1] == 0) {
+            if (slot[1] == 0) {
                 winningMoney = bettingMoney * 5;
-            }
-            else {
+            } else {
                 winningMoney = bettingMoney * 2;
             }
         }
         //third column
         if (slot[2] == slot[5] && slot[5] == slot[8]) {
-            if(slot[2] == 0) {
+            if (slot[2] == 0) {
                 winningMoney = bettingMoney * 5;
-            }
-            else {
+            } else {
                 winningMoney = bettingMoney * 2;
             }
         }
         //top left to bottom right diagonal
         if (slot[0] == slot[4] && slot[4] == slot[8]) {
-            if(slot[0] == 0) {
+            if (slot[0] == 0) {
                 winningMoney = bettingMoney * 5;
-            }
-            else {
+            } else {
                 winningMoney = bettingMoney * 2;
             }
         }
         //bottom left to top right diagonal
         if (slot[6] == slot[4] && slot[4] == slot[2]) {
-            if(slot[6] == 0) {
+            if (slot[6] == 0) {
                 winningMoney = bettingMoney * 5;
-            }
-            else {
+            } else {
                 winningMoney = bettingMoney * 2;
             }
         }
         if (winningMoney > 0) {
             money += winningMoney;
             return "Winner!!";
-        }
-        else {
+        } else {
             money -= bettingMoney;
             return "Bad Luck!!";
         }
@@ -166,6 +157,8 @@ public class SlotModel {
             }
         }
     }
+
+     */
 
 
     public void exit() {
