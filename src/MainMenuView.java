@@ -11,6 +11,9 @@ import java.io.File;
 public class MainMenuView extends JFrame {
     private MainMenuModel menuModel;
     public static String gamemode;
+
+    private JComboBox<String> gamemodeSelect;
+  
     public static String difficulty;
     private JLabel background;
     private JLabel blackjackMenu;
@@ -38,12 +41,12 @@ public class MainMenuView extends JFrame {
 
         //gamemode dropdown code
         JLabel gamemodeTxt = new JLabel();
-        gamemodeTxt.setBounds(20, 0, 100, 60);
+        gamemodeTxt.setBounds(20, 0, 130, 60);
         gamemodeTxt.setText("Gamemode: ");
         gamemodeTxt.setForeground(Color.WHITE);
         gamemodeTxt.setFont(new Font("Dialog", Font.BOLD, 16));
         String[] playOptions = {"Simulated Casino", "Freeplay"};
-        JComboBox<String> gamemodeSelect = new JComboBox<>(playOptions);
+        gamemodeSelect = new JComboBox<>(playOptions);
         gamemodeSelect.setBounds(120, 0, 140, 60);
 
         //difficulty dropdown code
@@ -88,7 +91,7 @@ public class MainMenuView extends JFrame {
         difficultyText.setFont(new Font("Dialog", Font.BOLD, 16));
 
         //total balance text
-        MainMenuModel.getMoney();
+        //MainMenuModel.getMoney();
         moneyTotal = new JLabel("Total balance: $" + MainMenuModel.getMoney());
         moneyTotal.setForeground(Color.WHITE);
         moneyTotal.setBounds(10, 570, 200, 50);
@@ -467,4 +470,10 @@ public class MainMenuView extends JFrame {
         background.add(difficultyHelp);
 
     }
+
+    /**
+     * For testing
+     */
+    public JLabel getBlackLabel() { return blackjackMenu; }
+    public JComboBox<String> getGameOptions() { return gamemodeSelect; }
 }

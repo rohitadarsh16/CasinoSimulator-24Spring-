@@ -1,5 +1,6 @@
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class BlackjackModel {
     private currentState currentState;
@@ -23,6 +24,12 @@ public class BlackjackModel {
     public currentState getCurrentState(){
         return currentState;
     }
+
+    // FOR TESTING
+    private boolean doneDeal;
+    private boolean doneHit;
+    private boolean doneStand;
+    private int hitCount = 0;
 
     public BlackjackModel(MainMenuModel menu, int money) {
         currentState = currentState.pTurn;
@@ -64,72 +71,124 @@ public class BlackjackModel {
      * Shuffle the deck.
      */
     public void shuffle() {
+        Random randomNumber = new Random();
+        Card ace = new Card(1, 0, 1);
         Collections.shuffle(deck);
+        if(MainMenuView.difficulty == "Medium") {
+            int index = randomNumber.nextInt(8);
+            if(index == 0) {//If you pass a 1/8 chance
+                for(int i = 0; i < 52; i++) {
+                    if(deck.get(i).value == 1) {
+                        ace = deck.get(i);
+                    }
+                }
+                int indexAce = deck.indexOf(ace);
+                Card firstCard = deck.getFirst();
+                deck.set(indexAce, firstCard); //Swap the first card with the ace
+                deck.set(0, ace);
+            }
+        }
+        else { //If the difficulty is easy
+            int index = randomNumber.nextInt(6);
+            if(index == 0) {//If you pass a 1/6 chance
+                for(int i = 0; i < deck.size(); i++) {
+                    if(deck.get(i).value == 1) {
+                        ace = deck.get(i);
+                    }
+                }
+                int indexAce = deck.indexOf(ace);
+                Card firstCard = deck.getFirst();
+                deck.set(indexAce, firstCard); //Swap the first card with the ace
+                deck.set(0, ace);
+            }
+        }
     }
 
     /**
      * Player hits.
      */
     public void playerHit() {
-        player.addCard();
-        int[] c = popPlayerCard();
-        blackjackView.ShowPlayerCard(c);
+        doneHit = false;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                player.addCard();
+                int[] c = popPlayerCard();
+                blackjackView.ShowPlayerCard(c);
 
-        if (player.isBlackjack()) {
-            currentState = currentState.pWin; //player wins
-            blackjackView.ShowDealerCard(hidden_card);
-            blackjackView.ShowBackCard(false);
-            playerWins();
-            win();
-        }
-        else if (player.hasBusted()) {
-            currentState = currentState.dWin; //dealer wins
-            blackjackView.ShowDealerCard(hidden_card);
-            blackjackView.ShowBackCard(false);
-            playerLoses();
-            win();
-        }
-        //else {
-            //currentState = currentState.dTurn;
-        //}
+                if (player.isBlackjack()) {
+                    currentState = currentState.pWin; //player wins
+                    blackjackView.ShowDealerCard(hidden_card);
+                    blackjackView.ShowBackCard(false);
+                    playerWins();
+                    win();
+                }
+                else if (player.hasBusted()) {
+                    currentState = currentState.dWin; //dealer wins
+                    blackjackView.ShowDealerCard(hidden_card);
+                    blackjackView.ShowBackCard(false);
+                    playerLoses();
+                    win();
+                }
+                //else {
+                //currentState = currentState.dTurn;
+                //}
+                hitCount++;
+                doneHit = true;
+                System.out.println(hitCount);
+            }
+        }).start();
     }
 
     /**
      * Player stands.
      */
-    public void playerStand() {              //player stands which makes it the dealer's turn
-        currentState = currentState.dTurn;
-        player.setToStanding(true);
-        blackjackView.ShowDealerCard(hidden_card);
-        blackjackView.ShowBackCard(false);
-        dealerTurn();
+    public void playerStand() {
+        //player stands which makes it the dealer's turn
+        doneStand = false;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                currentState = currentState.dTurn;
+                player.setToStanding(true);
+                blackjackView.ShowDealerCard(hidden_card);
+                blackjackView.ShowBackCard(false);
+                dealerTurn();
+                doneStand = true;
+            }
+        }).start();
     }
 
     /**
      * Player doubles down (doubles bet but only gets one more card)
      */
     public void doubleDown(){
-        money = money - bet;
-        bet = bet + bet;
-        player.addCard();
-        int[] c = popPlayerCard();
-        blackjackView.ShowPlayerCard(c);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                money = money - bet;
+                bet = bet + bet;
+                player.addCard();
+                int[] c = popPlayerCard();
+                blackjackView.ShowPlayerCard(c);
 
-        if (player.isBlackjack()) {
-            currentState = currentState.pWin; //player wins
-            blackjackView.ShowDealerCard(hidden_card);
-            blackjackView.ShowBackCard(false);
-            playerWins();
-            win();
-        }
-        else if (player.hasBusted()) {
-            currentState = currentState.dWin; //dealer wins
-            blackjackView.ShowDealerCard(hidden_card);
-            blackjackView.ShowBackCard(false);
-            playerLoses();
-            win();
-        }
-        //playerStand();
+                if (player.isBlackjack()) {
+                    currentState = currentState.pWin; //player wins
+                    blackjackView.ShowDealerCard(hidden_card);
+                    blackjackView.ShowBackCard(false);
+                    playerWins();
+                    win();
+                }
+                else if (player.hasBusted()) {
+                    currentState = currentState.dWin; //dealer wins
+                    blackjackView.ShowDealerCard(hidden_card);
+                    blackjackView.ShowBackCard(false);
+                    playerLoses();
+                    win();
+                }
+                //playerStand();
+            }
+        }).start();
     }
 
     /**
@@ -204,6 +263,8 @@ public class BlackjackModel {
 
         dealer.reset();
         player.reset();
+        createDeck();
+        shuffle(); //Shuffle the deck after every turn
     }
 
     /**
@@ -255,31 +316,38 @@ public class BlackjackModel {
      * The dealer's last card is face down.
      */
     public void deal() {
-        int[] c;
-        for (int i = 0; i < 4; i++) {
-            if (i % 2 == 0) {
-                player.addCard();
-                c = popPlayerCard();
-                blackjackView.ShowPlayerCard(c);
-            }
-            else {
-                dealer.addCard();
-                c = popDealerCard();
-                if (i < 3)
-                    blackjackView.ShowDealerCard(c);
-                else { // dealer's last card is face down
-                    hidden_card = c;
-                    blackjackView.ShowBackCard(true);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                doneDeal = false; // for testing
+                int[] c;
+                for (int i = 0; i < 4; i++) {
+                    if (i % 2 == 0) {
+                        player.addCard();
+                        c = popPlayerCard();
+                        blackjackView.ShowPlayerCard(c);
+                    }
+                    else {
+                        dealer.addCard();
+                        c = popDealerCard();
+                        if (i < 3)
+                            blackjackView.ShowDealerCard(c);
+                        else { // dealer's last card is face down
+                            hidden_card = c;
+                            blackjackView.ShowBackCard(true);
+                        }
+                    }
+                }
+                doneDeal = true; // for testing
+                if (player.isBlackjack()) {
+                    currentState = currentState.pWin; //player wins
+                    blackjackView.ShowDealerCard(hidden_card);
+                    blackjackView.ShowBackCard(false);
+                    playerWins();
+                    win();
                 }
             }
-        }
-        if (player.isBlackjack()) {
-            currentState = currentState.pWin; //player wins
-            blackjackView.ShowDealerCard(hidden_card);
-            blackjackView.ShowBackCard(false);
-            playerWins();
-            win();
-        }
+        }).start();
     }
 
     /**
@@ -391,6 +459,8 @@ public class BlackjackModel {
             }
         }
 
+        public int getHandCount() { return i; }
+
         public boolean hasBusted() { return total > 21; }
 
         public boolean isBlackjack() { return total == 21; }
@@ -408,4 +478,16 @@ public class BlackjackModel {
             stand = false;
         }
     }
+
+    /**
+     * For testing
+     */
+    public int getDeckCount() { return deck.size(); }
+    public int getPlayerCardCount() { return player.getHandCount(); }
+    public int getDealerCardCount() { return dealer.getHandCount(); }
+    public BlackjackView getView() { return blackjackView; }
+    public boolean isDoneDeal() { return doneDeal; }
+    public boolean isDoneHit() { return doneHit; }
+    public boolean isDoneStand() { return doneStand; }
+    public int getHitCount() { return hitCount; }
 }

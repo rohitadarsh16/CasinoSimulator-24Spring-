@@ -36,9 +36,7 @@ public class MainMenuModel {
         slotModel = new SlotModel(this, money);
     }
 
-    public void startBlackjack() {
-        blackjackModel = new BlackjackModel(this, money);
-    }
+    public void startBlackjack() { blackjackModel = new BlackjackModel(this, money); }
 
     public static int getMoney(){return money;}
 
@@ -72,5 +70,9 @@ public class MainMenuModel {
         }
     }
 
-
+    /**
+     * For testing
+     */
+    public MainMenuView getView() { return menuView; }
+    public BlackjackModel getModel() { return blackjackModel; }
 }
