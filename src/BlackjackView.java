@@ -294,7 +294,6 @@ public class BlackjackView extends JFrame {
         }
 
         x_player += 96;
-        System.out.println("x = " + x_player);
     }
 
     /**
@@ -520,4 +519,9 @@ public class BlackjackView extends JFrame {
             running = false;
         }
     }
+
+    /**
+     * For testing
+     */
+    public JButton getDealBtn() { return dealBtn; }
 }
