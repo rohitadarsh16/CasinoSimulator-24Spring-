@@ -318,6 +318,9 @@ public class MainMenuView extends JFrame {
         jd.setVisible(true);
     }
 
+    /**
+     * Creates pop-up with information on different gamemodes
+     */
     public void gamemodeBox(){
         BufferedImage img = null;
         String path = System.getProperty("user.dir"); // get main folder path
@@ -351,6 +354,9 @@ public class MainMenuView extends JFrame {
         jd.setVisible(true);
     }
 
+    /**
+     * Creates pop-up with information on different difficulties
+     */
     public void difficultyBox(){
         BufferedImage img = null;
         String path = System.getProperty("user.dir"); // get main folder path
