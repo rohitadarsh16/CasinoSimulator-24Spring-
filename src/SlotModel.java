@@ -56,81 +56,119 @@ public class SlotModel {
     //simple rules for 3by3 slots
     public String matchCheck2() {
         int winningMoney = 0;
-        //first row
-        if (slot[0] == slot[1] && slot[1] == slot[2]) {
-            if (slot[0] == 0) {
-                winningMoney = bettingMoney * 5;
-            } else {
-                winningMoney = bettingMoney * 2;
+        boolean checkIfWon = false;
+        if (MainMenuView.gamemode == "Simulated Casino") {
+            //first row
+            if (slot[0] == slot[1] && slot[1] == slot[2]) {
+                if (slot[0] == 0) {
+                    winningMoney = bettingMoney * 5;
+                } else {
+                    winningMoney = bettingMoney * 2;
+                }
             }
-
-        }
-        //second row
-        if (slot[3] == slot[4] && slot[4] == slot[5]) {
-            if (slot[3] == 0) {
-                winningMoney = bettingMoney * 5;
-            } else {
-                winningMoney = bettingMoney * 2;
+            //second row
+            if (slot[3] == slot[4] && slot[4] == slot[5]) {
+                if (slot[3] == 0) {
+                    winningMoney = bettingMoney * 5;
+                } else {
+                    winningMoney = bettingMoney * 2;
+                }
             }
-        }
-        //third row
-        if (slot[6] == slot[7] && slot[7] == slot[8]) {
-            if (slot[6] == 0) {
-                winningMoney = bettingMoney * 5;
-            } else {
-                winningMoney = bettingMoney * 2;
+            //third row
+            if (slot[6] == slot[7] && slot[7] == slot[8]) {
+                if (slot[6] == 0) {
+                    winningMoney = bettingMoney * 5;
+                } else {
+                    winningMoney = bettingMoney * 2;
+                }
             }
-        }
-        //first column
-        if (slot[0] == slot[3] && slot[3] == slot[6]) {
-            if (slot[0] == 0) {
-                winningMoney = bettingMoney * 5;
-            } else {
-                winningMoney = bettingMoney * 2;
+            //first column
+            if (slot[0] == slot[3] && slot[3] == slot[6]) {
+                if (slot[0] == 0) {
+                    winningMoney = bettingMoney * 5;
+                } else {
+                    winningMoney = bettingMoney * 2;
+                }
             }
-        }
-        //second column
-        if (slot[1] == slot[4] && slot[4] == slot[7]) {
-            if (slot[1] == 0) {
-                winningMoney = bettingMoney * 5;
-            } else {
-                winningMoney = bettingMoney * 2;
+            //second column
+            if (slot[1] == slot[4] && slot[4] == slot[7]) {
+                if (slot[1] == 0) {
+                    winningMoney = bettingMoney * 5;
+                } else {
+                    winningMoney = bettingMoney * 2;
+                }
             }
-        }
-        //third column
-        if (slot[2] == slot[5] && slot[5] == slot[8]) {
-            if (slot[2] == 0) {
-                winningMoney = bettingMoney * 5;
-            } else {
-                winningMoney = bettingMoney * 2;
+            //third column
+            if (slot[2] == slot[5] && slot[5] == slot[8]) {
+                if (slot[2] == 0) {
+                    winningMoney = bettingMoney * 5;
+                } else {
+                    winningMoney = bettingMoney * 2;
+                }
             }
-        }
-        //top left to bottom right diagonal
-        if (slot[0] == slot[4] && slot[4] == slot[8]) {
-            if (slot[0] == 0) {
-                winningMoney = bettingMoney * 5;
-            } else {
-                winningMoney = bettingMoney * 2;
+            //top left to bottom right diagonal
+            if (slot[0] == slot[4] && slot[4] == slot[8]) {
+                if (slot[0] == 0) {
+                    winningMoney = bettingMoney * 5;
+                } else {
+                    winningMoney = bettingMoney * 2;
+                }
             }
-        }
-        //bottom left to top right diagonal
-        if (slot[6] == slot[4] && slot[4] == slot[2]) {
-            if (slot[6] == 0) {
-                winningMoney = bettingMoney * 5;
-            } else {
-                winningMoney = bettingMoney * 2;
+            //bottom left to top right diagonal
+            if (slot[6] == slot[4] && slot[4] == slot[2]) {
+                if (slot[6] == 0) {
+                    winningMoney = bettingMoney * 5;
+                } else {
+                    winningMoney = bettingMoney * 2;
+                }
             }
+        } else { //If the gamemode is set to freeplay
+            //first row
+            if (slot[0] == slot[1] && slot[1] == slot[2]) {
+                checkIfWon = true;
+            }
+            //second row
+            if (slot[3] == slot[4] && slot[4] == slot[5]) {
+                checkIfWon = true;
+            }
+            //third row
+            if (slot[6] == slot[7] && slot[7] == slot[8]) {
+                checkIfWon = true;
+            }
+            //first column
+            if (slot[0] == slot[3] && slot[3] == slot[6]) {
+                checkIfWon = true;
+            }
+            //second column
+            if (slot[1] == slot[4] && slot[4] == slot[7]) {
+                checkIfWon = true;
+            }
+            //third column
+            if (slot[2] == slot[5] && slot[5] == slot[8]) {
+                checkIfWon = true;
+            }
+            //top left to bottom right diagonal
+            if (slot[0] == slot[4] && slot[4] == slot[8]) {
+                checkIfWon = true;
+            }
+            //bottom left to top right diagonal
+            if (slot[6] == slot[4] && slot[4] == slot[2]) {
+                checkIfWon = true;
+            }
+//            money += winningMoney;
         }
-        if (result > 0) {
-            if(MainMenuView.gamemode == "Simulated Casino")
-                money += 5;
+        if (winningMoney > 0) {
+            money += winningMoney;
             return "Winner!!";
         }
-        else {
-            if(MainMenuView.gamemode == "Simulated Casino")
-                money--;
+        else if(checkIfWon == true)
+            return "Winner!!";
+        else if(MainMenuView.gamemode == "Simulated Casino") {
+            money -= bettingMoney;
             return "Bad Luck!!";
         }
+        else
+            return "Bad Luck!!";
     }
 
     /*
