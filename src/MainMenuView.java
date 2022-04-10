@@ -230,6 +230,7 @@ public class MainMenuView extends JFrame {
             }
         });
 
+
         //code for difficulty help button
         difficultyHelp.addMouseListener(new MouseAdapter() {
             @Override
@@ -292,7 +293,7 @@ public class MainMenuView extends JFrame {
         JFrame ruleFrame = new JFrame();
         JDialog jd = new JDialog(ruleFrame);
         jd.setLayout(new FlowLayout());
-        jd.setBounds(300, 100, 550, 600);
+        jd.setBounds(300, 100, 550, 565);
 
         //load picture of rules
         try {
@@ -318,11 +319,69 @@ public class MainMenuView extends JFrame {
     }
 
     public void gamemodeBox(){
+        BufferedImage img = null;
+        String path = System.getProperty("user.dir"); // get main folder path
 
+        //create pop-up frame
+        JFrame ruleFrame = new JFrame();
+        JDialog jd = new JDialog(ruleFrame);
+        jd.setLayout(new FlowLayout());
+        jd.setBounds(400, 300, 570, 210);
+
+        //load picture of gamemode rules
+        try {
+            img = ImageIO.read(new File(path + "/Assets/MainMenu/gamemodeRules.png"));
+        } catch (Exception e) {
+            System.out.println("Cannot load gamemode rules image!");
+        }
+        gameRules = new JLabel(new ImageIcon(img));
+        gameRules.setBounds(5, 5, 200, 200);
+
+        //close button
+        JButton close = new JButton("Close");
+        close.setBounds(400, 400, 100, 100);
+        close.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jd.setVisible(false);
+            }
+        });
+        jd.add(gameRules);
+        jd.add(close);
+        jd.setVisible(true);
     }
 
     public void difficultyBox(){
+        BufferedImage img = null;
+        String path = System.getProperty("user.dir"); // get main folder path
 
+        //create pop-up frame
+        JFrame ruleFrame = new JFrame();
+        JDialog jd = new JDialog(ruleFrame);
+        jd.setLayout(new FlowLayout());
+        jd.setBounds(400, 300, 360, 385);
+
+        //load picture of rules
+        try {
+            img = ImageIO.read(new File(path + "/Assets/MainMenu/DifficultyRules.png"));
+        } catch (Exception e) {
+            System.out.println("Cannot load difficulty rules image!");
+        }
+        gameRules = new JLabel(new ImageIcon(img));
+        gameRules.setBounds(5, 5, 200, 200);
+
+        //close button
+        JButton close = new JButton("Close");
+        close.setBounds(400, 400, 100, 100);
+        close.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jd.setVisible(false);
+            }
+        });
+        jd.add(gameRules);
+        jd.add(close);
+        jd.setVisible(true);
     }
 
     /**
