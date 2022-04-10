@@ -63,4 +63,10 @@ public class MainMenuModel {
         }
     System.exit(0);
     }
+
+    /**
+     * For testing
+     */
+    public MainMenuView getView() { return menuView; }
+    public BlackjackModel getModel() { return blackjackModel; }
 }

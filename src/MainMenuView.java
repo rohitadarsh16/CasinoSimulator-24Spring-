@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 public class MainMenuView extends JFrame {
     private MainMenuModel menuModel;
     public static String gamemode;
+    private JButton blackBtn;
+    private JComboBox<String> jComboBox;
 
     public MainMenuView(MainMenuModel menu) {
         super("CasinoSimulator");
@@ -18,7 +20,7 @@ public class MainMenuView extends JFrame {
         jLabel.setBounds(100, 0, 100, 60);
         jLabel.setText("Gamemode: ");
         String[] playOptions = {"Freeplay", "Simulated Casino"};
-        JComboBox<String> jComboBox = new JComboBox<>(playOptions);
+        jComboBox = new JComboBox<>(playOptions);
         jComboBox.setBounds(190, 0, 100, 60);
         add(jComboBox);
         add(jLabel);
@@ -36,7 +38,7 @@ public class MainMenuView extends JFrame {
             }
         });
 
-        JButton blackBtn = new JButton("Blackjack");
+        blackBtn = new JButton("Blackjack");
         blackBtn.setBounds(100, 150, 100, 100);
         add(blackBtn);
 
@@ -64,4 +66,10 @@ public class MainMenuView extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
+    /**
+     * For testing
+     */
+    public JButton getBlackButton() { return blackBtn; }
+    public JComboBox<String> getGameOptions() { return jComboBox; }
 }

@@ -1,16 +1,23 @@
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.LinkedList;
+import java.awt.*;
+import java.awt.event.InputEvent;
 
 import static org.junit.Assert.assertEquals;
 
 public class BlackjackTest {
-    BlackjackModel blackjackModel;
+    public MainMenuModel mainMenuModel;
+    public MainMenuView mainMenuView;
+    public BlackjackModel blackjackModel;
 
     @Before
     public void setup() {
-        blackjackModel = new BlackjackModel(null, 100);
+        mainMenuModel = new MainMenuModel();
+        mainMenuView = mainMenuModel.getView();
+        mainMenuView.getGameOptions().setSelectedIndex(1);
+        mainMenuView.getBlackButton().doClick();
+        blackjackModel = mainMenuModel.getModel();
     }
 
     @Test
@@ -20,25 +27,41 @@ public class BlackjackTest {
 
     @Test
     public void afterDealPlayerHas2Cards() {
-        BlackjackView b = blackjackModel.getView();
-        b.getDealBtn().doClick();
+        BlackjackView view = blackjackModel.getView();
+        view.getDealBtn().doClick();
         while (!blackjackModel.isDone()) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {}
         }
-        assertEquals("Should have 2 cards in hand.", 2, blackjackModel.getPlayerCardCount());
+        assertEquals("Player should have 2 cards in hand.", 2, blackjackModel.getPlayerCardCount());
     }
 
     @Test
     public void afterDealDealerHas2Cards() {
-        BlackjackView b = blackjackModel.getView();
-        b.getDealBtn().doClick();
+        BlackjackView view = blackjackModel.getView();
+        view.getDealBtn().doClick();
         while (!blackjackModel.isDone()) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {}
         }
-        assertEquals("Should have 2 cards in hand.", 2, blackjackModel.getDealerCardCount());
+        assertEquals("Dealer should have 2 cards in hand.", 2, blackjackModel.getDealerCardCount());
+    }
+
+    @Test
+    public void bet15Dollars() throws AWTException {
+        try { Thread.sleep(1000); }
+        catch (InterruptedException e) {}
+        Robot bot = new Robot();
+        int mask = InputEvent.BUTTON1_DOWN_MASK;
+        bot.mouseMove(0, 0);
+        bot.mouseMove(479, 592);
+//        bot.mousePress(mask);
+//        bot.mouseRelease(mask);
+//        bot.mouseMove(550, 587);
+//        bot.mousePress(mask);
+//        bot.mouseRelease(mask);
+        assertEquals("Amount bet should be $15.", 15, blackjackModel.getBet());
     }
 }
