@@ -10,13 +10,22 @@ public class BlackjackTest {
     public MainMenuModel mainMenuModel;
     public MainMenuView mainMenuView;
     public BlackjackModel blackjackModel;
+    public BlackjackView blackjackView;
+
+    public Robot bot;
 
     @Before
-    public void setup() {
+    public void setup() throws AWTException {
         mainMenuModel = new MainMenuModel();
         mainMenuView = mainMenuModel.getView();
-        mainMenuView.getGameOptions().setSelectedIndex(1);
+        mainMenuView.getGameOptions().setSelectedIndex(0);
+        bot = new Robot();
+        bot.mouseMove(844, 439);
+        bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
         blackjackModel = mainMenuModel.getModel();
+        blackjackView = blackjackModel.getView();
     }
 
     @Test
@@ -26,8 +35,7 @@ public class BlackjackTest {
 
     @Test
     public void afterDealPlayerHas2Cards() {
-        BlackjackView b = blackjackModel.getView();
-        b.getDealBtn().doClick();
+        blackjackView.getDealBtn().doClick();
         while (!blackjackModel.isDoneDeal()) {
             try {
                 Thread.sleep(100);
@@ -38,8 +46,7 @@ public class BlackjackTest {
 
     @Test
     public void afterDealDealerHas2Cards() {
-        BlackjackView b = blackjackModel.getView();
-        b.getDealBtn().doClick();
+        blackjackView.getDealBtn().doClick();
         while (!blackjackModel.isDoneDeal()) {
             try {
                 Thread.sleep(100);
@@ -49,33 +56,30 @@ public class BlackjackTest {
     }
 
     @Test
-    public void bet15Dollars() throws AWTException {
+    public void bet5Dollars() throws AWTException {
         try { Thread.sleep(1000); }
         catch (InterruptedException e) {}
-        Robot bot = new Robot();
-        int mask = InputEvent.BUTTON1_DOWN_MASK;
-        bot.mouseMove(0, 0);
         bot.mouseMove(479, 592);
-//        bot.mousePress(mask);
-//        bot.mouseRelease(mask);
-//        bot.mouseMove(550, 587);
-//        bot.mousePress(mask);
-//        bot.mouseRelease(mask);
-        assertEquals("Amount bet should be $15.", 15, blackjackModel.getBet());
+        // click twice to make sure it registers
+        bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        assertEquals("Amount bet should be $5.", 5, blackjackModel.getBet());
     }
 
-    @Test
-    public void cardAddedAfterHit(){
-        BlackjackView b = blackjackModel.getView();
-        b.getDealBtn().doClick();
-        b.getHitBtn().doClick();
-        while (!blackjackModel.isDoneHit()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {}
-        }
-        assertEquals("Should add one card", 1, blackjackModel.getHitCount());
-    }
+//    @Test
+//    public void cardAddedAfterHit(){
+//        BlackjackView b = blackjackModel.getView();
+//        b.getDealBtn().doClick();
+//        b.getHitBtn().doClick();
+//        while (!blackjackModel.isDoneHit()) {
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {}
+//        }
+//        assertEquals("Should add one card", 1, blackjackModel.getHitCount());
+//    }
 
 
 /*
@@ -127,6 +131,4 @@ public class BlackjackTest {
     }
 
 */
-
-
 }
