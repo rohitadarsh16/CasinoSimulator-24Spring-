@@ -27,13 +27,15 @@ public class MainMenuView extends JFrame {
     private JLabel difficultyText;
     private JLabel moneyTotal;
     private JLabel gameRules;
+    private JLabel gamemodeHelp;
+    private JLabel difficultyHelp;
 
     public MainMenuView(MainMenuModel menu) {
         super("CasinoSimulator");
         menuModel = menu;
 
 
-        setSize(600, 600);
+        setSize(650, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -57,28 +59,28 @@ public class MainMenuView extends JFrame {
         //blackjack label
         blackjackText = new JLabel("Blackjack");
         blackjackText.setForeground(Color.WHITE);
-        blackjackText.setBounds(365, 160, 80, 50);
+        blackjackText.setBounds(400, 215, 80, 50);
         blackjackText.setFont(new Font("Dialog", Font.BOLD, 16));
         blackjackText.setVisible(false);
 
         //slot machine text
         slotText = new JLabel("Slot Machine");
         slotText.setForeground(Color.WHITE);
-        slotText.setBounds(115, 160, 110, 50);
+        slotText.setBounds(142, 215, 110, 50);
         slotText.setFont(new Font("Dialog", Font.BOLD, 16));
         slotText.setVisible(false);
 
         //save text
         saveText = new JLabel("Save");
         saveText.setForeground(Color.WHITE);
-        saveText.setBounds(500, 65, 80, 20);
+        saveText.setBounds(560, 65, 80, 20);
         saveText.setFont(new Font("Dialog", Font.BOLD, 16));
         saveText.setVisible(false);
 
         //rules text
         helpText = new JLabel("Rules");
         helpText.setForeground(Color.WHITE);
-        helpText.setBounds(505, 512, 80, 20);
+        helpText.setBounds(556, 548, 80, 20);
         helpText.setFont(new Font("Dialog", Font.BOLD, 16));
         helpText.setVisible(false);
 
@@ -86,15 +88,14 @@ public class MainMenuView extends JFrame {
         difficultyText = new JLabel("Difficulty:");
         difficultyText.setForeground(Color.WHITE);
         difficultyText.setBounds(20, 60, 100, 60);
-        difficultyText.setFont(new Font("Dialiog", Font.BOLD, 16));
+        difficultyText.setFont(new Font("Dialog", Font.BOLD, 16));
 
         //total balance text
         //MainMenuModel.getMoney();
         moneyTotal = new JLabel("Total balance: $" + MainMenuModel.getMoney());
         moneyTotal.setForeground(Color.WHITE);
-        moneyTotal.setBounds(10, 480, 300, 50);
-        moneyTotal.setFont(new Font("Dialog", Font.BOLD, 16));
-
+        moneyTotal.setBounds(10, 570, 200, 50);
+        moneyTotal.setFont(new Font("Dialog", Font.BOLD, 20));
 
         //updates money value when player mouses over background
         background.addMouseListener(new MouseAdapter() {
@@ -223,6 +224,24 @@ public class MainMenuView extends JFrame {
             }
         });
 
+        //code for gamemode help button
+        gamemodeHelp.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                gamemodeBox();
+            }
+        });
+
+
+        //code for difficulty help button
+        difficultyHelp.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                difficultyBox();
+            }
+        });
 
         //exit button
         /*
@@ -252,6 +271,8 @@ public class MainMenuView extends JFrame {
         background.add(difficultyText);
         background.add(difficultySelect);
         background.add(moneyTotal);
+       // background.add(gamemodeHelp);
+        //background.add(difficultyHelp);
     }
 
     /**
@@ -275,13 +296,85 @@ public class MainMenuView extends JFrame {
         JFrame ruleFrame = new JFrame();
         JDialog jd = new JDialog(ruleFrame);
         jd.setLayout(new FlowLayout());
-        jd.setBounds(375, 275, 550, 600);
+        jd.setBounds(300, 100, 550, 565);
 
         //load picture of rules
         try {
             img = ImageIO.read(new File(path + "/Assets/MainMenu/GameRules.png"));
         } catch (Exception e) {
             System.out.println("Cannot load BlackjackMenu image!");
+        }
+        gameRules = new JLabel(new ImageIcon(img));
+        gameRules.setBounds(5, 5, 200, 200);
+
+        //close button
+        JButton close = new JButton("Close");
+        close.setBounds(400, 400, 100, 100);
+        close.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jd.setVisible(false);
+            }
+        });
+        jd.add(gameRules);
+        jd.add(close);
+        jd.setVisible(true);
+    }
+
+    /**
+     * Creates pop-up with information on different gamemodes
+     */
+    public void gamemodeBox(){
+        BufferedImage img = null;
+        String path = System.getProperty("user.dir"); // get main folder path
+
+        //create pop-up frame
+        JFrame ruleFrame = new JFrame();
+        JDialog jd = new JDialog(ruleFrame);
+        jd.setLayout(new FlowLayout());
+        jd.setBounds(400, 300, 570, 210);
+
+        //load picture of gamemode rules
+        try {
+            img = ImageIO.read(new File(path + "/Assets/MainMenu/gamemodeRules.png"));
+        } catch (Exception e) {
+            System.out.println("Cannot load gamemode rules image!");
+        }
+        gameRules = new JLabel(new ImageIcon(img));
+        gameRules.setBounds(5, 5, 200, 200);
+
+        //close button
+        JButton close = new JButton("Close");
+        close.setBounds(400, 400, 100, 100);
+        close.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jd.setVisible(false);
+            }
+        });
+        jd.add(gameRules);
+        jd.add(close);
+        jd.setVisible(true);
+    }
+
+    /**
+     * Creates pop-up with information on different difficulties
+     */
+    public void difficultyBox(){
+        BufferedImage img = null;
+        String path = System.getProperty("user.dir"); // get main folder path
+
+        //create pop-up frame
+        JFrame ruleFrame = new JFrame();
+        JDialog jd = new JDialog(ruleFrame);
+        jd.setLayout(new FlowLayout());
+        jd.setBounds(400, 300, 360, 385);
+
+        //load picture of rules
+        try {
+            img = ImageIO.read(new File(path + "/Assets/MainMenu/DifficultyRules.png"));
+        } catch (Exception e) {
+            System.out.println("Cannot load difficulty rules image!");
         }
         gameRules = new JLabel(new ImageIcon(img));
         gameRules.setBounds(5, 5, 200, 200);
@@ -314,7 +407,7 @@ public class MainMenuView extends JFrame {
         }
         catch (Exception e) { System.out.println("Cannot load background image!"); }
         background = new JLabel(new ImageIcon(img));
-        background.setBounds(0, 0, 600, 600);
+        background.setBounds(0, 0, 750, 700);
 
         //load Blackjack Icon
         try {
@@ -323,7 +416,7 @@ public class MainMenuView extends JFrame {
             System.out.println("Cannot load BlackjackMenu image!");
         }
         blackjackMenu = new JLabel(new ImageIcon(img));
-        blackjackMenu.setBounds(320, 210, 200, 200);
+        blackjackMenu.setBounds(350, 260, 200, 200);
         background.add(blackjackMenu);
 
         //load Slotmachine Icon
@@ -333,7 +426,7 @@ public class MainMenuView extends JFrame {
             System.out.println("Cannot load SlotMachineMenu image!");
         }
         slotMenu = new JLabel(new ImageIcon(img));
-        slotMenu.setBounds(50, 170, 250, 200);
+        slotMenu.setBounds(75, 215, 250, 200);
         background.add(slotMenu);
 
         //load save button
@@ -343,7 +436,7 @@ public class MainMenuView extends JFrame {
             System.out.println("Cannot load SaveButton image!");
         }
         saveButton = new JLabel(new ImageIcon(img));
-        saveButton.setBounds(500, 20, 40, 40);
+        saveButton.setBounds(560, 20, 40, 40);
         background.add(saveButton);
 
         //load help button
@@ -353,8 +446,28 @@ public class MainMenuView extends JFrame {
             System.out.println("Cannot load HelpButton image!");
         }
         helpButton = new JLabel(new ImageIcon(img));
-        helpButton.setBounds(495, 450, 60, 60);
+        helpButton.setBounds(550, 575, 60, 60);
         background.add(helpButton);
+
+        //load gamemode Help Button
+        try {
+            img = ImageIO.read(new File(path + "/Assets/MainMenu/HelpButtonSmaller.png"));
+        } catch (Exception e) {
+            System.out.println("Cannot load HelpButton image!");
+        }
+        gamemodeHelp = new JLabel(new ImageIcon(img));
+        gamemodeHelp.setBounds(275, 10, 30, 30);
+        background.add(gamemodeHelp);
+
+        //load difficulty help button
+        try {
+            img = ImageIO.read(new File(path + "/Assets/MainMenu/HelpButtonSmaller.png"));
+        } catch (Exception e) {
+            System.out.println("Cannot load HelpButton image!");
+        }
+        difficultyHelp = new JLabel(new ImageIcon(img));
+        difficultyHelp.setBounds(275, 75, 30, 30);
+        background.add(difficultyHelp);
 
     }
 
