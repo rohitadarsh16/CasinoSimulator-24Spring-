@@ -524,4 +524,6 @@ public class BlackjackView extends JFrame {
      * For testing
      */
     public JButton getDealBtn() { return dealBtn; }
+    public JButton getHitBtn() { return hitBtn; }
+    public JButton getStandBtn() { return standBtn; }
 }
