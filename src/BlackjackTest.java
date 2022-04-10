@@ -4,10 +4,6 @@ import org.junit.Test;
 import java.awt.*;
 import java.awt.event.InputEvent;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 public class BlackjackTest {
@@ -20,7 +16,6 @@ public class BlackjackTest {
         mainMenuModel = new MainMenuModel();
         mainMenuView = mainMenuModel.getView();
         mainMenuView.getGameOptions().setSelectedIndex(1);
-        //mainMenuView.getBlackButton().doClick();
         blackjackModel = mainMenuModel.getModel();
     }
 
