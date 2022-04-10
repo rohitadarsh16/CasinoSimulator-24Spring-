@@ -1,5 +1,6 @@
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class BlackjackModel {
     private currentState currentState;
@@ -64,7 +65,37 @@ public class BlackjackModel {
      * Shuffle the deck.
      */
     public void shuffle() {
+        Random randomNumber = new Random();
+        Card ace = new Card(1, 0, 1);
         Collections.shuffle(deck);
+        if(MainMenuView.difficulty == "Medium") {
+            int index = randomNumber.nextInt(8);
+            if(index == 0) {//If you pass a 1/8 chance
+                for(int i = 0; i < 52; i++) {
+                    if(deck.get(i).value == 1) {
+                        ace = deck.get(i);
+                    }
+                }
+                int indexAce = deck.indexOf(ace);
+                Card firstCard = deck.getFirst();
+                deck.set(indexAce, firstCard); //Swap the first card with the ace
+                deck.set(0, ace);
+            }
+        }
+        else { //If the difficulty is easy
+            int index = randomNumber.nextInt(6);
+            if(index == 0) {//If you pass a 1/6 chance
+                for(int i = 0; i < deck.size(); i++) {
+                    if(deck.get(i).value == 1) {
+                        ace = deck.get(i);
+                    }
+                }
+                int indexAce = deck.indexOf(ace);
+                Card firstCard = deck.getFirst();
+                deck.set(indexAce, firstCard); //Swap the first card with the ace
+                deck.set(0, ace);
+            }
+        }
     }
 
     /**
@@ -219,6 +250,8 @@ public class BlackjackModel {
 
         dealer.reset();
         player.reset();
+        createDeck();
+        shuffle(); //Shuffle the deck after every turn
     }
 
     /**
