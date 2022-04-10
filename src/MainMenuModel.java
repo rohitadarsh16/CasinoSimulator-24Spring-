@@ -38,9 +38,7 @@ public class MainMenuModel {
         slotModel = new SlotModel(this, money);
     }
 
-    public void startBlackjack() {
-        blackjackModel = new BlackjackModel(this, money);
-    }
+    public void startBlackjack() { blackjackModel = new BlackjackModel(this, money); }
 
     public void exit() {
         //Create a new file called savedata.txt if it does not already exist

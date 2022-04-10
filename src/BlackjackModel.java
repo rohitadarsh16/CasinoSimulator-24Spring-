@@ -71,65 +71,80 @@ public class BlackjackModel {
      * Player hits.
      */
     public void playerHit() {
-        player.addCard();
-        int[] c = popPlayerCard();
-        blackjackView.ShowPlayerCard(c);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                player.addCard();
+                int[] c = popPlayerCard();
+                blackjackView.ShowPlayerCard(c);
 
-        if (player.isBlackjack()) {
-            currentState = currentState.pWin; //player wins
-            blackjackView.ShowDealerCard(hidden_card);
-            blackjackView.ShowBackCard(false);
-            playerWins();
-            win();
-        }
-        else if (player.hasBusted()) {
-            currentState = currentState.dWin; //dealer wins
-            blackjackView.ShowDealerCard(hidden_card);
-            blackjackView.ShowBackCard(false);
-            playerLoses();
-            win();
-        }
-        //else {
-            //currentState = currentState.dTurn;
-        //}
+                if (player.isBlackjack()) {
+                    currentState = currentState.pWin; //player wins
+                    blackjackView.ShowDealerCard(hidden_card);
+                    blackjackView.ShowBackCard(false);
+                    playerWins();
+                    win();
+                }
+                else if (player.hasBusted()) {
+                    currentState = currentState.dWin; //dealer wins
+                    blackjackView.ShowDealerCard(hidden_card);
+                    blackjackView.ShowBackCard(false);
+                    playerLoses();
+                    win();
+                }
+                //else {
+                //currentState = currentState.dTurn;
+                //}
+            }
+        }).start();
     }
 
     /**
      * Player stands.
      */
     public void playerStand() {              //player stands which makes it the dealer's turn
-        currentState = currentState.dTurn;
-        player.setToStanding(true);
-        blackjackView.ShowDealerCard(hidden_card);
-        blackjackView.ShowBackCard(false);
-        dealerTurn();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                currentState = currentState.dTurn;
+                player.setToStanding(true);
+                blackjackView.ShowDealerCard(hidden_card);
+                blackjackView.ShowBackCard(false);
+                dealerTurn();
+            }
+        }).start();
     }
 
     /**
      * Player doubles down (doubles bet but only gets one more card)
      */
     public void doubleDown(){
-        money = money - bet;
-        bet = bet + bet;
-        player.addCard();
-        int[] c = popPlayerCard();
-        blackjackView.ShowPlayerCard(c);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                money = money - bet;
+                bet = bet + bet;
+                player.addCard();
+                int[] c = popPlayerCard();
+                blackjackView.ShowPlayerCard(c);
 
-        if (player.isBlackjack()) {
-            currentState = currentState.pWin; //player wins
-            blackjackView.ShowDealerCard(hidden_card);
-            blackjackView.ShowBackCard(false);
-            playerWins();
-            win();
-        }
-        else if (player.hasBusted()) {
-            currentState = currentState.dWin; //dealer wins
-            blackjackView.ShowDealerCard(hidden_card);
-            blackjackView.ShowBackCard(false);
-            playerLoses();
-            win();
-        }
-        //playerStand();
+                if (player.isBlackjack()) {
+                    currentState = currentState.pWin; //player wins
+                    blackjackView.ShowDealerCard(hidden_card);
+                    blackjackView.ShowBackCard(false);
+                    playerWins();
+                    win();
+                }
+                else if (player.hasBusted()) {
+                    currentState = currentState.dWin; //dealer wins
+                    blackjackView.ShowDealerCard(hidden_card);
+                    blackjackView.ShowBackCard(false);
+                    playerLoses();
+                    win();
+                }
+                //playerStand();
+            }
+        }).start();
     }
 
     /**
@@ -255,31 +270,36 @@ public class BlackjackModel {
      * The dealer's last card is face down.
      */
     public void deal() {
-        int[] c;
-        for (int i = 0; i < 4; i++) {
-            if (i % 2 == 0) {
-                player.addCard();
-                c = popPlayerCard();
-                blackjackView.ShowPlayerCard(c);
-            }
-            else {
-                dealer.addCard();
-                c = popDealerCard();
-                if (i < 3)
-                    blackjackView.ShowDealerCard(c);
-                else { // dealer's last card is face down
-                    hidden_card = c;
-                    blackjackView.ShowBackCard(true);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int[] c;
+                for (int i = 0; i < 4; i++) {
+                    if (i % 2 == 0) {
+                        player.addCard();
+                        c = popPlayerCard();
+                        blackjackView.ShowPlayerCard(c);
+                    }
+                    else {
+                        dealer.addCard();
+                        c = popDealerCard();
+                        if (i < 3)
+                            blackjackView.ShowDealerCard(c);
+                        else { // dealer's last card is face down
+                            hidden_card = c;
+                            blackjackView.ShowBackCard(true);
+                        }
+                    }
+                }
+                if (player.isBlackjack()) {
+                    currentState = currentState.pWin; //player wins
+                    blackjackView.ShowDealerCard(hidden_card);
+                    blackjackView.ShowBackCard(false);
+                    playerWins();
+                    win();
                 }
             }
-        }
-        if (player.isBlackjack()) {
-            currentState = currentState.pWin; //player wins
-            blackjackView.ShowDealerCard(hidden_card);
-            blackjackView.ShowBackCard(false);
-            playerWins();
-            win();
-        }
+        }).start();
     }
 
     /**
