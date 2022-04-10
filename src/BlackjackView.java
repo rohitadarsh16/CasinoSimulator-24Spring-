@@ -41,13 +41,15 @@ public class BlackjackView extends JFrame {
     private int x_dealer; // x position for dealer cards
     private final int Y_DEALER = 70; // y position for dealer cards
     private final int Y_PLAYER = 304; // y position for player cards
+    public boolean running; // while animation is playing running is true
 
     public BlackjackView(BlackjackModel black) {
         super("CasinoSimulator - Blackjack");
         blackjackModel = black;
-        x_dealer = x_player = 30;
+        x_dealer = x_player = 30; // initial x position
         cards = new LinkedList<>();
         betLabels = new JLabel[5];
+        running = false;
 
         // init window
         setSize(600, 800);
@@ -107,7 +109,7 @@ public class BlackjackView extends JFrame {
         playerTotal.setBounds(330, 234, 50, 30);
         playerTotal.setForeground(Color.WHITE);
 
-        //chip labels
+        // Chip labels
         chip5 = new JLabel("$5");
         chip5.setBounds(52, 570, 50, 30);
         chip5.setForeground(Color.WHITE);
@@ -141,7 +143,7 @@ public class BlackjackView extends JFrame {
         // Game buttons
         dealBtn = new JButton("Deal");
         dealBtn.setBounds(95, 630, 100, 30);
-        dealBtn.setEnabled(false);
+        //dealBtn.setEnabled(false);
 
         standBtn = new JButton("Stand");
         standBtn.setBounds(200, 630, 100, 30);
@@ -178,12 +180,12 @@ public class BlackjackView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dealBtn.setEnabled(false);
-                standBtn.setEnabled(true);
-                hitBtn.setEnabled(true);
                 hideChipValues();
                 ShowBetLabels(false);
-                dblDownBtn.setEnabled(true);
                 blackjackModel.deal();
+                standBtn.setEnabled(true);
+                hitBtn.setEnabled(true);
+                dblDownBtn.setEnabled(true);
                 repaint();
             }
         });
@@ -283,28 +285,69 @@ public class BlackjackView extends JFrame {
      * Show the player's card after it was dealt.
      */
     public void ShowPlayerCard(int[] c) {
-        deckLabel[c[0]][c[1]].setBounds(x_player, Y_PLAYER, 96, 144);
-        x_player += 96;
+        deckLabel[c[0]][c[1]].setBounds(600, 0, 96, 144); // initial position upper-right corner
         background.add(deckLabel[c[0]][c[1]]);
         playerTotal.setText(String.valueOf(blackjackModel.getPlayerTotal()));
         cards.add(deckLabel[c[0]][c[1]]);
+
+        // run animation
+        running = true;
+        animThread a = new animThread(deckLabel[c[0]][c[1]], x_player, Y_PLAYER);
+        a.execute();
+
+        while (running) {
+            try { Thread.sleep(100); }
+            catch (InterruptedException e) {}
+        }
+
+        x_player += 96;
+        System.out.println("x = " + x_player);
     }
 
     /**
      * Show the dealer's card after it was dealt.
      */
     public void ShowDealerCard(int[] c) {
-        deckLabel[c[0]][c[1]].setBounds(x_dealer, Y_DEALER, 96, 144);
-        x_dealer += 96;
         background.add(deckLabel[c[0]][c[1]]);
         dealerTotal.setText(String.valueOf(blackjackModel.getDealerTotal()));
         cards.add(deckLabel[c[0]][c[1]]);
+
+        // if carBack is visible flip it; else run animation
+        if (!cardBack.isVisible()) {
+            deckLabel[c[0]][c[1]].setBounds(600, 0, 96, 144);
+
+            // run animation
+            running = true;
+            animThread a = new animThread(deckLabel[c[0]][c[1]], x_dealer, Y_DEALER);
+            a.execute();
+
+            while (running) {
+                try { Thread.sleep(100); }
+                catch (InterruptedException e) {}
+            }
+        }
+        else deckLabel[c[0]][c[1]].setBounds(x_dealer, Y_DEALER, 96, 144);
+
+        x_dealer += 96;
     }
 
     /**
      * Show the back of a card.
      */
-    public void ShowBackCard(boolean visible) { cardBack.setVisible(visible); }
+    public void ShowBackCard(boolean visible) {
+        cardBack.setVisible(visible);
+        if (visible) {
+            // run animation
+            running = true;
+            animThread a = new animThread(cardBack, x_dealer, Y_DEALER);
+            a.execute();
+
+            while (running) {
+                try { Thread.sleep(100); }
+                catch (InterruptedException e) {}
+            }
+        }
+    }
 
     /*
      * Update balance and current bet
@@ -348,7 +391,6 @@ public class BlackjackView extends JFrame {
             }
         };
 
-
         standBtn.setEnabled(false);
         hitBtn.setEnabled(false);
         x_dealer = x_player = 30;
@@ -356,11 +398,7 @@ public class BlackjackView extends JFrame {
         Timer t = new Timer(2000, ac); // wait 2 seconds before executing ac
         t.setRepeats(false);
         t.start();
-
-
     }
-
-
 
     /*
      * Show who won.
@@ -421,7 +459,7 @@ public class BlackjackView extends JFrame {
         }
         catch (Exception e) { System.out.println("Cannot load card back image!"); }
         cardBack = new JLabel(new ImageIcon(img));
-        cardBack.setBounds(126, Y_DEALER, 96, 144);
+        cardBack.setBounds(600, 0, 96, 144);
         cardBack.setVisible(false);
 
         // Load background
@@ -449,6 +487,50 @@ public class BlackjackView extends JFrame {
             betLabels[i] = l;
             index += 5;
             x_chip += 70;
+        }
+    }
+
+    /**
+     * Animation class.
+     */
+    public class animThread extends SwingWorker {
+        JLabel j;
+        int dX, dY, finX, finY, currX, currY, speed, distance, moves, xUnits, yUnits;
+
+        public animThread(JLabel j, int x, int y) {
+            this.j = j;
+            finX = x; // final x position
+            finY = y; // final y position
+            currX = 600;
+            currY = 0;
+            speed = 25;
+            dX = Math.abs(finX - currX);
+            dY = finY - currY;
+            distance = (int) Math.sqrt(dX * dX + dY * dY);
+            moves = distance / speed; // how many moves it takes to get there
+            // calculate one step
+            xUnits = dX / moves;
+            yUnits = dY / moves;
+        }
+
+        @Override
+        protected Object doInBackground() throws Exception {
+            while (moves > 0) {
+                moves--;
+                currX -= xUnits;
+                currY += yUnits;
+                j.setBounds(currX, currY, 96, 144);
+                repaint();
+                Thread.sleep(10);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            j.setBounds(finX, finY, 96, 144); // adjust final position
+            running = false;
         }
     }
 }
