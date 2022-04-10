@@ -12,8 +12,7 @@ public class MainMenuView extends JFrame {
     private MainMenuModel menuModel;
     public static String gamemode;
 
-    private JButton blackBtn;
-    private JComboBox<String> jComboBox;
+    private JComboBox<String> gamemodeSelect;
   
     public static String difficulty;
     private JLabel background;
@@ -38,24 +37,14 @@ public class MainMenuView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-
-        JLabel jLabel = new JLabel();
-        jLabel.setBounds(100, 0, 100, 60);
-        jLabel.setText("Gamemode: ");
-        String[] playOptions = {"Freeplay", "Simulated Casino"};
-        jComboBox = new JComboBox<>(playOptions);
-        jComboBox.setBounds(190, 0, 100, 60);
-        add(jComboBox);
-        add(jLabel);
-
         //gamemode dropdown code
         JLabel gamemodeTxt = new JLabel();
-        gamemodeTxt.setBounds(20, 0, 100, 60);
+        gamemodeTxt.setBounds(20, 0, 130, 60);
         gamemodeTxt.setText("Gamemode: ");
         gamemodeTxt.setForeground(Color.WHITE);
         gamemodeTxt.setFont(new Font("Dialog", Font.BOLD, 16));
         String[] playOptions = {"Simulated Casino", "Freeplay"};
-        JComboBox<String> gamemodeSelect = new JComboBox<>(playOptions);
+        gamemodeSelect = new JComboBox<>(playOptions);
         gamemodeSelect.setBounds(120, 0, 140, 60);
 
         //difficulty dropdown code
@@ -100,10 +89,10 @@ public class MainMenuView extends JFrame {
         difficultyText.setFont(new Font("Dialiog", Font.BOLD, 16));
 
         //total balance text
-        MainMenuModel.getMoney();
+        //MainMenuModel.getMoney();
         moneyTotal = new JLabel("Total balance: $" + MainMenuModel.getMoney());
         moneyTotal.setForeground(Color.WHITE);
-        moneyTotal.setBounds(10, 480, 150, 50);
+        moneyTotal.setBounds(10, 480, 300, 50);
         moneyTotal.setFont(new Font("Dialog", Font.BOLD, 16));
 
 
@@ -115,10 +104,6 @@ public class MainMenuView extends JFrame {
                 moneyTotal.setText("Total balance: $" + MainMenuModel.getMoney());
             }
         });
-
-        blackBtn = new JButton("Blackjack");
-        blackBtn.setBounds(100, 150, 100, 100);
-        add(blackBtn);
 
         //save button code
         saveButton.addMouseListener(new MouseAdapter() {
@@ -376,6 +361,6 @@ public class MainMenuView extends JFrame {
     /**
      * For testing
      */
-    public JButton getBlackButton() { return blackBtn; }
-    public JComboBox<String> getGameOptions() { return jComboBox; }
+    public JLabel getBlackLabel() { return blackjackMenu; }
+    public JComboBox<String> getGameOptions() { return gamemodeSelect; }
 }
