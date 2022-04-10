@@ -25,6 +25,12 @@ public class BlackjackModel {
         return currentState;
     }
 
+    // FOR TESTING
+    private boolean doneDeal;
+    private boolean doneHit;
+    private boolean doneStand;
+    private int hitCount = 0;
+
     public BlackjackModel(MainMenuModel menu, int money) {
         currentState = currentState.pTurn;
         menuModel = menu;
@@ -102,6 +108,7 @@ public class BlackjackModel {
      * Player hits.
      */
     public void playerHit() {
+        doneHit = false;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -126,6 +133,9 @@ public class BlackjackModel {
                 //else {
                 //currentState = currentState.dTurn;
                 //}
+                hitCount++;
+                doneHit = true;
+                System.out.println(hitCount);
             }
         }).start();
     }
@@ -133,7 +143,9 @@ public class BlackjackModel {
     /**
      * Player stands.
      */
-    public void playerStand() {              //player stands which makes it the dealer's turn
+    public void playerStand() {
+        //player stands which makes it the dealer's turn
+        doneStand = false;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -142,6 +154,7 @@ public class BlackjackModel {
                 blackjackView.ShowDealerCard(hidden_card);
                 blackjackView.ShowBackCard(false);
                 dealerTurn();
+                doneStand = true;
             }
         }).start();
     }
@@ -306,6 +319,7 @@ public class BlackjackModel {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                doneDeal = false; // for testing
                 int[] c;
                 for (int i = 0; i < 4; i++) {
                     if (i % 2 == 0) {
@@ -324,6 +338,7 @@ public class BlackjackModel {
                         }
                     }
                 }
+                doneDeal = true; // for testing
                 if (player.isBlackjack()) {
                     currentState = currentState.pWin; //player wins
                     blackjackView.ShowDealerCard(hidden_card);
@@ -444,6 +459,8 @@ public class BlackjackModel {
             }
         }
 
+        public int getHandCount() { return i; }
+
         public boolean hasBusted() { return total > 21; }
 
         public boolean isBlackjack() { return total == 21; }
@@ -461,4 +478,16 @@ public class BlackjackModel {
             stand = false;
         }
     }
+
+    /**
+     * For testing
+     */
+    public int getDeckCount() { return deck.size(); }
+    public int getPlayerCardCount() { return player.getHandCount(); }
+    public int getDealerCardCount() { return dealer.getHandCount(); }
+    public BlackjackView getView() { return blackjackView; }
+    public boolean isDoneDeal() { return doneDeal; }
+    public boolean isDoneHit() { return doneHit; }
+    public boolean isDoneStand() { return doneStand; }
+    public int getHitCount() { return hitCount; }
 }

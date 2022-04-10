@@ -11,6 +11,10 @@ import java.io.File;
 public class MainMenuView extends JFrame {
     private MainMenuModel menuModel;
     public static String gamemode;
+
+    private JButton blackBtn;
+    private JComboBox<String> jComboBox;
+  
     public static String difficulty;
     private JLabel background;
     private JLabel blackjackMenu;
@@ -33,6 +37,16 @@ public class MainMenuView extends JFrame {
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
+
+
+        JLabel jLabel = new JLabel();
+        jLabel.setBounds(100, 0, 100, 60);
+        jLabel.setText("Gamemode: ");
+        String[] playOptions = {"Freeplay", "Simulated Casino"};
+        jComboBox = new JComboBox<>(playOptions);
+        jComboBox.setBounds(190, 0, 100, 60);
+        add(jComboBox);
+        add(jLabel);
 
         //gamemode dropdown code
         JLabel gamemodeTxt = new JLabel();
@@ -101,6 +115,10 @@ public class MainMenuView extends JFrame {
                 moneyTotal.setText("Total balance: $" + MainMenuModel.getMoney());
             }
         });
+
+        blackBtn = new JButton("Blackjack");
+        blackBtn.setBounds(100, 150, 100, 100);
+        add(blackBtn);
 
         //save button code
         saveButton.addMouseListener(new MouseAdapter() {
@@ -354,4 +372,10 @@ public class MainMenuView extends JFrame {
         background.add(helpButton);
 
     }
+
+    /**
+     * For testing
+     */
+    public JButton getBlackButton() { return blackBtn; }
+    public JComboBox<String> getGameOptions() { return jComboBox; }
 }
