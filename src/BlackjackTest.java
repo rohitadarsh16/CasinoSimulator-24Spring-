@@ -20,7 +20,7 @@ public class BlackjackTest {
         mainMenuModel = new MainMenuModel();
         mainMenuView = mainMenuModel.getView();
         mainMenuView.getGameOptions().setSelectedIndex(1);
-        mainMenuView.getBlackButton().doClick();
+        //mainMenuView.getBlackButton().doClick();
         blackjackModel = mainMenuModel.getModel();
     }
 
