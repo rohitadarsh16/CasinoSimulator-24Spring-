@@ -428,4 +428,9 @@ public class BlackjackModel {
             stand = false;
         }
     }
+
+    /**
+     * For testing
+     */
+    int getDeckCount() { return deck.size(); }
 }
