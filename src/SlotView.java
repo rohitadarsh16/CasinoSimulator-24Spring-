@@ -134,11 +134,10 @@ public class SlotView extends JFrame {
         pullLever.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(slot.getMoney() <= 0) {
-                    slotModel.exit();
-                    dispose();
-                    //resultLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-                    //resultLabel.setText("<html><div style='text-align: center;'>No More money!<br> Add more money in the menu.</div></html>");
+
+                if(slot.getMoney() == 0) {
+                    resultLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+                    resultLabel.setText("<html><div style='text-align: center;'>No More money!<br> Add more money in the menu.</div></html>");
 
                 }
                 else if(slot.getMoney() < slot.getBettingMoney()) {

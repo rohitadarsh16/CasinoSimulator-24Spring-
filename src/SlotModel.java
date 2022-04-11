@@ -20,6 +20,8 @@ public class SlotModel {
 
     public void pullLever() {
 
+
+
         Random randomNumber = new Random();
         if(MainMenuView.difficulty == "Hard") {
             for (int i = 0; i < 9; i++) {
@@ -43,12 +45,21 @@ public class SlotModel {
                     val = 1;
                 slot[i] = val;
             }
+
         }
     }
 
     public int getBettingMoney() {
         return bettingMoney;
     }
+
+
+    //add setSlot method for test purpose.
+    public void setSlot (int slotNumber, int slotSymbol) {
+        slot[slotNumber] = slotSymbol;
+    }
+
+    //Get slot number methods. There should be a better way to do it because if we need 9 slots, then there are 9 get methods.
 
     public int getSlot(int a) {
         return slot[a];
@@ -58,7 +69,9 @@ public class SlotModel {
         bettingMoney = a;
     }
 
+
     //rule for slots
+
     public String matchCheck() {
         int winningMoney = 0;
         boolean checkIfWon = false;
