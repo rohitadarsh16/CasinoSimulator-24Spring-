@@ -23,9 +23,14 @@ public class SlotModel {
         Random randomNumber = new Random();
 
         for (int i = 0; i < 9; i++) {
-            slot[i] = randomNumber.nextInt(7);
+            slot[i] = randomNumber.nextInt(11);
         }
 
+    }
+
+    //add setSlot method for test purpose.
+    public void setSlot (int slotNumber, int slotSymbol) {
+        slot[slotNumber] = slotSymbol;
     }
 
     //Get slot number methods. There should be a better way to do it because if we need 9 slots, then there are 9 get methods.
@@ -33,12 +38,16 @@ public class SlotModel {
         return slot[a];
     }
 
+    public int getBettingMoney() {
+        return bettingMoney;
+    }
+
     public void setBettingMoney(int a) {
         bettingMoney = a;
     }
 
     //simple rules for 3by3 slots
-    public String matchCheck2() {
+    public String matchCheck() {
         int winningMoney = 0;
         //first row
         if (slot[0] == slot[1] && slot[1] == slot[2]) {
