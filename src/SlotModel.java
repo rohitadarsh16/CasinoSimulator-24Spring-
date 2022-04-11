@@ -141,7 +141,8 @@ public class SlotModel {
                     winningMoney = bettingMoney * 2;
                 }
             }
-        } else { //If the gamemode is set to freeplay
+        }
+        else { //If the gamemode is set to freeplay
             //first row
             if (slot[0] == slot[1] && slot[1] == slot[2]) {
                 checkIfWon = true;
@@ -183,12 +184,7 @@ public class SlotModel {
         else if(checkIfWon == true)
             return "Winner!!";
         else if(MainMenuView.gamemode == "Simulated Casino") {
-            if(bettingMoney > money) {
-                money = 0;
-            }
-            else {
-                money -= bettingMoney;
-            }
+            money -= bettingMoney;
             return "Bad Luck!!";
         }
         else
