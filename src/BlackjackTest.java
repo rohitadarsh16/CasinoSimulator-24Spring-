@@ -57,9 +57,12 @@ public class BlackjackTest {
 
     @Test
     public void bet5Dollars() throws AWTException {
+        Point p = blackjackView.getLocationOnScreen();
+
         try { Thread.sleep(1000); }
         catch (InterruptedException e) {}
-        bot.mouseMove(479, 592);
+        bot.mouseMove(p.x + 59, p.y + 559);
+        //bot.mouseMove(479, 592);
         // click twice to make sure it registers
         bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
         bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
@@ -68,19 +71,34 @@ public class BlackjackTest {
         assertEquals("Amount bet should be $5.", 5, blackjackModel.getBet());
     }
 
-//    @Test
-//    public void cardAddedAfterHit(){
-//        BlackjackView b = blackjackModel.getView();
-//        b.getDealBtn().doClick();
-//        b.getHitBtn().doClick();
-//        while (!blackjackModel.isDoneHit()) {
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {}
-//        }
-//        assertEquals("Should add one card", 1, blackjackModel.getHitCount());
-//    }
+    @Test
+    public void playerHitShouldIncreaseTotal () {
+        int prev_points, curr_points ;
 
+        blackjackView.getDealBtn().doClick();
+        while (!blackjackModel.isDoneDeal()) {
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
+        }
+        prev_points = blackjackModel.getPlayerTotal();
+
+        blackjackView.getHitBtn().doClick();
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+        curr_points = blackjackModel.getPlayerTotal();
+
+        assertEquals("Total points should be greater than before hitting.", true, curr_points > prev_points);
+    }
+
+    @Test
+    public void cardAddedAfterHit() {
+        blackjackView.getDealBtn().doClick();
+        while (!blackjackModel.isDoneDeal()) {
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
+        }
+        blackjackView.getHitBtn().doClick();
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+
+        assertEquals("After hit player should have 3 cards.", 3, blackjackModel.getPlayerCardCount());
+    }
 
 /*
     @Test
@@ -98,8 +116,6 @@ public class BlackjackTest {
         }
         assertEquals("dTurn", blackjackModel.getCurrentState());
     }
-
-
  */
 
 /*
@@ -129,6 +145,5 @@ public class BlackjackTest {
             assertTrue(blackjackModel.getBalance() == temp);
         }
     }
-
 */
 }

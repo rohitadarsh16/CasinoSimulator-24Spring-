@@ -539,4 +539,11 @@ public class BlackjackView extends JFrame {
     public JButton getDealBtn() { return dealBtn; }
     public JButton getHitBtn() { return hitBtn; }
     public JButton getStandBtn() { return standBtn; }
+//    public Point getWindowPosition() {
+//        return this.getLocationOnScreen();
+//        int[] ret = new int[2];
+//        ret[0] = this.getBounds().x;
+//        ret[1] = this.getBounds().y;
+//        return ret;
+//    }
 }
