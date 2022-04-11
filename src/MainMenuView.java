@@ -94,7 +94,7 @@ public class MainMenuView extends JFrame {
         //MainMenuModel.getMoney();
         moneyTotal = new JLabel("Total balance: $" + MainMenuModel.getMoney());
         moneyTotal.setForeground(Color.WHITE);
-        moneyTotal.setBounds(10, 570, 200, 50);
+        moneyTotal.setBounds(10, 570, 300, 50);
         moneyTotal.setFont(new Font("Dialog", Font.BOLD, 20));
 
         //updates money value when player mouses over background
