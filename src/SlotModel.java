@@ -46,7 +46,10 @@ public class SlotModel {
         }
     }
 
-    //Get slot number methods. There should be a better way to do it because if we need 9 slots, then there are 9 get methods.
+    public int getBettingMoney() {
+        return bettingMoney;
+    }
+
     public int getSlot(int a) {
         return slot[a];
     }
@@ -55,8 +58,8 @@ public class SlotModel {
         bettingMoney = a;
     }
 
-    //simple rules for 3by3 slots
-    public String matchCheck2() {
+    //rule for slots
+    public String matchCheck() {
         int winningMoney = 0;
         boolean checkIfWon = false;
         if (MainMenuView.gamemode == "Simulated Casino") {
