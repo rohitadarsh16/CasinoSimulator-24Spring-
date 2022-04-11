@@ -38,10 +38,6 @@ public class SlotModel {
         return slot[a];
     }
 
-    public int getBettingMoney() {
-        return bettingMoney;
-    }
-
     public void setBettingMoney(int a) {
         bettingMoney = a;
     }
