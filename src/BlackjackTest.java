@@ -4,24 +4,28 @@ import org.junit.Test;
 import java.awt.*;
 import java.awt.event.InputEvent;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 public class BlackjackTest {
     public MainMenuModel mainMenuModel;
     public MainMenuView mainMenuView;
     public BlackjackModel blackjackModel;
+    public BlackjackView blackjackView;
+
+    public Robot bot;
 
     @Before
-    public void setup() {
+    public void setup() throws AWTException {
         mainMenuModel = new MainMenuModel();
         mainMenuView = mainMenuModel.getView();
-        mainMenuView.getGameOptions().setSelectedIndex(1);
-        //mainMenuView.getBlackButton().doClick();
+        mainMenuView.getGameOptions().setSelectedIndex(0);
+        bot = new Robot();
+        bot.mouseMove(844, 439);
+        bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
         blackjackModel = mainMenuModel.getModel();
+        blackjackView = blackjackModel.getView();
     }
 
     @Test
@@ -31,8 +35,7 @@ public class BlackjackTest {
 
     @Test
     public void afterDealPlayerHas2Cards() {
-        BlackjackView b = blackjackModel.getView();
-        b.getDealBtn().doClick();
+        blackjackView.getDealBtn().doClick();
         while (!blackjackModel.isDoneDeal()) {
             try {
                 Thread.sleep(100);
@@ -43,8 +46,7 @@ public class BlackjackTest {
 
     @Test
     public void afterDealDealerHas2Cards() {
-        BlackjackView b = blackjackModel.getView();
-        b.getDealBtn().doClick();
+        blackjackView.getDealBtn().doClick();
         while (!blackjackModel.isDoneDeal()) {
             try {
                 Thread.sleep(100);
@@ -54,84 +56,101 @@ public class BlackjackTest {
     }
 
     @Test
-    public void bet15Dollars() throws AWTException {
+    public void bet5Dollars() throws AWTException {
+        Point p = blackjackView.getLocationOnScreen();
+
         try { Thread.sleep(1000); }
         catch (InterruptedException e) {}
-        Robot bot = new Robot();
-        int mask = InputEvent.BUTTON1_DOWN_MASK;
-        bot.mouseMove(0, 0);
-        bot.mouseMove(479, 592);
-//        bot.mousePress(mask);
-//        bot.mouseRelease(mask);
-//        bot.mouseMove(550, 587);
-//        bot.mousePress(mask);
-//        bot.mouseRelease(mask);
-        assertEquals("Amount bet should be $15.", 15, blackjackModel.getBet());
+        bot.mouseMove(p.x + 59, p.y + 559);
+        //bot.mouseMove(479, 592);
+        // click twice to make sure it registers
+        bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        assertEquals("Amount bet should be $5.", 5, blackjackModel.getBet());
     }
 
     @Test
-    public void cardAddedAfterHit(){
-        BlackjackView b = blackjackModel.getView();
-        b.getDealBtn().doClick();
-        b.getHitBtn().doClick();
-        while (!blackjackModel.isDoneHit()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {}
+    public void playerHitShouldIncreaseTotal () {
+        int prev_points, curr_points ;
+
+        blackjackView.getDealBtn().doClick();
+        while (!blackjackModel.isDoneDeal()) {
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
         }
-        assertEquals("Should add one card", 1, blackjackModel.getHitCount());
+        prev_points = blackjackModel.getPlayerTotal();
+
+        blackjackView.getHitBtn().doClick();
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+        curr_points = blackjackModel.getPlayerTotal();
+
+        assertEquals("Total points should be greater than before hitting.", true, curr_points > prev_points);
     }
 
-
-/*
     @Test
-    public void playerStandEndsGame(){
-        BlackjackView b = blackjackModel.getView();
-        b.getDealBtn().doClick();
-        //b.getStandBtn().doClick();
-        while (!blackjackModel.isDoneStand()) {
-            try {
-                Thread.sleep(2000);
-                b.getStandBtn().doClick();
-
-                //b.getStandBtn().doClick();
-            } catch (InterruptedException e) {}
+    public void cardAddedAfterHit() {
+        blackjackView.getDealBtn().doClick();
+        while (!blackjackModel.isDoneDeal()) {
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
         }
-        assertEquals("dTurn", blackjackModel.getCurrentState());
+        blackjackView.getHitBtn().doClick();
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+
+        assertEquals("After hit player should have 3 cards.", 3, blackjackModel.getPlayerCardCount());
     }
 
-
- */
-
-/*
     @Test
-    public void moneyIsGainedAfterWin() {
+    public void afterLossLoseMoney(){
         int temp = blackjackModel.getBalance();
-        BlackjackView b = blackjackModel.getView();
-        b.getDealBtn().doClick();
-        System.out.println(blackjackModel.getBalance());
-       // b.getStandBtn().doClick();
-        while (!blackjackModel.isDoneStand()) {
-            try {
-                Thread.sleep(2000);
-                b.getStandBtn().doClick();
-            } catch (InterruptedException e) {}
+
+        Point p = blackjackView.getLocationOnScreen();
+
+        try { Thread.sleep(1000); }
+        catch (InterruptedException e) {}
+        bot.mouseMove(p.x + 59, p.y + 559);
+        //bot.mouseMove(479, 592);
+        // click twice to make sure it registers
+        bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+
+        blackjackView.getDealBtn().doClick();
+        while (!blackjackModel.isDoneDeal()) {
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
         }
-        if(blackjackModel.getCurrentState().equals("pWin")){
-            System.out.println(blackjackModel.getBalance());
-            assertTrue(blackjackModel.getBalance() > temp);
+
+        while(blackjackModel.getPlayerTotal() <= 21) {
+            blackjackView.getHitBtn().doClick();
+            try {Thread.sleep(100);} catch (InterruptedException e) {}
         }
-        else if(blackjackModel.getCurrentState().equals("dWin")){
-            System.out.println(blackjackModel.getBalance());
-            assertTrue(blackjackModel.getBalance() < temp);
-        }
-        else{
-            System.out.println(blackjackModel.getBalance());
-            assertTrue(blackjackModel.getBalance() == temp);
-        }
+        assertTrue("player should have less money after losing",blackjackModel.getBalance() < temp);
     }
 
-*/
+    @Test
+    public void playerStandMeansDealerTurn(){
+        blackjackView.getDealBtn().doClick();
+        while (!blackjackModel.isDoneDeal()) {
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
+        }
 
+        blackjackView.getStandBtn().doClick();
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
 
+        assertEquals("should be dTurn", "dTurn", blackjackModel.getCurrentState().toString());
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+    }
+
+    @Test
+    public void dealerTurnEndsGame(){
+        blackjackView.getDealBtn().doClick();
+        while (!blackjackModel.isDoneDeal()) {
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
+        }
+        blackjackView.getStandBtn().doClick();
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+
+        assertNotEquals("Someone should win game", "dTurn", blackjackModel.getCurrentState().toString());
+    }
 }
