@@ -128,8 +128,6 @@ public class BlackjackTest {
         assertTrue("player should have less money after losing",blackjackModel.getBalance() < temp);
     }
 
-
-
     @Test
     public void playerStandMeansDealerTurn(){
         blackjackView.getDealBtn().doClick();
@@ -144,4 +142,15 @@ public class BlackjackTest {
         try { Thread.sleep(100); } catch (InterruptedException e) {}
     }
 
+    @Test
+    public void dealerTurnEndsGame(){
+        blackjackView.getDealBtn().doClick();
+        while (!blackjackModel.isDoneDeal()) {
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
+        }
+        blackjackView.getStandBtn().doClick();
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+
+        assertNotEquals("Someone should win game", "dTurn", blackjackModel.getCurrentState().toString());
+    }
 }
