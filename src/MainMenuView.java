@@ -53,6 +53,7 @@ public class MainMenuView extends JFrame {
         String[] difficultyOptions = {"Hard", "Medium", "Easy"};
         JComboBox<String> difficultySelect = new JComboBox<>(difficultyOptions);
         difficultySelect.setBounds(120, 60, 140, 60);
+        difficultySelect.setVisible(true);
 
         LoadAssets();
 
@@ -94,7 +95,7 @@ public class MainMenuView extends JFrame {
         //MainMenuModel.getMoney();
         moneyTotal = new JLabel("Total balance: $" + MainMenuModel.getMoney());
         moneyTotal.setForeground(Color.WHITE);
-        moneyTotal.setBounds(10, 570, 200, 50);
+        moneyTotal.setBounds(10, 570, 300, 50);
         moneyTotal.setFont(new Font("Dialog", Font.BOLD, 20));
 
         //updates money value when player mouses over background
@@ -195,7 +196,7 @@ public class MainMenuView extends JFrame {
                 super.mouseClicked(e);
                 gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
                 difficulty = difficultySelect.getItemAt(difficultySelect.getSelectedIndex());
-                if(MainMenuModel.getMoney() <= 0 && gamemode == "Simulated Casino") { //if player has no money and wants to play simulated casino, add 100 and notify
+                if(MainMenuModel.getMoney() < 5 && gamemode == "Simulated Casino") { //if player has no money and wants to play simulated casino, add 100 and notify
                     MainMenuModel.addMoney();
                     infoBox("$100 has been added", "You Ran Out of Money!");
                     setVisible(false);
