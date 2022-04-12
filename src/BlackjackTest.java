@@ -144,5 +144,4 @@ public class BlackjackTest {
         try { Thread.sleep(100); } catch (InterruptedException e) {}
     }
 
-
 }
