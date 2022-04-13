@@ -21,6 +21,10 @@ public class BlackjackModel {
         pWin, dWin, pStand, dStand, dTurn, pTurn, draw //d = dealer, p = player
     }
 
+    /**
+     * gets current state of the game
+     * @return current state
+     */
     public currentState getCurrentState(){
         return currentState;
     }
@@ -105,7 +109,7 @@ public class BlackjackModel {
     }
 
     /**
-     * Player hits.
+     * Player hits - adding a card to their hand
      */
     public void playerHit() {
         doneHit = false;
@@ -141,7 +145,7 @@ public class BlackjackModel {
     }
 
     /**
-     * Player stands.
+     * Player stands - ending their turn
      */
     public void playerStand() {
         //player stands which makes it the dealer's turn
@@ -241,7 +245,7 @@ public class BlackjackModel {
     }
 
     /**
-     * Dealer's turn.
+     * Dealer's turn - dealer decides whether to hit or stand
      */
     public void dealerTurn() {               //dealer's turn
         if (dealer.getTotal() < 17) {        //if dealer has less than 17 they hit
@@ -380,11 +384,22 @@ public class BlackjackModel {
         return ret;
     }
 
-    /*
-     * Get current numbers.
+    /**
+     * Get total of dealer's hand
+     * @return total points dealer's hand is worth
      */
     public int getDealerTotal() { return dealer.getTotal(); }
+
+    /**
+     * Get total of player's hand
+     * @return total points player's hand it worth
+     */
     public int getPlayerTotal() { return player.getTotal(); }
+
+    /**
+     * get balance of player
+     * @return player balance
+     */
     public int getBalance() { return money; }
     public int getBet() { return bet; }
 
@@ -459,18 +474,42 @@ public class BlackjackModel {
             }
         }
 
+        /**
+         * Get number of cards in players hand
+         * @return number of cards
+         */
         public int getHandCount() { return i; }
 
+        /**
+         * Check if player has gone over 21
+         * @return true or false
+         */
         public boolean hasBusted() { return total > 21; }
 
+        /**
+         * Check if player has 21 points (blackjack)
+         * @return true or false
+         */
         public boolean isBlackjack() { return total == 21; }
 
+        /**
+         * Checks if player is currently standing
+         * @return true or false
+         */
         public boolean isStanding() { return stand; }
 
+        /**
+         * Sets player to standing
+         * @param stand
+         */
         public void setToStanding(boolean stand) { this.stand = stand; }
 
         Card popCard() { return hand[j++]; }
 
+        /**
+         * Gets total
+         * @return total points
+         */
         int getTotal() { return total; }
 
         void reset() {
