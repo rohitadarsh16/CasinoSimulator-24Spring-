@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class MainMenuView extends JFrame {
     private MainMenuModel menuModel;
@@ -180,6 +182,15 @@ public class MainMenuView extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 slotText.setVisible(true);
+                try {
+                    playSlotClip();
+                } catch (LineUnavailableException ex) {
+                    ex.printStackTrace();
+                } catch (UnsupportedAudioFileException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             @Override
             public void mouseExited(MouseEvent e) {
@@ -217,6 +228,15 @@ public class MainMenuView extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 blackjackText.setVisible(true);
+                try {
+                    playCardClip();
+                } catch (LineUnavailableException ex) {
+                    ex.printStackTrace();
+                } catch (UnsupportedAudioFileException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             @Override
             public void mouseExited(MouseEvent e) {
@@ -469,8 +489,34 @@ public class MainMenuView extends JFrame {
         difficultyHelp = new JLabel(new ImageIcon(img));
         difficultyHelp.setBounds(275, 75, 30, 30);
         background.add(difficultyHelp);
-
     }
+
+    /**
+     * plays audio for card shuffling
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     */
+    public void playCardClip() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/CardShuffle.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
+    public void playSlotClip() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/SlotStart.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
 
     /**
      * For testing
