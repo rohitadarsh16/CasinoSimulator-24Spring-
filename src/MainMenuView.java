@@ -159,7 +159,7 @@ public class MainMenuView extends JFrame {
                 super.mouseClicked(e);
                 gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
                 difficulty = difficultySelect.getItemAt(difficultySelect.getSelectedIndex());
-                if(MainMenuModel.getMoney() <= 0 && gamemode == "Simulated Casino"){   //if player has no money and wants to play simulated casino, add 100 and notify
+                if(MainMenuModel.getMoney() <= 5 && gamemode == "Simulated Casino"){   //if player has no money and wants to play simulated casino, add 100 and notify
                     MainMenuModel.addMoney();
                     infoBox("$100 has been added", "You Ran Out of Money!");
                     setVisible(false);
@@ -277,7 +277,7 @@ public class MainMenuView extends JFrame {
     }
 
     /**
-     * creates pop-up window for running out of money
+     * creates pop-up window for getting below $5
      * @param infoMessage (what the message will say)
      * @param titleBar    (text in the title)
      */
@@ -287,7 +287,7 @@ public class MainMenuView extends JFrame {
     }
 
     /**
-     * creates pop-up window with rules
+     * creates pop-up window with rules for blackjack and slot machine
      */
     public void rulesBox(){
         BufferedImage img = null;
@@ -323,7 +323,7 @@ public class MainMenuView extends JFrame {
     }
 
     /**
-     * Creates pop-up with information on different gamemodes
+     * Creates pop-up with information on different game modes
      */
     public void gamemodeBox(){
         BufferedImage img = null;
@@ -474,7 +474,13 @@ public class MainMenuView extends JFrame {
 
     /**
      * For testing
+     * @return blackjackMenu
      */
     public JLabel getBlackLabel() { return blackjackMenu; }
+
+    /**
+     * for testing
+     * @return what game mode is chosen
+     */
     public JComboBox<String> getGameOptions() { return gamemodeSelect; }
 }
