@@ -187,7 +187,12 @@ public class BlackjackView extends JFrame {
                 blackjackModel.deal();
                 standBtn.setEnabled(true);
                 hitBtn.setEnabled(true);
-                dblDownBtn.setEnabled(true);
+                if(blackjackModel.getBalance() < blackjackModel.getBet()){
+                    dblDownBtn.setEnabled(false);
+                }
+                else{
+                    dblDownBtn.setEnabled(true);
+                }
                 repaint();
             }
         });
