@@ -433,6 +433,15 @@ public class BlackjackView extends JFrame {
                     super.mouseClicked(e);
                     blackjackModel.playerBet(finalBet);
                     dealBtn.setEnabled(true);
+                    try {
+                        playChipSound();
+                    } catch (LineUnavailableException ex) {
+                        ex.printStackTrace();
+                    } catch (UnsupportedAudioFileException ex) {
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             });
             bet += 5;
@@ -494,6 +503,16 @@ public class BlackjackView extends JFrame {
             index += 5;
             x_chip += 70;
         }
+    }
+
+    public void playChipSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/ChipSound.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
     }
 
     /**
