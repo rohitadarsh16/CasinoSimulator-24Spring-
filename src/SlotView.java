@@ -25,7 +25,7 @@ public class SlotView extends JFrame {
         File[] allFiles = path.listFiles();
         String contents[] = path.list();
 
-        picture = new BufferedImage[allFiles.length];
+        //picture = new BufferedImage[allFiles.length];
 
         //create 9 labels for 9 slots
         JLabel label[] = new JLabel[9];
@@ -35,7 +35,22 @@ public class SlotView extends JFrame {
 
         //Put symbols to each icon variable.
         ImageIcon[] icon = new ImageIcon[contents.length];
-
+        try {
+            icon[0] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/apple.png")));
+            icon[1] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/slot7.png")));
+            icon[2] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/banana.png")));
+            icon[3] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/bell.png")));
+            icon[4] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/cherry.png")));
+            icon[5] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/grape.png")));
+            icon[6] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/orange.png")));
+            icon[7] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/pear.png")));
+            icon[8] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/triplebar.png")));
+            icon[9] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/watermelon.png")));
+            icon[10] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/diamond.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /**
         for(int i = 0; i < contents.length; i++) {
             try{
                 picture[i] = ImageIO.read(allFiles[i]);
@@ -44,6 +59,55 @@ public class SlotView extends JFrame {
 
             }
         }
+         */
+
+
+        //Add a button for user to know which symbols are special or normal.
+        JButton helpButton = new JButton(new ImageIcon("Assets/SlotMachineGUI/" + "HelpButtonSmaller.png"));
+        helpButton.setBounds(355, 685, 35, 35);
+        //helpButton.setBorder(BorderFactory.createEmptyBorder());
+        //helpButton.setContentAreaFilled(false);
+        add(helpButton);
+        helpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Copy from menu
+                BufferedImage img = null;
+                //String mainPath = System.getProperty("user.dir"); // get main folder path
+
+                //create pop-up frame
+                JFrame ruleFrame = new JFrame();
+                JDialog symbolsDialog = new JDialog(ruleFrame);
+                symbolsDialog.setLayout(new FlowLayout());
+                symbolsDialog.setBounds(300, 100, 530, 450);
+
+                //load picture of rules
+                try {
+                    img = ImageIO.read(new File("Assets/SlotMachineGUI/WinningSymbols.PNG"));
+                } catch (Exception ex) {
+                    System.out.println("Cannot load WinningSymbols image!");
+                }
+                JLabel symbolsRules = new JLabel(new ImageIcon(img));
+                symbolsRules.setBounds(5, 5, 200, 200);
+
+                //close button
+                JButton close = new JButton("Close");
+                close.setBounds(400, 400, 100, 100);
+                close.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        symbolsDialog.setVisible(false);
+                    }
+                });
+                symbolsDialog.add(symbolsRules);
+                symbolsDialog.add(close);
+                symbolsDialog.setVisible(true);
+            }
+        });
+
+
+
+
 
         JButton exitBtn = new JButton("Exit");
         exitBtn.setBounds(700, 162, 75, 70);
@@ -73,9 +137,9 @@ public class SlotView extends JFrame {
         label[7].setBounds(500, 380, 100, 80);
         label[8].setBounds(500, 460, 100, 80);
 
-        //There will be 7 icons for each label
+        //There will be 11 icons for each label
         for(int i = 0; i < 9; i++) {
-            label[i].setIcon(icon[0]);
+            label[i].setIcon(icon[1]);
 
             add(label[i]);
         }
@@ -97,7 +161,7 @@ public class SlotView extends JFrame {
         //add JComboBox for betting options.
         String[] betOptions = {"1$", "2$", "5$"};
         JComboBox<String> betSelect = new JComboBox<>(betOptions);
-        betSelect.setBounds(260, 685, 50, 30);
+        betSelect.setBounds(260, 675, 60, 50);
         betSelect.setBackground(Color.CYAN);
         betSelect.addItemListener(new ItemListener() {
             @Override
@@ -123,7 +187,7 @@ public class SlotView extends JFrame {
         JLabel bonuslabel = new JLabel();
         bonuslabel.setFont(new Font("Arial", Font.BOLD, 15));
         bonuslabel.setBounds(400, 675, 300, 50);
-        bonuslabel.setText(("<html>Bonus = Bet x 2<br>SpecialBonus = bet x 5</html>"));
+        bonuslabel.setText(("<html>Normal Symbols = Bet x 2<br>Special Symbols = Bet x 5</html>"));
 
         pullLever.setBorder(BorderFactory.createEmptyBorder());
         pullLever.setContentAreaFilled(false);
