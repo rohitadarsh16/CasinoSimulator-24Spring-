@@ -167,6 +167,7 @@ public class BlackjackView extends JFrame {
 
         if(MainMenuView.gamemode == "Simulated Casino") {
             ShowBetLabels(true);
+            dealBtn.setEnabled(false);
             showChipValues();
         }
         else { //Gamemode is set to freeplay
