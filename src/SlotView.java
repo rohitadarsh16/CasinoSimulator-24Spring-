@@ -65,8 +65,8 @@ public class SlotView extends JFrame {
         //Add a button for user to know which symbols are special or normal.
         JButton helpButton = new JButton(new ImageIcon("Assets/SlotMachineGUI/" + "HelpButtonSmaller.png"));
         helpButton.setBounds(355, 685, 35, 35);
-        //helpButton.setBorder(BorderFactory.createEmptyBorder());
-        //helpButton.setContentAreaFilled(false);
+        helpButton.setBorder(BorderFactory.createEmptyBorder());
+        helpButton.setContentAreaFilled(false);
         add(helpButton);
         helpButton.addActionListener(new ActionListener() {
             @Override
@@ -104,10 +104,6 @@ public class SlotView extends JFrame {
                 symbolsDialog.setVisible(true);
             }
         });
-
-
-
-
 
         JButton exitBtn = new JButton("Exit");
         exitBtn.setBounds(700, 162, 75, 70);
