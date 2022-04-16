@@ -519,9 +519,9 @@ public class BlackjackView extends JFrame {
     /**
      * Animation class.
      */
-    public class animThread extends SwingWorker {
-        JLabel j;
-        int dX, dY, finX, finY, currX, currY, speed, distance, moves, xUnits, yUnits;
+    private class animThread extends SwingWorker {
+        private JLabel j;
+        private int dX, dY, finX, finY, currX, currY, speed, distance, moves, xUnits, yUnits;
 
         public animThread(JLabel j, int x, int y) {
             this.j = j;

@@ -134,10 +134,17 @@ public class SlotView extends JFrame {
         pullLever.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(slot.getMoney() == 0) {
-                    resultLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-                    resultLabel.setText("<html><div style='text-align: center;'>No More money!<br> Add more money in the menu.</div></html>");
 
+                if(slot.getMoney() == 0) {
+                    //resultLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+                    //resultLabel.setText("<html><div style='text-align: center;'>No More money!<br> Add more money in the menu.</div></html>");
+                    slotModel.exit();
+                    dispose();
+
+                }
+                else if(slot.getMoney() < slot.getBettingMoney()) {
+                    resultLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+                    resultLabel.setText("<html><div style='text-align: center;'>Not enough money for betting!<br> Please lower the bet.</div></html>");
                 }
                 else {
 
@@ -147,7 +154,7 @@ public class SlotView extends JFrame {
 
                         add(label[i]);
                     }
-                    resultLabel.setText(slot.matchCheck2());
+                    resultLabel.setText(slot.matchCheck());
                     resultLabel.setHorizontalAlignment(JLabel.CENTER);
                     moneylabel.setText(("TOTAL:" + "$" + slot.getMoney()));
                 }
