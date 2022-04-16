@@ -522,11 +522,13 @@ public class MainMenuView extends JFrame {
      * For testing
      * @return blackjackMenu
      */
+
     public JLabel getBlackLabel() { return blackjackMenu; }
 
     /**
      * for testing
      * @return what game mode is chosen
      */
+
     public JComboBox<String> getGameOptions() { return gamemodeSelect; }
 }

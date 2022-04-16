@@ -1,7 +1,7 @@
 # CasinoSimulator
 The program will run a simulation of various games found within a casino. These include standard games such as Slots, Blackjack, etc. The program will have a main menu to select each game and will include a graphical user interface (GUI) to interact with the various games while playing. There will be a free-play mode, where there is infinite money to be played with, and a standard mode with a limited amount of money to start with.
 
-![This is a screenshot.](casino.png)
+![image](https://user-images.githubusercontent.com/77748455/163686845-8bcf28f7-f819-483e-8f21-ed26a892fb88.png)
 
 #IMPORTANT!
 Minimum Java version required is **17.0.1**.
@@ -33,3 +33,9 @@ Follow this project board to know the latest status of the project: [Trello](htt
 java -jar CasinoSimulator.jar
 ```
 - Have fun!!!
+
+### Testing
+Testing was perfomed using JUnit testing suite primarily on macOS. There are two classes meant for this purpose: SlotModelTest.java and BlackjackTest.java.
+**Warning** Some of the tests behave differently if ran on macOS or Windows. For example, when automating clicking on a bet label, say the $5 label, macOS requires two
+clicks in order to register one click whereas on Windows only one click is sufficient. This means that one pair of mousePress, mouseRelease functions need to be commented
+out when testing on Windows.
