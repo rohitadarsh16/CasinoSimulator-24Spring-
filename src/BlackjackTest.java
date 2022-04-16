@@ -153,4 +153,32 @@ public class BlackjackTest {
 
         assertNotEquals("Someone should win game", "dTurn", blackjackModel.getCurrentState().toString());
     }
+
+    @Test
+    public void dealerStandsAt17() {
+        blackjackModel.dealCardTest(true, false, 4, 0, 4);
+        blackjackModel.dealCardTest(true, false, 5, 0, 5);
+        blackjackModel.dealCardTest(false, false, 9, 0, 9);
+        blackjackModel.dealCardTest(false, true, 8, 0, 8);
+        blackjackView.getStandBtn().setEnabled(true);
+        blackjackView.ShowBetLabels(false);
+        blackjackView.hideChipValues();
+        blackjackView.getStandBtn().doClick();
+        assertEquals("Dealer's points should remain at 17.", 17, blackjackModel.getDealerTotal());
+        try { Thread.sleep(3000); } catch (InterruptedException e) {}
+    }
+
+    @Test
+    public void dealerStandsIfTotalOver17() {
+        blackjackModel.dealCardTest(true, false, 4, 0, 4);
+        blackjackModel.dealCardTest(true, false, 5, 0, 5);
+        blackjackModel.dealCardTest(false, false, 9, 0, 9);
+        blackjackModel.dealCardTest(false, true, 9, 0, 9);
+        blackjackView.getStandBtn().setEnabled(true);
+        blackjackView.ShowBetLabels(false);
+        blackjackView.hideChipValues();
+        blackjackView.getStandBtn().doClick();
+        assertEquals("Dealer's points should remain at 17.", 18, blackjackModel.getDealerTotal());
+        try { Thread.sleep(3000); } catch (InterruptedException e) {}
+    }
 }

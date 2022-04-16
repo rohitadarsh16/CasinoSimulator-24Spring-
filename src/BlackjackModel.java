@@ -88,7 +88,7 @@ public class BlackjackModel {
                 deck.set(0, ace);
             }
         }
-        else { //If the difficulty is easy
+        else if (MainMenuView.difficulty == "Easy") { //If the difficulty is easy
             int index = randomNumber.nextInt(6);
             if(index == 0) {//If you pass a 1/6 chance
                 for(int i = 0; i < deck.size(); i++) {
@@ -151,7 +151,7 @@ public class BlackjackModel {
             public void run() {
                 currentState = currentState.dTurn;
                 player.setToStanding(true);
-                blackjackView.ShowDealerCard(hidden_card);
+                //blackjackView.ShowDealerCard(hidden_card);
                 blackjackView.ShowBackCard(false);
                 dealerTurn();
                 doneStand = true;
@@ -459,6 +459,16 @@ public class BlackjackModel {
             }
         }
 
+        /**
+         * For testing!!!
+         */
+        void addCard(int value, int suit, int points) {
+            Card c = new Card(value, suit, points);
+            cards_played++;
+            hand[i++] = c;
+            total += points;
+        }
+
         public int getHandCount() { return i; }
 
         public boolean hasBusted() { return total > 21; }
@@ -490,4 +500,27 @@ public class BlackjackModel {
     public boolean isDoneHit() { return doneHit; }
     public boolean isDoneStand() { return doneStand; }
     public int getHitCount() { return hitCount; }
+
+    /*
+     * Deal a chosen card for testing purposes.
+     * If p is set to true it will deal to the player; otherwise to the dealer.
+     * If hidden is true it will show the hidden card; used to follow the normal course of the game
+     */
+    public void dealCardTest(boolean p, boolean hidden, int value, int suit, int points) {
+        doneDeal = false;
+        if (p) { // if p is true deal to player; otherwise deal to dealer
+            player.addCard(value, suit, points);
+            int[] c = popPlayerCard();
+            blackjackView.ShowPlayerCard(c);
+        }
+        else {
+            dealer.addCard(value, suit, points);
+            int[] c = popDealerCard();
+            if (hidden) {
+                hidden_card = c;
+                blackjackView.ShowBackCard(true);
+            }
+            else blackjackView.ShowDealerCard(c);
+        }
+    }
 }
