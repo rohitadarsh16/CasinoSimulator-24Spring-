@@ -1,7 +1,7 @@
 # CasinoSimulator
 The program will run a simulation of various games found within a casino. These include standard games such as Slots, Blackjack, etc. The program will have a main menu to select each game and will include a graphical user interface (GUI) to interact with the various games while playing. There will be a free-play mode, where there is infinite money to be played with, and a standard mode with a limited amount of money to start with.
 
-![This is a screenshot.](casino.png)
+!![image](https://user-images.githubusercontent.com/77748455/163686845-8bcf28f7-f819-483e-8f21-ed26a892fb88.png)
 
 #IMPORTANT!
 Minimum Java version required is **17.0.1**.
