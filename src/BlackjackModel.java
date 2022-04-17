@@ -1,3 +1,6 @@
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
@@ -457,6 +460,15 @@ public class BlackjackModel {
             } else {                           // otherwise all cards are normal values
                 total += c.points;
             }
+            try {
+                playDealSound();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         public int getHandCount() { return i; }
@@ -478,6 +490,18 @@ public class BlackjackModel {
             stand = false;
         }
     }
+
+
+    public void playDealSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/CardSound.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
 
     /**
      * For testing

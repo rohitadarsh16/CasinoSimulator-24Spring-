@@ -32,14 +32,27 @@ public class MainMenuModel {
      */
     public void setVisible() {menuView.setVisible(true);}
 
+    /**
+     * starts slot machine
+     */
     public void startSlot() {
         slotModel = new SlotModel(this, money);
     }
 
+    /**
+     * starts blackjack game
+     */
     public void startBlackjack() { blackjackModel = new BlackjackModel(this, money); }
 
+    /**
+     * returns amount of money player has
+     * @return money player has
+     */
     public static int getMoney(){return money;}
 
+    /**
+     * adds $100 to players balance
+     */
     public static void addMoney(){money = 100;}
 
     public void exit() {
@@ -47,6 +60,9 @@ public class MainMenuModel {
         System.exit(0);
     }
 
+    /**
+     * Create/overwrite file "savedata.txt" with value of money player currently has
+     */
     public void save(){
         //Create a new file called savedata.txt if it does not already exist
         try {
@@ -72,7 +88,13 @@ public class MainMenuModel {
 
     /**
      * For testing
+     * @return menuView
      */
     public MainMenuView getView() { return menuView; }
+
+    /**
+     * For testing
+     * @return blackjackModel
+     */
     public BlackjackModel getModel() { return blackjackModel; }
 }

@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class MainMenuView extends JFrame {
     private MainMenuModel menuModel;
@@ -159,7 +161,7 @@ public class MainMenuView extends JFrame {
                 super.mouseClicked(e);
                 gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
                 difficulty = difficultySelect.getItemAt(difficultySelect.getSelectedIndex());
-                if(MainMenuModel.getMoney() <= 0 && gamemode == "Simulated Casino"){   //if player has no money and wants to play simulated casino, add 100 and notify
+                if(MainMenuModel.getMoney() <= 5 && gamemode == "Simulated Casino"){   //if player has no money and wants to play simulated casino, add 100 and notify
                     MainMenuModel.addMoney();
                     infoBox("$100 has been added", "You Ran Out of Money!");
                     setVisible(false);
@@ -180,6 +182,15 @@ public class MainMenuView extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 slotText.setVisible(true);
+                try {
+                    playSlotClip();
+                } catch (LineUnavailableException ex) {
+                    ex.printStackTrace();
+                } catch (UnsupportedAudioFileException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             @Override
             public void mouseExited(MouseEvent e) {
@@ -217,6 +228,15 @@ public class MainMenuView extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 blackjackText.setVisible(true);
+                try {
+                    playCardClip();
+                } catch (LineUnavailableException ex) {
+                    ex.printStackTrace();
+                } catch (UnsupportedAudioFileException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             @Override
             public void mouseExited(MouseEvent e) {
@@ -277,7 +297,7 @@ public class MainMenuView extends JFrame {
     }
 
     /**
-     * creates pop-up window for running out of money
+     * creates pop-up window for getting below $5
      * @param infoMessage (what the message will say)
      * @param titleBar    (text in the title)
      */
@@ -287,7 +307,7 @@ public class MainMenuView extends JFrame {
     }
 
     /**
-     * creates pop-up window with rules
+     * creates pop-up window with rules for blackjack and slot machine
      */
     public void rulesBox(){
         BufferedImage img = null;
@@ -323,7 +343,7 @@ public class MainMenuView extends JFrame {
     }
 
     /**
-     * Creates pop-up with information on different gamemodes
+     * Creates pop-up with information on different game modes
      */
     public void gamemodeBox(){
         BufferedImage img = null;
@@ -469,11 +489,44 @@ public class MainMenuView extends JFrame {
         difficultyHelp = new JLabel(new ImageIcon(img));
         difficultyHelp.setBounds(275, 75, 30, 30);
         background.add(difficultyHelp);
-
     }
 
     /**
+     * plays audio for card shuffling
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     */
+    public void playCardClip() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/CardShuffle.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
+    public void playSlotClip() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/SlotStart.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
+
+    /**
      * For testing
+     * @return blackjackMenu
+     */
+    public JLabel getBlackLabel() { return blackjackMenu; }
+
+    /**
+     * for testing
+     * @return what game mode is chosen
      */
     public JComboBox<String> getGameOptions() { return gamemodeSelect; }
 }
