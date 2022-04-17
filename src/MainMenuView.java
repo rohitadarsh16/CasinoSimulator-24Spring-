@@ -491,6 +491,28 @@ public class MainMenuView extends JFrame {
         background.add(difficultyHelp);
     }
 
+
+    /**
+     * plays audio for card shuffling
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     */
+    public void playCardClip() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/CardShuffle.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
+    public void playSlotClip() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/SlotStart.wav").getAbsoluteFile();
+
+
     /**
      * plays audio for card shuffling
      * @throws LineUnavailableException
@@ -517,16 +539,17 @@ public class MainMenuView extends JFrame {
         clip.start();
     }
 
-
     /**
      * For testing
      * @return blackjackMenu
      */
+
     public JLabel getBlackLabel() { return blackjackMenu; }
 
     /**
      * for testing
      * @return what game mode is chosen
      */
+
     public JComboBox<String> getGameOptions() { return gamemodeSelect; }
 }
