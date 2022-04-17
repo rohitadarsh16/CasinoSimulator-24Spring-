@@ -151,7 +151,7 @@ public class BlackjackModel {
             public void run() {
                 currentState = currentState.dTurn;
                 player.setToStanding(true);
-                //blackjackView.ShowDealerCard(hidden_card);
+                blackjackView.ShowDealerCard(hidden_card);
                 blackjackView.ShowBackCard(false);
                 dealerTurn();
                 doneStand = true;
@@ -258,7 +258,7 @@ public class BlackjackModel {
         switch (currentState) {
             case pWin -> blackjackView.ShowPlayerWin();
             case dWin -> blackjackView.ShowDealerWin();
-            case draw -> blackjackView.ShowDraw();
+            case draw -> { currentState = currentState.draw; blackjackView.ShowDraw(); }
         }
 
         dealer.reset();
@@ -500,6 +500,7 @@ public class BlackjackModel {
     public boolean isDoneHit() { return doneHit; }
     public boolean isDoneStand() { return doneStand; }
     public int getHitCount() { return hitCount; }
+    public boolean dealerIsStanding() { return dealer.isStanding(); }
 
     /*
      * Deal a chosen card for testing purposes.
