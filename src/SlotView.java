@@ -10,7 +10,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class SlotView extends JFrame {
+
     private SlotModel slotModel;
+    private JButton pullLever;
+    private JLabel handleDown;
 
     public SlotView(SlotModel slot) {
         super("CasinoSimulator - Slot Machine");
@@ -60,7 +63,6 @@ public class SlotView extends JFrame {
             }
         }
          */
-
 
         //Add a button for user to know which symbols are special or normal.
         JButton helpButton = new JButton(new ImageIcon("Assets/SlotMachineGUI/" + "HelpButtonSmaller.png"));
@@ -188,6 +190,14 @@ public class SlotView extends JFrame {
         pullLever.setBorder(BorderFactory.createEmptyBorder());
         pullLever.setContentAreaFilled(false);
 
+        JLabel handleDown = new JLabel();
+        handleDown.setBounds(644, 285, 900, 800);
+        ImageIcon handlePull = new ImageIcon("Assets/SlotMachineGUI/" + "HandleDown.png");
+        handleDown.setIcon(handlePull);
+
+        add(handleDown);
+        handleDown.setVisible(false);
+
         add(pullLever);
         moneylabel.setText(("TOTAL:" + "$" + slot.getMoney()));
 
@@ -207,8 +217,32 @@ public class SlotView extends JFrame {
                     resultLabel.setText("<html><div style='text-align: center;'>Not enough money for betting!<br> Please lower the bet.</div></html>");
                 }
                 else {
-
                     slotModel.pullLever();
+                    Timer t = new Timer(500, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            pullLever.setVisible(false);
+                            handleDown.setVisible(true);
+                        }
+                    });
+                    t.start();
+                    t.setRepeats(false);
+
+                    Timer y = new Timer(700, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            handleDown.setVisible(false);
+                            pullLever.setVisible(true);
+                        }
+                    });
+                    y.start();
+                    y.setRepeats(false);
+
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                    }
+
                     for (int i = 0; i < 9; i++) {
                         label[i].setIcon(icon[slot.getSlot(i)]);
 

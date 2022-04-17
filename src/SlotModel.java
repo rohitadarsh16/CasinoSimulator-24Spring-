@@ -19,9 +19,6 @@ public class SlotModel {
     }
 
     public void pullLever() {
-
-
-
         Random randomNumber = new Random();
         if(MainMenuView.difficulty == "Hard") {
             for (int i = 0; i < 9; i++) {
