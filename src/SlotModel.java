@@ -1,5 +1,8 @@
 import java.util.Random;
 
+/**
+ * SlotModel class for slot-machine. Should contain all the backend methods/functions.
+ */
 public class SlotModel {
     private MainMenuModel menuModel;
     private SlotView slotView;
@@ -8,16 +11,29 @@ public class SlotModel {
     private int[] slot = new int[9];
     private int bettingMoney = 1;
 
+    /**
+     * SlotModel constructors for slot-machine. Have menuModel, money, and slotView variable.
+     * @param menu contain main menu model.
+     * @param money contain money share across all games and menu.
+     */
     public SlotModel(MainMenuModel menu, int money) {
         menuModel = menu;
         this.money = money;
         slotView = new SlotView(this);
     }
 
+    /**
+     * Get money method
+     * @return money
+     */
     public int getMoney() {
         return money;
     }
 
+    /**
+     * pull lever method for pull lever button. This method will generate random number from 1 to 7,9, or 11 depend on the
+     * difficulty for total of 9 times for 9 slots.
+     */
     public void pullLever() {
         Random randomNumber = new Random();
         if(MainMenuView.difficulty == "Hard") {
@@ -46,29 +62,45 @@ public class SlotModel {
         }
     }
 
+    /**
+     * get betting money
+     * @return betting money
+     */
     public int getBettingMoney() {
         return bettingMoney;
     }
 
-
-    //add setSlot method for test purpose.
+    /**
+     * setSlot method for testing purpose only
+     * @param slotNumber set slot position to test
+     * @param slotSymbol set slot symbol to test
+     */
     public void setSlot (int slotNumber, int slotSymbol) {
         slot[slotNumber] = slotSymbol;
     }
 
-    //Get slot number methods. There should be a better way to do it because if we need 9 slots, then there are 9 get methods.
-
+    /**
+     * get slot method
+     * @param a to get slot's number/position
+     * @return that slot's number/position
+     */
     public int getSlot(int a) {
         return slot[a];
     }
 
+    /**
+     * set betting money for combo-box button options.
+     * @param a set "a" to "betting money".
+     */
     public void setBettingMoney(int a) {
         bettingMoney = a;
     }
 
-
-    //rule for slots
-
+    /**
+     * rules for slots. If statement to check if there are any matches symbols in slots.
+     * @return winning a string to tell the user is losing or winning. Also, calculate the
+     * winning money for the user.
+     */
     public String matchCheck() {
         int winningMoney = 0;
         boolean checkIfWon = false;
@@ -172,7 +204,7 @@ public class SlotModel {
             if (slot[6] == slot[4] && slot[4] == slot[2]) {
                 checkIfWon = true;
             }
-//            money += winningMoney;
+            //money += winningMoney;
         }
         if (winningMoney > 0) {
             money += winningMoney;
@@ -188,51 +220,9 @@ public class SlotModel {
             return "Bad Luck!!";
     }
 
-    /*
-    //simple rules for 1by3 slots
-    public String matchCheck1() {
-        if (MainMenuView.gamemode == "Simulated Casino") {
-            //Some simple winning rules, modify if needed
-            if (slot[1] == slot[2] && slot[2] == slot[3]) {
-                //if 7 symbol is 3 in the row, then jackpot winner
-                if (slot[1] == 0) {
-                    money += 100;
-                    return "Jackpot Winner!!!";
-                    //Other 3 in the row
-                } else {
-                    money += 50;
-                    return "Winner!!";
-                }
-                //2 in the row
-            } else if (slot[1] == slot[2] || slot[2] == slot[3] || slot[3] == slot[1]) {
-                return "Free Spin!";
-                //No matches
-            } else {
-                return "Bad luck!";
-            }
-        }
-        //If the gamemode is in freeplay
-        else {
-            if (slot[1] == slot[2] && slot[2] == slot[3]) {
-                //if 7 symbol is 3 in the row, then jackpot winner
-                if (slot[1] == 0) {
-                    return "Jackpot Winner!!!";
-                    //Other 3 in the row
-                } else {
-                    return "Winner!!";
-                }
-                //2 in the row
-            } else if (slot[1] == slot[2] || slot[2] == slot[3] || slot[3] == slot[1]) {
-                return "Free Spin!";
-                //No matches
-            } else {
-                return "Bad luck!";
-            }
-        }
-    }
-
+    /**
+     * exit method to exit slot-machine and go back to menu.
      */
-
     public void exit() {
         MainMenuModel.money = money;
         menuModel.setVisible();
