@@ -2,10 +2,7 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +32,7 @@ public class MainMenuView extends JFrame {
     public MainMenuView(MainMenuModel menu) {
         super("CasinoSimulator");
         menuModel = menu;
-
+        setLayout(null);
 
         setSize(650, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,7 +46,7 @@ public class MainMenuView extends JFrame {
         gamemodeTxt.setFont(new Font("Dialog", Font.BOLD, 16));
         String[] playOptions = {"Simulated Casino", "Freeplay"};
         gamemodeSelect = new JComboBox<>(playOptions);
-        gamemodeSelect.setBounds(120, 0, 140, 60);
+        gamemodeSelect.setBounds(120, 0, 160, 60);
 
         //difficulty dropdown code
         String[] difficultyOptions = {"Hard", "Medium", "Easy"};
@@ -254,13 +251,20 @@ public class MainMenuView extends JFrame {
             }
         });
 
-
         //code for difficulty help button
         difficultyHelp.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 difficultyBox();
+            }
+        });
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                menuModel.exit();
             }
         });
 
@@ -278,10 +282,6 @@ public class MainMenuView extends JFrame {
         });
         */
 
-        setLayout(null);
-        setLocationRelativeTo(null);
-        setVisible(true);
-
         add(background);
         background.add(gamemodeSelect);
         background.add(gamemodeTxt);
@@ -294,6 +294,9 @@ public class MainMenuView extends JFrame {
         background.add(moneyTotal);
        // background.add(gamemodeHelp);
         //background.add(difficultyHelp);
+
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     /**
@@ -477,7 +480,7 @@ public class MainMenuView extends JFrame {
             System.out.println("Cannot load HelpButton image!");
         }
         gamemodeHelp = new JLabel(new ImageIcon(img));
-        gamemodeHelp.setBounds(275, 10, 30, 30);
+        gamemodeHelp.setBounds(285, 10, 30, 30);
         background.add(gamemodeHelp);
 
         //load difficulty help button
@@ -487,7 +490,7 @@ public class MainMenuView extends JFrame {
             System.out.println("Cannot load HelpButton image!");
         }
         difficultyHelp = new JLabel(new ImageIcon(img));
-        difficultyHelp.setBounds(275, 75, 30, 30);
+        difficultyHelp.setBounds(285, 75, 30, 30);
         background.add(difficultyHelp);
     }
 
