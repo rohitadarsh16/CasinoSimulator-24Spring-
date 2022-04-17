@@ -185,7 +185,7 @@ public class BlackjackView extends JFrame {
                 blackjackModel.deal();
                 standBtn.setEnabled(true);
                 hitBtn.setEnabled(true);
-                dblDownBtn.setEnabled(true);
+                if (blackjackModel.getBalance() >= blackjackModel.getBet()) dblDownBtn.setEnabled(true);
                 repaint();
             }
         });
@@ -225,14 +225,8 @@ public class BlackjackView extends JFrame {
         dblDownBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(blackjackModel.getBalance() >= blackjackModel.getBet()) {
-                    blackjackModel.doubleDown();
-                    blackjackModel.playerStand();
-                    dblDownBtn.setEnabled(false);
-                }
-                else{
-                    dblDownBtn.setEnabled(false);
-                }
+                dblDownBtn.setEnabled(false);
+                blackjackModel.doubleDown();
             }
         });
 
@@ -391,6 +385,7 @@ public class BlackjackView extends JFrame {
 
         standBtn.setEnabled(false);
         hitBtn.setEnabled(false);
+        dblDownBtn.setEnabled(false);
         x_dealer = x_player = 30;
 
         Timer t = new Timer(2000, ac); // wait 2 seconds before executing ac

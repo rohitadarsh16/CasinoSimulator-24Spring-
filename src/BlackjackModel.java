@@ -162,12 +162,14 @@ public class BlackjackModel {
     /**
      * Player doubles down (doubles bet but only gets one more card)
      */
-    public void doubleDown(){
+    public void doubleDown() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                money = money - bet;
-                bet = bet + bet;
+                //money = money - bet;
+                //bet = bet + bet;
+                playerBet(bet);
+
                 player.addCard();
                 int[] c = popPlayerCard();
                 blackjackView.ShowPlayerCard(c);
@@ -186,7 +188,7 @@ public class BlackjackModel {
                     playerLoses();
                     win();
                 }
-                //playerStand();
+                else playerStand();
             }
         }).start();
     }
