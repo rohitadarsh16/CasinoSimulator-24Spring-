@@ -1,10 +1,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -234,13 +231,20 @@ public class MainMenuView extends JFrame {
             }
         });
 
-
         //code for difficulty help button
         difficultyHelp.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 difficultyBox();
+            }
+        });
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                menuModel.exit();
             }
         });
 
@@ -469,7 +473,6 @@ public class MainMenuView extends JFrame {
         difficultyHelp = new JLabel(new ImageIcon(img));
         difficultyHelp.setBounds(275, 75, 30, 30);
         background.add(difficultyHelp);
-
     }
 
     /**
