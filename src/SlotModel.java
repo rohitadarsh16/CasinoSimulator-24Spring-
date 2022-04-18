@@ -1,3 +1,6 @@
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -222,18 +225,57 @@ public class SlotModel {
             //money += winningMoney;
         }
         if (winningMoney > 0) {
+            try {
+                playWinSound();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             money += winningMoney;
             return "Winner!!";
-        } else if (checkIfWon == true)
+        else if(checkIfWon == true) {
+            try {
+                playWinSound();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return "Winner!!";
-        else if (MainMenuView.gamemode == "Simulated Casino") {
+        }
+        else if(MainMenuView.gamemode == "Simulated Casino") {
             money -= bettingMoney;
             return "Bad Luck!!";
         } else
             return "Bad Luck!!";
     }
+      
+    public void playWinSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/Win.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
 
-    /**
+    public void playLoseSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/Lose.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+      
+     /**
      * exit method to exit slot-machine and go back to menu.
      */
     public void exit() {

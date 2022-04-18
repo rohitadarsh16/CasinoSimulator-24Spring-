@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
@@ -8,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class BlackjackView extends JFrame {
@@ -165,6 +167,7 @@ public class BlackjackView extends JFrame {
 
         if(MainMenuView.gamemode == "Simulated Casino") {
             ShowBetLabels(true);
+            dealBtn.setEnabled(false);
             showChipValues();
         }
         else { //Gamemode is set to freeplay
@@ -185,7 +188,12 @@ public class BlackjackView extends JFrame {
                 blackjackModel.deal();
                 standBtn.setEnabled(true);
                 hitBtn.setEnabled(true);
-                dblDownBtn.setEnabled(true);
+                if(blackjackModel.getBalance() < blackjackModel.getBet()){
+                    dblDownBtn.setEnabled(false);
+                }
+                else{
+                    dblDownBtn.setEnabled(true);
+                }
                 repaint();
             }
         });
@@ -402,8 +410,32 @@ public class BlackjackView extends JFrame {
     /*
      * Show who won.
      */
-    public void ShowDealerWin() { dealerWin.setVisible(true); Reset(dealerWin); }
-    public void ShowPlayerWin() { playerWin.setVisible(true); Reset(playerWin); }
+    public void ShowDealerWin() {
+        dealerWin.setVisible(true);
+        try {
+            playLoseSound();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Reset(dealerWin);
+    }
+    public void ShowPlayerWin() {
+        playerWin.setVisible(true);
+        try {
+            playWinSound();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Reset(playerWin);
+    }
     public void ShowDraw() { draw.setVisible(true); Reset(draw); }
 
     /**
@@ -426,6 +458,15 @@ public class BlackjackView extends JFrame {
                     super.mouseClicked(e);
                     blackjackModel.playerBet(finalBet);
                     dealBtn.setEnabled(true);
+                    try {
+                        playChipSound();
+                    } catch (LineUnavailableException ex) {
+                        ex.printStackTrace();
+                    } catch (UnsupportedAudioFileException ex) {
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             });
             bet += 5;
@@ -487,6 +528,36 @@ public class BlackjackView extends JFrame {
             index += 5;
             x_chip += 70;
         }
+    }
+
+    public void playChipSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/ChipSound.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
+    public void playWinSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/Win.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
+    public void playLoseSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/Lose.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
     }
 
     /**

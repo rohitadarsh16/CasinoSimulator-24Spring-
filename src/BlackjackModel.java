@@ -1,3 +1,6 @@
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
@@ -88,7 +91,7 @@ public class BlackjackModel {
                 deck.set(0, ace);
             }
         }
-        else { //If the difficulty is easy
+        else if (MainMenuView.difficulty == "Easy") { //If the difficulty is easy
             int index = randomNumber.nextInt(6);
             if(index == 0) {//If you pass a 1/6 chance
                 for(int i = 0; i < deck.size(); i++) {
@@ -162,12 +165,14 @@ public class BlackjackModel {
     /**
      * Player doubles down (doubles bet but only gets one more card)
      */
-    public void doubleDown(){
+    public void doubleDown() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                money = money - bet;
-                bet = bet + bet;
+                //money = money - bet;
+                //bet = bet + bet;
+                playerBet(bet);
+
                 player.addCard();
                 int[] c = popPlayerCard();
                 blackjackView.ShowPlayerCard(c);
@@ -186,7 +191,7 @@ public class BlackjackModel {
                     playerLoses();
                     win();
                 }
-                //playerStand();
+                else playerStand();
             }
         }).start();
     }
@@ -258,7 +263,7 @@ public class BlackjackModel {
         switch (currentState) {
             case pWin -> blackjackView.ShowPlayerWin();
             case dWin -> blackjackView.ShowDealerWin();
-            case draw -> blackjackView.ShowDraw();
+            case draw -> { currentState = currentState.draw; blackjackView.ShowDraw(); }
         }
 
         dealer.reset();
@@ -457,6 +462,25 @@ public class BlackjackModel {
             } else {                           // otherwise all cards are normal values
                 total += c.points;
             }
+            try {
+                playDealSound();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * For testing!!!
+         */
+        void addCard(int value, int suit, int points) {
+            Card c = new Card(value, suit, points);
+            cards_played++;
+            hand[i++] = c;
+            total += points;
         }
 
         public int getHandCount() { return i; }
@@ -479,6 +503,18 @@ public class BlackjackModel {
         }
     }
 
+
+    public void playDealSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/CardSound.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
+
     /**
      * For testing
      */
@@ -490,4 +526,28 @@ public class BlackjackModel {
     public boolean isDoneHit() { return doneHit; }
     public boolean isDoneStand() { return doneStand; }
     public int getHitCount() { return hitCount; }
+    public boolean dealerIsStanding() { return dealer.isStanding(); }
+
+    /*
+     * Deal a chosen card for testing purposes.
+     * If p is set to true it will deal to the player; otherwise to the dealer.
+     * If hidden is true it will show the hidden card; used to follow the normal course of the game
+     */
+    public void dealCardTest(boolean p, boolean hidden, int value, int suit, int points) {
+        doneDeal = false;
+        if (p) { // if p is true deal to player; otherwise deal to dealer
+            player.addCard(value, suit, points);
+            int[] c = popPlayerCard();
+            blackjackView.ShowPlayerCard(c);
+        }
+        else {
+            dealer.addCard(value, suit, points);
+            int[] c = popDealerCard();
+            if (hidden) {
+                hidden_card = c;
+                blackjackView.ShowBackCard(true);
+            }
+            else blackjackView.ShowDealerCard(c);
+        }
+    }
 }

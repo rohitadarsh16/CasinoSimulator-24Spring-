@@ -153,4 +153,97 @@ public class BlackjackTest {
 
         assertNotEquals("Someone should win game", "dTurn", blackjackModel.getCurrentState().toString());
     }
+
+    @Test
+    public void dealerStandsAt17() {
+        blackjackModel.dealCardTest(true, false, 4, 0, 4);
+        blackjackModel.dealCardTest(true, false, 5, 0, 5);
+        blackjackModel.dealCardTest(false, false, 9, 0, 9);
+        blackjackModel.dealCardTest(false, true, 8, 0, 8);
+        blackjackView.getStandBtn().setEnabled(true);
+        blackjackView.ShowBetLabels(false);
+        blackjackView.hideChipValues();
+        blackjackView.getStandBtn().doClick();
+        assertEquals("Dealer's points should remain at 17.", 17, blackjackModel.getDealerTotal());
+        try { Thread.sleep(3000); } catch (InterruptedException e) {}
+    }
+
+    @Test
+    public void dealerStandsIfTotalOver17() {
+        blackjackModel.dealCardTest(true, false, 4, 0, 4);
+        blackjackModel.dealCardTest(true, false, 5, 0, 5);
+        blackjackModel.dealCardTest(false, false, 9, 0, 9);
+        blackjackModel.dealCardTest(false, true, 9, 1, 9);
+        blackjackView.getStandBtn().setEnabled(true);
+        blackjackView.ShowBetLabels(false);
+        blackjackView.hideChipValues();
+        blackjackView.getStandBtn().doClick();
+        assertEquals("Dealer's points should remain at 18.", 18, blackjackModel.getDealerTotal());
+        try { Thread.sleep(3000); } catch (InterruptedException e) {}
+    }
+
+    @Test
+    public void dealerHitsIfTotalLessThan17() {
+        blackjackModel.dealCardTest(true, false, 4, 0, 4);
+        blackjackModel.dealCardTest(true, false, 5, 0, 5);
+        blackjackModel.dealCardTest(false, false, 9, 0, 9);
+        blackjackModel.dealCardTest(false, true, 2, 1, 2);
+        blackjackView.getStandBtn().setEnabled(true);
+        blackjackView.ShowBetLabels(false);
+        blackjackView.hideChipValues();
+        blackjackView.getStandBtn().doClick();
+        while (!blackjackModel.isDoneStand())
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
+        // if standing is false it means that the dealer hit, stood and won and the reset function was called
+        assertEquals("Dealer should hit then stand.", false, blackjackModel.dealerIsStanding());
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+    }
+
+    @Test
+    public void dealerHitsBlackjack() {
+        blackjackModel.dealCardTest(true, false, 4, 0, 4);
+        blackjackModel.dealCardTest(true, false, 5, 0, 5);
+        blackjackModel.dealCardTest(false, false, 1, 0, 11);
+        blackjackModel.dealCardTest(false, true, 10, 1, 10);
+        blackjackView.getStandBtn().setEnabled(true);
+        blackjackView.ShowBetLabels(false);
+        blackjackView.hideChipValues();
+        blackjackView.getStandBtn().doClick();
+        while (!blackjackModel.isDoneStand())
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
+        assertEquals("Dealer hits blackjack.", "dWin", blackjackModel.getCurrentState().toString());
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+    }
+
+    @Test
+    public void playerHitsBlackjack() {
+        blackjackModel.dealCardTest(true, false, 1, 0, 11);
+        blackjackModel.dealCardTest(true, false, 10, 0, 10);
+        blackjackModel.dealCardTest(false, false, 2, 0, 2);
+        blackjackModel.dealCardTest(false, true, 10, 1, 10);
+        blackjackView.getStandBtn().setEnabled(true);
+        blackjackView.ShowBetLabels(false);
+        blackjackView.hideChipValues();
+        blackjackView.getStandBtn().doClick();
+        while (!blackjackModel.isDoneStand())
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
+        assertEquals("Player hits blackjack.", "pWin", blackjackModel.getCurrentState().toString());
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+    }
+
+    @Test
+    public void nobodyWins() {
+        blackjackModel.dealCardTest(true, false, 1, 0, 11);
+        blackjackModel.dealCardTest(true, false, 10, 0, 10);
+        blackjackModel.dealCardTest(false, false, 1, 1, 11);
+        blackjackModel.dealCardTest(false, true, 10, 1, 10);
+        blackjackView.getStandBtn().setEnabled(true);
+        blackjackView.ShowBetLabels(false);
+        blackjackView.hideChipValues();
+        blackjackView.getStandBtn().doClick();
+        while (!blackjackModel.isDoneStand())
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
+        assertEquals("It's a draw.", "draw", blackjackModel.getCurrentState().toString());
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+    }
 }
