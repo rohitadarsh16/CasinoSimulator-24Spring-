@@ -13,7 +13,8 @@ public class SlotModel {
 
     /**
      * SlotModel constructors for slot-machine. Have menuModel, money, and slotView variable.
-     * @param menu contain main menu model.
+     *
+     * @param menu  contain main menu model.
      * @param money contain money share across all games and menu.
      */
     public SlotModel(MainMenuModel menu, int money) {
@@ -24,6 +25,7 @@ public class SlotModel {
 
     /**
      * Get money method
+     *
      * @return money
      */
     public int getMoney() {
@@ -36,21 +38,19 @@ public class SlotModel {
      */
     public void pullLever() {
         Random randomNumber = new Random();
-        if(MainMenuView.difficulty == "Hard") {
+        if (MainMenuView.difficulty == "Hard") {
             for (int i = 0; i < 9; i++) {
                 slot[i] = randomNumber.nextInt(11);
             }
-        }
-        else if(MainMenuView.difficulty == "Medium") {
+        } else if (MainMenuView.difficulty == "Medium") {
             for (int i = 0; i < 9; i++) {
                 int val = randomNumber.nextInt(9);
                 int val2 = randomNumber.nextInt(8);
-                if(val2 == 7) //Double the chance to get a "7" icon
+                if (val2 == 7) //Double the chance to get a "7" icon
                     val = 1;
                 slot[i] = val;
             }
-        }
-        else {//Difficuly is set to easy...
+        } else {//Difficuly is set to easy...
             for (int i = 0; i < 9; i++) {
                 int val = randomNumber.nextInt(7);
                 int val2 = randomNumber.nextInt(9);
@@ -64,13 +64,11 @@ public class SlotModel {
 
     public int Leverdifficulty() {
         int totalRandom;
-        if(MainMenuView.difficulty == "Hard") {
+        if (MainMenuView.difficulty == "Hard") {
             totalRandom = 11;
-        }
-        else if(MainMenuView.difficulty == "Medium") {
+        } else if (MainMenuView.difficulty == "Medium") {
             totalRandom = 9;
-        }
-        else {
+        } else {
             totalRandom = 7;
         }
         return totalRandom;
@@ -78,6 +76,7 @@ public class SlotModel {
 
     /**
      * get betting money
+     *
      * @return betting money
      */
     public int getBettingMoney() {
@@ -86,15 +85,17 @@ public class SlotModel {
 
     /**
      * setSlot method for testing purpose only
+     *
      * @param slotNumber set slot position to test
      * @param slotSymbol set slot symbol to test
      */
-    public void setSlot (int slotNumber, int slotSymbol) {
+    public void setSlot(int slotNumber, int slotSymbol) {
         slot[slotNumber] = slotSymbol;
     }
 
     /**
      * get slot method
+     *
      * @param a to get slot's number/position
      * @return that slot's number/position
      */
@@ -104,6 +105,7 @@ public class SlotModel {
 
     /**
      * set betting money for combo-box button options.
+     *
      * @param a set "a" to "betting money".
      */
     public void setBettingMoney(int a) {
@@ -112,6 +114,7 @@ public class SlotModel {
 
     /**
      * rules for slots. If statement to check if there are any matches symbols in slots.
+     *
      * @return winning a string to tell the user is losing or winning. Also, calculate the
      * winning money for the user.
      */
@@ -123,8 +126,7 @@ public class SlotModel {
             if (slot[0] == slot[1] && slot[1] == slot[2]) {
                 if (slot[0] == 1 || slot[0] == 10) {
                     winningMoney = bettingMoney * 5;
-                }
-                else {
+                } else {
                     winningMoney = bettingMoney * 2;
                 }
             }
@@ -184,8 +186,7 @@ public class SlotModel {
                     winningMoney = bettingMoney * 2;
                 }
             }
-        }
-        else { //If the gamemode is set to freeplay
+        } else { //If the gamemode is set to freeplay
             //first row
             if (slot[0] == slot[1] && slot[1] == slot[2]) {
                 checkIfWon = true;
@@ -223,16 +224,14 @@ public class SlotModel {
         if (winningMoney > 0) {
             money += winningMoney;
             return "Winner!!";
-        }
-        else if(checkIfWon == true)
+        } else if (checkIfWon == true)
             return "Winner!!";
-        else if(MainMenuView.gamemode == "Simulated Casino") {
+        else if (MainMenuView.gamemode == "Simulated Casino") {
             money -= bettingMoney;
             //return "Bad Luck!!";
-        }
-//        else
-//            return "Bad Luck!!";
-        return null;
+        } else
+            return "Bad Luck!!";
+        return "Bad Luck!!";
     }
 
     /**
