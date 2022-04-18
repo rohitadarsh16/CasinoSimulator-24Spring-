@@ -62,6 +62,20 @@ public class SlotModel {
         }
     }
 
+    public int Leverdifficulty() {
+        int totalRandom;
+        if(MainMenuView.difficulty == "Hard") {
+            totalRandom = 11;
+        }
+        else if(MainMenuView.difficulty == "Medium") {
+            totalRandom = 9;
+        }
+        else {
+            totalRandom = 7;
+        }
+        return totalRandom;
+    }
+
     /**
      * get betting money
      * @return betting money
@@ -214,10 +228,11 @@ public class SlotModel {
             return "Winner!!";
         else if(MainMenuView.gamemode == "Simulated Casino") {
             money -= bettingMoney;
-            return "Bad Luck!!";
+            //return "Bad Luck!!";
         }
-        else
-            return "Bad Luck!!";
+//        else
+//            return "Bad Luck!!";
+        return null;
     }
 
     /**
