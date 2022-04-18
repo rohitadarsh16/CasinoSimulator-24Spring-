@@ -228,10 +228,9 @@ public class SlotModel {
             return "Winner!!";
         else if (MainMenuView.gamemode == "Simulated Casino") {
             money -= bettingMoney;
-            //return "Bad Luck!!";
+            return "Bad Luck!!";
         } else
             return "Bad Luck!!";
-        return "Bad Luck!!";
     }
 
     /**
