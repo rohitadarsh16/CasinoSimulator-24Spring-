@@ -9,6 +9,9 @@ public class MainMenuModel {
     private SlotModel slotModel;
     private BlackjackModel blackjackModel;
 
+    /**
+     * Stores money for the player
+     */
     public static int money; // available money to play
 
     public MainMenuModel() {
@@ -54,6 +57,9 @@ public class MainMenuModel {
      */
     public static void addMoney(){money = 100;}
 
+    /**
+     * Saves the data and exits the program
+     */
     public void exit() {
         save();
         System.exit(0);

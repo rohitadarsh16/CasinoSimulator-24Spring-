@@ -9,10 +9,16 @@ import java.io.IOException;
 
 public class MainMenuView extends JFrame {
     private MainMenuModel menuModel;
+    /**
+     * stores the current gamemode
+     */
     public static String gamemode;
 
     private JComboBox<String> gamemodeSelect;
-  
+
+    /**
+     * stores the current difficulty
+     */
     public static String difficulty;
     private JLabel background;
     private JLabel blackjackMenu;
@@ -509,7 +515,12 @@ public class MainMenuView extends JFrame {
         //Plays audio once
         clip.start();
     }
-
+    /**
+     * plays audio for slot game
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     */
     public void playSlotClip() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         String path = System.getProperty("user.dir");
         File audioFile = new File(path + "/Sounds/SlotStart.wav").getAbsoluteFile();
@@ -528,7 +539,7 @@ public class MainMenuView extends JFrame {
     public JLabel getBlackLabel() { return blackjackMenu; }
 
     /**
-     * for testing
+     * For testing
      * @return what game mode is chosen
      */
 
