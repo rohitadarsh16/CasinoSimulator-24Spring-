@@ -40,6 +40,16 @@ public class SlotModel {
      * difficulty for total of 9 times for 9 slots.
      */
     public void pullLever() {
+        try {
+            playHandleSound();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Random randomNumber = new Random();
         if (MainMenuView.difficulty == "Hard") {
             for (int i = 0; i < 9; i++) {
@@ -236,6 +246,7 @@ public class SlotModel {
             }
             money += winningMoney;
             return "Winner!!";
+        }
         else if(checkIfWon == true) {
             try {
                 playWinSound();
@@ -267,7 +278,17 @@ public class SlotModel {
 
     public void playLoseSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         String path = System.getProperty("user.dir");
-        File audioFile = new File(path + "/Sounds/Lose.wav").getAbsoluteFile();
+        File audioFile = new File(path + "").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
+    public void playHandleSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/HandleSound.wav").getAbsoluteFile();
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
         Clip clip = AudioSystem.getClip();
         clip.open(audioInputStream);
