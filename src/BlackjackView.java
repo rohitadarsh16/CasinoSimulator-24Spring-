@@ -566,6 +566,13 @@ public class BlackjackView extends JFrame {
         }
     }
 
+    /**
+     * playChipSound method.
+     * Plays a wav file when selecting a bet.
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     */
     public void playChipSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         String path = System.getProperty("user.dir");
         File audioFile = new File(path + "/Sounds/ChipSound.wav").getAbsoluteFile();
@@ -576,6 +583,13 @@ public class BlackjackView extends JFrame {
         clip.start();
     }
 
+    /**
+     * playWinSound method.
+     * Plays a wav file when the player wins.
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     */
     public void playWinSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         String path = System.getProperty("user.dir");
         File audioFile = new File(path + "/Sounds/Win.wav").getAbsoluteFile();
@@ -586,6 +600,13 @@ public class BlackjackView extends JFrame {
         clip.start();
     }
 
+    /**
+     * playLoseSound method.
+     * Plays a wav file when the player loses.
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     */
     public void playLoseSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         String path = System.getProperty("user.dir");
         File audioFile = new File(path + "/Sounds/Lose.wav").getAbsoluteFile();
