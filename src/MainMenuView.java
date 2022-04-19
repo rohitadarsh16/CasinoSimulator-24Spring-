@@ -7,6 +7,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * MainMenuView class.
+ * Implements the UI of the main menu.
+ * The GUI is used to launch the casino games.
+ */
 public class MainMenuView extends JFrame {
     private MainMenuModel menuModel;
     /**
@@ -35,6 +40,11 @@ public class MainMenuView extends JFrame {
     private JLabel gamemodeHelp;
     private JLabel difficultyHelp;
 
+    /**
+     * Constructor.
+     * Initializes all the elements of the UI; assigns code for button interactions.
+     * @param menu A reference to the MainMenuModel object.
+     */
     public MainMenuView(MainMenuModel menu) {
         super("CasinoSimulator");
         menuModel = menu;
@@ -266,6 +276,7 @@ public class MainMenuView extends JFrame {
             }
         });
 
+        // intercept closing the window
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -531,17 +542,9 @@ public class MainMenuView extends JFrame {
         clip.start();
     }
 
-    /**
+    /*
      * For testing
-     * @return blackjackMenu
      */
-
     public JLabel getBlackLabel() { return blackjackMenu; }
-
-    /**
-     * For testing
-     * @return what game mode is chosen
-     */
-
     public JComboBox<String> getGameOptions() { return gamemodeSelect; }
 }

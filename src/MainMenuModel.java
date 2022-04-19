@@ -4,6 +4,10 @@ import java.io.FileWriter;
 import java.util.Scanner;
 import java.io.IOException;
 
+/**
+ * MainMenuModel class.
+ * Implements the logic of the main menu.
+ */
 public class MainMenuModel {
     private MainMenuView menuView;
     private SlotModel slotModel;
@@ -14,6 +18,11 @@ public class MainMenuModel {
      */
     public static int money; // available money to play
 
+    /**
+     * Constructor.
+     * Initializes the necessary variables for the main menu; tries to read savedata.txt if
+     * it exists.
+     */
     public MainMenuModel() {
         try {
             File myObj = new File("savedata.txt");
@@ -91,15 +100,9 @@ public class MainMenuModel {
         }
     }
 
-    /**
+    /*
      * For testing
-     * @return menuView
      */
     public MainMenuView getView() { return menuView; }
-
-    /**
-     * For testing
-     * @return blackjackModel
-     */
     public BlackjackModel getModel() { return blackjackModel; }
 }
