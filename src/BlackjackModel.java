@@ -10,7 +10,11 @@ import java.util.Random;
  * Implements the logic of the blackjack game.
  */
 public class BlackjackModel {
+    /**
+     * Current state of the game.
+     */
     private currentState currentState;
+
     private MainMenuModel menuModel;
     private BlackjackView blackjackView;
     /**

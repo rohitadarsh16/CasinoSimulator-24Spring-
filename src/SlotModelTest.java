@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SlotModelTest {
     public SlotModel slotModel;
 
-    /**
+    /*
      * test if return "Winner!!" when same symbols in first row.
      */
     @Test
@@ -19,7 +19,7 @@ class SlotModelTest {
 
     }
 
-    /**
+    /*
      * Test if return "Bad Luck!!" when there is no matches symbols.
      */
     @Test
@@ -38,7 +38,7 @@ class SlotModelTest {
 
     }
 
-    /**
+    /*
      * Test if it returns 99 dollars when the player doesn't win.
      */
     @Test
@@ -59,7 +59,7 @@ class SlotModelTest {
         assertEquals(99, slotModel.getMoney());
     }
 
-    /**
+    /*
      * Test if it returns 52 dollars when there is one winning row (normal symbol).
      */
     @Test
@@ -82,7 +82,7 @@ class SlotModelTest {
         assertEquals(52, slotModel.getMoney());
     }
 
-    /**
+    /*
      * Test if it returns 54 dollars when there is one winning row (special symbol).
      */
     @Test
@@ -105,7 +105,7 @@ class SlotModelTest {
         assertEquals(55, slotModel.getMoney());
     }
 
-    /**
+    /*
      * Test if it returns 110 dollars when there is one winning row and the betting is 2 dollars (special symbol).
      */
     @Test
@@ -129,7 +129,7 @@ class SlotModelTest {
         assertEquals(110, slotModel.getMoney());
     }
 
-    /**
+    /*
      * Test if it returns 125 dollars when there is one winning row and the betting is 5 dollars (special symbol).
      */
     @Test
@@ -153,7 +153,7 @@ class SlotModelTest {
         assertEquals(125, slotModel.getMoney());
     }
 
-    /**
+    /*
      * Test if it stills return 100 dollars when "free play" is chosen.
      */
     @Test
