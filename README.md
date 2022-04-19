@@ -8,7 +8,7 @@ Minimum Java version required is **17.0.1**.
 
 # How to run
 - Download Casino.zip from the latest release
-- Extract the zip file; there should be a **jar** file and an **Assets** folder
+- Extract the zip file; there should be a **jar** file and **Assets** and **Sounds** folders
 - On the command line navigate to the folder where the files were extracted and run
 ```
 java -jar CasinoSimulator.jar
