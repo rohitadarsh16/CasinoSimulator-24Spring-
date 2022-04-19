@@ -5,16 +5,36 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
+/**
+ * BlackjackModel class.
+ * Implements the logic of the blackjack game.
+ */
 public class BlackjackModel {
     private currentState currentState;
     private MainMenuModel menuModel;
     private BlackjackView blackjackView;
+    /**
+     * The deck of cards represented as a linked list.
+     */
     private LinkedList<Card> deck;
+    /**
+     * Player object that represents the dealer.
+     */
     private Player dealer;
+    /**
+     * Player object that represents the player.
+     */
     private Player player;
 
+    /**
+     * Current balance.
+     */
     private int money;
+    /**
+     * Current bet.
+     */
     private int bet;
+
     private int cards_played; // how many cards were removed from the deck so far
     private int cardsPerRound; //counts number of cards played per round
 
@@ -24,6 +44,10 @@ public class BlackjackModel {
         pWin, dWin, pStand, dStand, dTurn, pTurn, draw //d = dealer, p = player
     }
 
+    /**
+     * gets current state of the game
+     * @return current state
+     */
     public currentState getCurrentState(){
         return currentState;
     }
@@ -34,6 +58,12 @@ public class BlackjackModel {
     private boolean doneStand;
     private int hitCount = 0;
 
+    /**
+     * Constructor.
+     * Initializes the necessary variables needed to start the game.
+     * @param menu A reference to the MainMenuModel object.
+     * @param money An integer representing the amount of money the player currently has.
+     */
     public BlackjackModel(MainMenuModel menu, int money) {
         currentState = currentState.pTurn;
         menuModel = menu;
@@ -51,7 +81,8 @@ public class BlackjackModel {
     }
 
     /**
-     * Create the deck; a list of 52 Cards of each suit.
+     * createDeck method.
+     * Create the deck; a linked list of 52 Cards of each suit is initialized.
      */
     public void createDeck() {
         deck.clear();
@@ -71,7 +102,8 @@ public class BlackjackModel {
     }
 
     /**
-     * Shuffle the deck.
+     * shuffle method.
+     * Shuffle the deck according to the difficulty level.
      */
     public void shuffle() {
         Random randomNumber = new Random();
@@ -108,7 +140,8 @@ public class BlackjackModel {
     }
 
     /**
-     * Player hits.
+     * playerHit method.
+     * The player is dealt another card from the deck; checks if the player won.
      */
     public void playerHit() {
         doneHit = false;
@@ -144,7 +177,8 @@ public class BlackjackModel {
     }
 
     /**
-     * Player stands.
+     * playerStand method.
+     * The playre gives up his turn and the dealer takes over.
      */
     public void playerStand() {
         //player stands which makes it the dealer's turn
@@ -163,7 +197,9 @@ public class BlackjackModel {
     }
 
     /**
-     * Player doubles down (doubles bet but only gets one more card)
+     * doubleDown method.
+     * The player is dealt one last card and the current bet is doubled.
+     * Checks if the player won; if not the player stands.
      */
     public void doubleDown() {
         new Thread(new Runnable() {
@@ -197,7 +233,8 @@ public class BlackjackModel {
     }
 
     /**
-     * Dealer hits.
+     * dealerHit method.
+     * The dealer is dealt another card from the deck; checks if the dealer won.
      */
     public void dealerHit() {
         dealer.addCard();
@@ -223,7 +260,8 @@ public class BlackjackModel {
     }
 
     /**
-     * Dealer stands.
+     * dealerStand method.
+     * Dealer gives up his turn; checks who won.
      */
     public void dealerStand() {
         currentState = currentState.pTurn;
@@ -246,7 +284,9 @@ public class BlackjackModel {
     }
 
     /**
-     * Dealer's turn.
+     * dealerTurn method.
+     * Calls dealerHit if dealer's total points are less than 17; otherwise
+     * calls dealerStand.
      */
     public void dealerTurn() {               //dealer's turn
         if (dealer.getTotal() < 17) {        //if dealer has less than 17 they hit
@@ -257,7 +297,8 @@ public class BlackjackModel {
     }
 
     /**
-     * Update BlackjackView and reset players.
+     * win method.
+     * Update BlackjackView, reset players and deck.
      */
     public void win() {
         switch (currentState) {
@@ -273,7 +314,8 @@ public class BlackjackModel {
     }
 
     /**
-     * Update bet and money balance where player wins
+     * playerWins method.
+     * Update bet and balance in BlackjackView, reset bet.
      */
     public void playerWins(){
         money = money + (bet * 2);
@@ -284,7 +326,8 @@ public class BlackjackModel {
     }
 
     /**
-     * Update bet and money balance where player loses
+     * playerLoses method.
+     * Update bet and balance in BlackjackView.
      */
     public void playerLoses(){
         bet = 0;
@@ -294,7 +337,8 @@ public class BlackjackModel {
     }
 
     /**
-     * Update bet and money balance where player draws
+     * playerDraws method.
+     * Update bet and balance in BlackjackView, reset bet.
      */
     public void playerDraws(){
         money = money + bet;
@@ -305,6 +349,7 @@ public class BlackjackModel {
     }
 
     /**
+     * playerBet method.
      * Player places a bet.
      */
     public void playerBet(int bet) {
@@ -317,6 +362,7 @@ public class BlackjackModel {
     }
 
     /**
+     * deal method.
      * Initial deal of cards. The order is player, dealer, player, dealer.
      * The dealer's last card is face down.
      */
@@ -356,8 +402,9 @@ public class BlackjackModel {
     }
 
     /**
-     * Get dealer's top card.
-     * @return The card's suit, value, and points in an integer array.
+     * popDealerCard method.
+     * Get dealer's top card in hand.
+     * @return An integer array containing the card's suit, value, and points.
      */
     int[] popDealerCard() {
         int[] ret = new int[3];
@@ -371,8 +418,9 @@ public class BlackjackModel {
     }
 
     /**
-     * Get player's top card.
-     * @return The card's suit, value, and points in an integer array.
+     * popPlayerCard method.
+     * Get player's top card in hand.
+     * @return An integer array containing the card's suit, value, and points.
      */
     int[] popPlayerCard() {
         int[] ret = new int[3];
@@ -385,16 +433,30 @@ public class BlackjackModel {
         return ret;
     }
 
-    /*
-     * Get current numbers.
+    /**
+     * getDealerTotal method.
+     * @return The dealer's total points as an integer.
      */
     public int getDealerTotal() { return dealer.getTotal(); }
+    /**
+     * getPlayerTotal method.
+     * @return The player's total points as an integer.
+     */
     public int getPlayerTotal() { return player.getTotal(); }
+    /**
+     * getBalance method.
+     * @return The current balance as an integer.
+     */
     public int getBalance() { return money; }
+    /**
+     * getBet method.
+     * @return The current bet as an integer.
+     */
     public int getBet() { return bet; }
 
     /**
-     * Quit game.
+     * exit method.
+     * Update balance and quit game.
      */
     public void exit() {
         MainMenuModel.money = money;
@@ -407,19 +469,32 @@ public class BlackjackModel {
     }
 
     /**
-     * Card class; represents a card.
+     * Card class.
+     * Used to define a card in the deck.
      */
     private class Card {
         int value;
         int suit;
         int points;
 
+        /**
+         * Constructor.
+         * Initialize a card object.
+         * @param v The face value of the card.
+         * @param s The suit of the card.
+         * @param p The number of points for the card.
+         */
         Card(int v, int s, int p) {
             value = v;
             suit = s;
             points = p;
         }
 
+        /**
+         * Constructor.
+         * Initialize a card object.
+         * @param c A card object.
+         */
         Card(Card c) {
             value = c.value;
             suit = c.suit;
@@ -429,6 +504,7 @@ public class BlackjackModel {
 
     /**
      * Player class.
+     * Used to define a player entity.
      */
     private class Player {
         Card[] hand;
@@ -437,6 +513,11 @@ public class BlackjackModel {
         int total;
         private boolean stand;
 
+        /**
+         * Constructor.
+         * Initialize a player object; creates a hand which is
+         * an array of Cards.
+         */
         Player() {
             stand = false;
             hand = new Card[10]; // max of 10 possible cards should be enough
@@ -444,7 +525,8 @@ public class BlackjackModel {
         }
 
         /**
-         * Add card to the hand.
+         * addCard method.
+         * Add a card to the hand; if all cards are dealt reset the deck.
          */
         void addCard() {
             // if all cards are dealt create a new deck and shuffle before continuing
@@ -473,8 +555,8 @@ public class BlackjackModel {
             }
         }
 
-        /**
-         * For testing!!!
+         /* For testing!!!
+         * Add a specific card to the hand.
          */
         void addCard(int value, int suit, int points) {
             Card c = new Card(value, suit, points);
@@ -483,27 +565,65 @@ public class BlackjackModel {
             total += points;
         }
 
+        /**
+         * getHandCount method.
+         * @return The size of the hand as an integer.
+         */
         public int getHandCount() { return i; }
 
+        /**
+         * hasBusted method.
+         * @return True if the total points are over 21.
+         */
         public boolean hasBusted() { return total > 21; }
 
+        /**
+         * isBlackjack method.
+         * @return True if the total points add up to 21.
+         */
         public boolean isBlackjack() { return total == 21; }
 
+        /**
+         * isStanding method.
+         * @return True is player is standing.
+         */
         public boolean isStanding() { return stand; }
 
+        /**
+         * setToStanding method.
+         * @param stand Boolean variable; set to true if the player stands.
+         */
         public void setToStanding(boolean stand) { this.stand = stand; }
 
+        /**
+         * popCard method.
+         * @return The top Card object in the hand.
+         */
         Card popCard() { return hand[j++]; }
 
+        /**
+         * getTotal method.
+         * @return Total points as an integer.
+         */
         int getTotal() { return total; }
 
+        /**
+         * reset method.
+         * Resets the player's points and hand.
+         */
         void reset() {
             i = j = total = 0;
             stand = false;
         }
     }
-
-
+  
+    /**
+     * playDealSound method.
+     * Plays a wav file when a card is dealt.
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     */
     public void playDealSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         String path = System.getProperty("user.dir");
         File audioFile = new File(path + "/Sounds/CardSound.wav").getAbsoluteFile();
@@ -514,8 +634,7 @@ public class BlackjackModel {
         clip.start();
     }
 
-
-    /**
+    /*
      * For testing
      */
     public int getDeckCount() { return deck.size(); }
@@ -531,7 +650,7 @@ public class BlackjackModel {
     /*
      * Deal a chosen card for testing purposes.
      * If p is set to true it will deal to the player; otherwise to the dealer.
-     * If hidden is true it will show the hidden card; used to follow the normal course of the game
+     * If hidden is true it will show the hidden card; used to follow the normal course of the game.
      */
     public void dealCardTest(boolean p, boolean hidden, int value, int suit, int points) {
         doneDeal = false;

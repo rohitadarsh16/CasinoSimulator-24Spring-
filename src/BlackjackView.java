@@ -12,10 +12,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * BlackjackView class.
+ * Implements the UI of the blackjack game.
+ */
 public class BlackjackView extends JFrame {
     private BlackjackModel blackjackModel;
+    /**
+     * JLabel array holding the cards assets.
+     */
     private JLabel[][] deckLabel; // holds all pictures of cards
+    /**
+     * Linked list holding the cards that are already dealt.
+     */
     private LinkedList<JLabel> cards; // holds the currently dealt cards
+
     private JLabel cardBack; // back of card picture
     private JLabel background; // background picture
     private JLabel[] betLabels; // chips pictures
@@ -45,6 +56,11 @@ public class BlackjackView extends JFrame {
     private final int Y_PLAYER = 304; // y position for player cards
     public boolean running; // while animation is playing running is true
 
+    /**
+     * Constructor.
+     * Initializes all the elements of the UI; assigns code for button interactions.
+     * @param black A reference to the BlackjackModel object.
+     */
     public BlackjackView(BlackjackModel black) {
         super("CasinoSimulator - Blackjack");
         blackjackModel = black;
@@ -262,6 +278,10 @@ public class BlackjackView extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * hideChipValues method.
+     * Hide the labels representing the values of the chips.
+     */
     public void hideChipValues(){
         chip5.setVisible(false);
         chip10.setVisible(false);
@@ -270,6 +290,10 @@ public class BlackjackView extends JFrame {
         chip25.setVisible(false);
     }
 
+    /**
+     * showChipValues method.
+     * Show the labels representing the values of the chips.
+     */
     public void showChipValues(){
         chip5.setVisible(true);
         chip10.setVisible(true);
@@ -279,7 +303,8 @@ public class BlackjackView extends JFrame {
     }
 
     /**
-     * Show the player's card after it was dealt.
+     * ShowPlayerCard method.
+     * Shows the player's card on the screen after it was dealt.
      */
     public void ShowPlayerCard(int[] c) {
         deckLabel[c[0]][c[1]].setBounds(600, 0, 96, 144); // initial position upper-right corner
@@ -301,7 +326,8 @@ public class BlackjackView extends JFrame {
     }
 
     /**
-     * Show the dealer's card after it was dealt.
+     * ShowDealerCard method.
+     * Show the dealer's card on the screen after it was dealt.
      */
     public void ShowDealerCard(int[] c) {
         background.add(deckLabel[c[0]][c[1]]);
@@ -328,7 +354,8 @@ public class BlackjackView extends JFrame {
     }
 
     /**
-     * Show the back of a card.
+     * ShowBackCard method.
+     * Show the back of a card on the screen.
      */
     public void ShowBackCard(boolean visible) {
         cardBack.setVisible(visible);
@@ -345,10 +372,15 @@ public class BlackjackView extends JFrame {
         }
     }
 
-    /*
-     * Update balance and current bet
+    /**
+     * UpdateBalance method.
+     * Update the balance label with current balance.
      */
     public void UpdateBalance() { balanceTotal.setText(String.valueOf(blackjackModel.getBalance())); }
+    /**
+     * UpdateBet method.
+     * Update the bet label with current bet.
+     */
     public void UpdateBet() { betTotal.setText(String.valueOf(blackjackModel.getBet())); }
 
     /**
@@ -397,8 +429,9 @@ public class BlackjackView extends JFrame {
         t.start();
     }
 
-    /*
-     * Show who won.
+    /**
+     * ShowDealerWin method.
+     * Dealer won; update the label and reset UI.
      */
     public void ShowDealerWin() {
         dealerWin.setVisible(true);
@@ -413,6 +446,11 @@ public class BlackjackView extends JFrame {
         }
         Reset(dealerWin);
     }
+  
+    /**
+     * ShowPlayerWin method.
+     * Player won; update the label and reset UI.
+     */
     public void ShowPlayerWin() {
         playerWin.setVisible(true);
         try {
@@ -426,9 +464,15 @@ public class BlackjackView extends JFrame {
         }
         Reset(playerWin);
     }
+  
+    /**
+     * ShowDraw method.
+     * It's a draw; update the label and reset UI.
+     */
     public void ShowDraw() { draw.setVisible(true); Reset(draw); }
 
     /**
+     * ShowBetLabels method.
      * Set each betLabel's visibility to visible.
      */
     public void ShowBetLabels(boolean visible) {
@@ -436,7 +480,8 @@ public class BlackjackView extends JFrame {
     }
 
     /**
-     * Assign a MouseListener for each betLabel so it can be clicked.
+     * InitBetLabels method.
+     * Assign a MouseListener for each betLabel, so it can be clicked.
      */
     private void InitBetLabels() {
         int bet = 5;
@@ -464,6 +509,7 @@ public class BlackjackView extends JFrame {
     }
 
     /**
+     * LoadAsset method.
      * Load all pictures from Assets folder.
      */
     private void LoadAssets() {
@@ -552,11 +598,20 @@ public class BlackjackView extends JFrame {
 
     /**
      * Animation class.
+     * Implements the logic for animating a card.
+     * Extends SwingerWorker which starts a thread that runs in the background.
      */
     private class animThread extends SwingWorker {
         private JLabel j;
         private int dX, dY, finX, finY, currX, currY, speed, distance, moves, xUnits, yUnits;
 
+        /**
+         * Constructor.
+         * Initializes the variables.
+         * @param j A label representing the card to be animated.
+         * @param x The final x position.
+         * @param y The final y position.
+         */
         public animThread(JLabel j, int x, int y) {
             this.j = j;
             finX = x; // final x position
@@ -573,6 +628,12 @@ public class BlackjackView extends JFrame {
             yUnits = dY / moves;
         }
 
+        /**
+         * doInBackground method.
+         * The actual animation logic. Runs as a separate thread in the background.
+         * @return Returns null.
+         * @throws Exception
+         */
         @Override
         protected Object doInBackground() throws Exception {
             while (moves > 0) {
@@ -587,6 +648,10 @@ public class BlackjackView extends JFrame {
             return null;
         }
 
+        /**
+         * done method.
+         * The code in this method runs after the doInBackground method finishes.
+         */
         @Override
         protected void done() {
             j.setBounds(finX, finY, 96, 144); // adjust final position
@@ -594,7 +659,7 @@ public class BlackjackView extends JFrame {
         }
     }
 
-    /**
+    /*
      * For testing
      */
     public JButton getDealBtn() { return dealBtn; }
