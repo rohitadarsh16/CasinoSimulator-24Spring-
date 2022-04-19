@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
@@ -8,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -181,6 +183,7 @@ public class BlackjackView extends JFrame {
 
         if(MainMenuView.gamemode == "Simulated Casino") {
             ShowBetLabels(true);
+            dealBtn.setEnabled(false);
             showChipValues();
         }
         else { //Gamemode is set to freeplay
@@ -201,7 +204,7 @@ public class BlackjackView extends JFrame {
                 blackjackModel.deal();
                 standBtn.setEnabled(true);
                 hitBtn.setEnabled(true);
-                dblDownBtn.setEnabled(true);
+                if (blackjackModel.getBalance() >= blackjackModel.getBet()) dblDownBtn.setEnabled(true);
                 repaint();
             }
         });
@@ -241,14 +244,8 @@ public class BlackjackView extends JFrame {
         dblDownBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(blackjackModel.getBalance() >= blackjackModel.getBet()) {
-                    blackjackModel.doubleDown();
-                    blackjackModel.playerStand();
-                    dblDownBtn.setEnabled(false);
-                }
-                else{
-                    dblDownBtn.setEnabled(false);
-                }
+                dblDownBtn.setEnabled(false);
+                blackjackModel.doubleDown();
             }
         });
 
@@ -424,6 +421,7 @@ public class BlackjackView extends JFrame {
 
         standBtn.setEnabled(false);
         hitBtn.setEnabled(false);
+        dblDownBtn.setEnabled(false);
         x_dealer = x_player = 30;
 
         Timer t = new Timer(2000, ac); // wait 2 seconds before executing ac
@@ -435,12 +433,38 @@ public class BlackjackView extends JFrame {
      * ShowDealerWin method.
      * Dealer won; update the label and reset UI.
      */
-    public void ShowDealerWin() { dealerWin.setVisible(true); Reset(dealerWin); }
+    public void ShowDealerWin() {
+        dealerWin.setVisible(true);
+        try {
+            playLoseSound();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Reset(dealerWin);
+    }
+  
     /**
      * ShowPlayerWin method.
      * Player won; update the label and reset UI.
      */
-    public void ShowPlayerWin() { playerWin.setVisible(true); Reset(playerWin); }
+    public void ShowPlayerWin() {
+        playerWin.setVisible(true);
+        try {
+            playWinSound();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Reset(playerWin);
+    }
+  
     /**
      * ShowDraw method.
      * It's a draw; update the label and reset UI.
@@ -469,6 +493,15 @@ public class BlackjackView extends JFrame {
                     super.mouseClicked(e);
                     blackjackModel.playerBet(finalBet);
                     dealBtn.setEnabled(true);
+                    try {
+                        playChipSound();
+                    } catch (LineUnavailableException ex) {
+                        ex.printStackTrace();
+                    } catch (UnsupportedAudioFileException ex) {
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             });
             bet += 5;
@@ -531,6 +564,36 @@ public class BlackjackView extends JFrame {
             index += 5;
             x_chip += 70;
         }
+    }
+
+    public void playChipSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/ChipSound.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
+    public void playWinSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/Win.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
+    public void playLoseSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/Lose.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
     }
 
     /**

@@ -8,10 +8,37 @@ import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.security.SecureRandom;
 
+/**
+ * SlotView class for slot-machine. Should contain all the front-end/GUI methods/functions.
+ */
 public class SlotView extends JFrame {
-    private SlotModel slotModel;
 
+    private SlotModel slotModel;
+    private ImageIcon[] icon;
+    private ImageIcon slotmachine;
+    private ImageIcon handlePull;
+    private File path;
+    private String[] betOptions;
+
+    private JLabel handleDown;
+    private JLabel label[];
+    private JLabel slotlabel;
+    private JLabel resultLabel;
+    private JLabel moneylabel;
+    private JLabel wagerlabel;
+    private JLabel bonuslabel;
+    private JButton helpButton;
+    private JButton exitBtn;
+    private JButton pullLever;
+    private JComboBox<String> betSelect;
+
+    /**
+     * SlotView constructor that contain all GUI functionalities
+     * such as the ImageIcon, File, JLabel, JButton, etc., and what it does.
+     * @param slot accept the SlotModel as a parameter.
+     */
     public SlotView(SlotModel slot) {
         super("CasinoSimulator - Slot Machine");
         slotModel = slot;
@@ -20,49 +47,34 @@ public class SlotView extends JFrame {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
 
-        BufferedImage[] picture;
-        File path = new File("Assets/SlotMachine");
-        File[] allFiles = path.listFiles();
+        path = new File("Assets/SlotMachine");
         String contents[] = path.list();
 
-        picture = new BufferedImage[allFiles.length];
+        //Put symbols to each icon variable.
+        icon = new ImageIcon[contents.length];
+        try {
+            icon[0] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/apple.png")));
+            icon[1] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/slot7.png")));
+            icon[2] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/banana.png")));
+            icon[3] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/bell.png")));
+            icon[4] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/cherry.png")));
+            icon[5] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/grape.png")));
+            icon[6] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/orange.png")));
+            icon[7] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/pear.png")));
+            icon[8] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/triplebar.png")));
+            icon[9] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/watermelon.png")));
+            icon[10] = new ImageIcon(ImageIO.read(new File("Assets/SlotMachine/diamond.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //create 9 labels for 9 slots
-        JLabel label[] = new JLabel[9];
+        label = new JLabel[9];
         for(int i = 0; i < 9; i++) {
             label[i] = new JLabel();
         }
 
-        //Put symbols to each icon variable.
-        ImageIcon[] icon = new ImageIcon[contents.length];
-
-        for(int i = 0; i < contents.length; i++) {
-            try{
-                picture[i] = ImageIO.read(allFiles[i]);
-                icon[i]= new ImageIcon(picture[i]);
-            }catch (IOException e) {
-
-            }
-        }
-
-        JButton exitBtn = new JButton("Exit");
-        exitBtn.setBounds(700, 162, 75, 70);
-        exitBtn.setBackground(Color.lightGray);
-        add(exitBtn);
-
-        exitBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                slotModel.exit();
-                dispose();
-            }
-        });
-
-        JLabel slotlabel = new JLabel();
-        slotlabel.setBounds(-70, -20, 900, 800);
-        ImageIcon slotmachine = new ImageIcon("Assets/SlotMachineGUI/" + "slotframe.png");
-        slotlabel.setIcon(slotmachine);
-
+        //set position of the 9 labels for 9 slots.
         label[0].setBounds(210, 300, 100, 80);
         label[1].setBounds(210, 380, 100, 80);
         label[2].setBounds(210, 460, 100, 80);
@@ -73,31 +85,180 @@ public class SlotView extends JFrame {
         label[7].setBounds(500, 380, 100, 80);
         label[8].setBounds(500, 460, 100, 80);
 
-        //There will be 7 icons for each label
+        //There will be 11 icons for each label
         for(int i = 0; i < 9; i++) {
-            label[i].setIcon(icon[0]);
+            label[i].setIcon(icon[1]);
 
             add(label[i]);
         }
 
-        JButton pullLever = new JButton(new ImageIcon("Assets/SlotMachineGUI/" + "handle.png"));
-        JLabel resultLabel = new JLabel();
+        //Add a button for user to know which symbols are special or normal.
+        helpButton = new JButton(new ImageIcon("Assets/SlotMachineGUI/" + "HelpButtonSmaller.png"));
+        helpButton.setBounds(355, 685, 35, 35);
+        helpButton.setBorder(BorderFactory.createEmptyBorder());
+        helpButton.setContentAreaFilled(false);
+        helpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //Copy from menu
+                BufferedImage img = null;
+                //String mainPath = System.getProperty("user.dir"); // get main folder path
 
+                //create pop-up frame
+                JFrame ruleFrame = new JFrame();
+                JDialog symbolsDialog = new JDialog(ruleFrame);
+                symbolsDialog.setLayout(new FlowLayout());
+                symbolsDialog.setBounds(300, 100, 530, 450);
+
+                //load picture of rules
+                try {
+                    img = ImageIO.read(new File("Assets/SlotMachineGUI/WinningSymbols.PNG"));
+                } catch (Exception ex) {
+                    System.out.println("Cannot load WinningSymbols image!");
+                }
+                JLabel symbolsRules = new JLabel(new ImageIcon(img));
+                symbolsRules.setBounds(5, 5, 200, 200);
+
+                //close button
+                JButton close = new JButton("Close");
+                close.setBounds(400, 400, 100, 100);
+                close.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        symbolsDialog.setVisible(false);
+                    }
+                });
+                symbolsDialog.add(symbolsRules);
+                symbolsDialog.add(close);
+                symbolsDialog.setVisible(true);
+            }
+        });
+
+        //exit button.
+        exitBtn = new JButton("Exit");
+        exitBtn.setBounds(700, 162, 75, 70);
+        exitBtn.setBackground(Color.lightGray);
+        exitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                slotModel.exit();
+                dispose();
+            }
+        });
+
+        //Add in slot-machine image
+        slotmachine = new ImageIcon("Assets/SlotMachineGUI/" + "slotframe.png");
+        slotlabel = new JLabel();
+        slotlabel.setBounds(-70, -20, 900, 800);
+        slotlabel.setIcon(slotmachine);
+
+        ImageIcon background;
+        JLabel IconBackground = new JLabel();
+        background = new ImageIcon("Assets/SlotMachineGUI/" + "SlotBackground.png");
+        IconBackground.setBounds(180, 270, 450, 300);
+        IconBackground.setIcon(background);
+
+
+        //Handle pulling button.
+        pullLever = new JButton(new ImageIcon("Assets/SlotMachineGUI/" + "handle.png"));
+        pullLever.setBounds(675, 350, 120, 320);
+        pullLever.setBorder(BorderFactory.createEmptyBorder());
+        pullLever.setContentAreaFilled(false);
+        pullLever.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resultLabel.setVisible(false);
+                if(slot.getMoney() == 0) {
+                    resultLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+                    resultLabel.setText("<html><div style='text-align: center;'>No More money!<br> Add more money in the menu.</div></html>");
+                    slotModel.exit();
+                    dispose();
+
+                }
+                else if(slot.getMoney() < slot.getBettingMoney()) {
+                    resultLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+                    resultLabel.setText("<html><div style='text-align: center;'>Not enough money for betting!<br> Please lower the bet.</div></html>");
+                }
+                else {
+                    //The handle animation, slots animation, and symbols matching when pull lever button is click.
+                    slotModel.pullLever();
+                    ActionListener a = new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            for(int j = 0; j < 9; j++) {
+                                SecureRandom rand = new SecureRandom();
+                                int randomNum = rand.nextInt(slotModel.Leverdifficulty());
+                                label[j].setIcon(icon[randomNum]);
+                            }
+                            pullLever.setEnabled(false);
+                        }
+                    };
+
+                    Timer randomSort = new Timer(100, a);
+
+                    Timer pullLeverDown = new Timer(200, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            pullLever.setVisible(false);
+                            handleDown.setVisible(true);
+                            randomSort.start();
+                            pullLever.setEnabled(false);
+                        }
+                    });
+                    pullLeverDown.start();
+                    pullLeverDown.setRepeats(false);
+
+                    Timer pullLeverUp = new Timer(700, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            handleDown.setVisible(false);
+                            pullLever.setVisible(true);
+                        }
+                    });
+                    pullLeverUp.start();
+                    pullLeverUp.setRepeats(false);
+
+                    Timer completionWait = new Timer(2000, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            randomSort.stop();
+                            for (int i = 0; i < 9; i++) {
+                                label[i].setIcon(icon[slot.getSlot(i)]);
+
+                                //add(label[i]);
+                            }
+                            resultLabel.setText(slot.matchCheck());
+                            resultLabel.setHorizontalAlignment(JLabel.CENTER);
+                            moneylabel.setText(("TOTAL:" + "$" + slot.getMoney()));
+                            pullLever.setEnabled(true);
+                            resultLabel.setVisible(true);
+                        }
+                    });
+                    completionWait.start();
+                    completionWait.setRepeats(false);
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                    }
+                }
+            }
+
+        });
+
+        resultLabel = new JLabel();
         resultLabel.setFont(new Font("Arial", Font.PLAIN, 36));
-        resultLabel.setBounds(250, 580, 300, 50);   //result label size
+        resultLabel.setBounds(250, 580, 300, 50);
 
-        pullLever.setBounds(675, 350, 120, 320);  //Pull button size
-
-        JLabel moneylabel = new JLabel();
+        moneylabel = new JLabel();
         moneylabel.setFont(new Font("Arial", Font.BOLD, 20));
         moneylabel.setBounds(310, 730, 300, 50);
-
-        JLabel wagerlabel = new JLabel();
+        moneylabel.setText(("TOTAL:" + "$" + slot.getMoney()));
 
         //add JComboBox for betting options.
-        String[] betOptions = {"1$", "2$", "5$"};
-        JComboBox<String> betSelect = new JComboBox<>(betOptions);
-        betSelect.setBounds(260, 685, 50, 30);
+        betOptions = new String[]{"1$", "2$", "5$"};
+        betSelect = new JComboBox<>(betOptions);
+        betSelect.setBounds(260, 675, 67, 50);
         betSelect.setBackground(Color.CYAN);
         betSelect.addItemListener(new ItemListener() {
             @Override
@@ -116,60 +277,42 @@ public class SlotView extends JFrame {
             }
         });
 
+        wagerlabel = new JLabel();
         wagerlabel.setFont(new Font("Arial", Font.BOLD, 20));
         wagerlabel.setBounds(200, 675, 300, 50);
         wagerlabel.setText(("Bet = "));
 
-        JLabel bonuslabel = new JLabel();
+        bonuslabel = new JLabel();
         bonuslabel.setFont(new Font("Arial", Font.BOLD, 15));
         bonuslabel.setBounds(400, 675, 300, 50);
-        bonuslabel.setText(("<html>Bonus = Bet x 2<br>SpecialBonus = bet x 5</html>"));
+        bonuslabel.setText(("<html>Normal Symbols = Bet x 2<br>Special Symbols = Bet x 5</html>"));
 
-        pullLever.setBorder(BorderFactory.createEmptyBorder());
-        pullLever.setContentAreaFilled(false);
+        handlePull = new ImageIcon("Assets/SlotMachineGUI/" + "HandleDown.png");
+        handleDown = new JLabel();
+        handleDown.setBounds(644, 285, 900, 800);
+        handleDown.setIcon(handlePull);
+        handleDown.setVisible(false);
 
         add(pullLever);
-        moneylabel.setText(("TOTAL:" + "$" + slot.getMoney()));
-
-        pullLever.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                if(slot.getMoney() == 0) {
-                    //resultLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-                    //resultLabel.setText("<html><div style='text-align: center;'>No More money!<br> Add more money in the menu.</div></html>");
-                    slotModel.exit();
-                    dispose();
-
-                }
-                else if(slot.getMoney() < slot.getBettingMoney()) {
-                    resultLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-                    resultLabel.setText("<html><div style='text-align: center;'>Not enough money for betting!<br> Please lower the bet.</div></html>");
-                }
-                else {
-
-                    slotModel.pullLever();
-                    for (int i = 0; i < 9; i++) {
-                        label[i].setIcon(icon[slot.getSlot(i)]);
-
-                        add(label[i]);
-                    }
-                    resultLabel.setText(slot.matchCheck());
-                    resultLabel.setHorizontalAlignment(JLabel.CENTER);
-                    moneylabel.setText(("TOTAL:" + "$" + slot.getMoney()));
-                }
-            }
-        });
+        add(handleDown);
+        add(exitBtn);
         add(betSelect);
-
+        add(helpButton);
         add(wagerlabel);
         add(bonuslabel);
         add(moneylabel);
         add(resultLabel);
         add(slotlabel);
+        for(int i = 0; i < 9; i++) {
+            add(label[i]);
+        }
+        add(IconBackground);
+
+        getContentPane().setBackground(Color.pink);
 
         setLayout(null);
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
 }

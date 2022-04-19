@@ -1,5 +1,11 @@
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
+/**
+ * SlotModel class for slot-machine. Should contain all the backend methods/functions.
+ */
 public class SlotModel {
     private MainMenuModel menuModel;
     private SlotView slotView;
@@ -8,36 +14,57 @@ public class SlotModel {
     private int[] slot = new int[9];
     private int bettingMoney = 1;
 
+    /**
+     * SlotModel constructors for slot-machine. Have menuModel, money, and slotView variable.
+     *
+     * @param menu  contain main menu model.
+     * @param money contain money share across all games and menu.
+     */
     public SlotModel(MainMenuModel menu, int money) {
         menuModel = menu;
         this.money = money;
         slotView = new SlotView(this);
     }
 
+    /**
+     * Get money method
+     *
+     * @return money
+     */
     public int getMoney() {
         return money;
     }
 
+    /**
+     * pull lever method for pull lever button. This method will generate random number from 1 to 7,9, or 11 depend on the
+     * difficulty for total of 9 times for 9 slots.
+     */
     public void pullLever() {
-
-
+        //Play HandleSound method when pullLever method is invoked.
+        try {
+            playHandleSound();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Random randomNumber = new Random();
-        if(MainMenuView.difficulty == "Hard") {
+        if (MainMenuView.difficulty == "Hard") {
             for (int i = 0; i < 9; i++) {
                 slot[i] = randomNumber.nextInt(11);
             }
-        }
-        else if(MainMenuView.difficulty == "Medium") {
+        } else if (MainMenuView.difficulty == "Medium") {
             for (int i = 0; i < 9; i++) {
                 int val = randomNumber.nextInt(9);
                 int val2 = randomNumber.nextInt(8);
-                if(val2 == 7) //Double the chance to get a "7" icon
+                if (val2 == 7) //Double the chance to get a "7" icon
                     val = 1;
                 slot[i] = val;
             }
-        }
-        else {//Difficuly is set to easy...
+        } else {//Difficuly is set to easy...
             for (int i = 0; i < 9; i++) {
                 int val = randomNumber.nextInt(7);
                 int val2 = randomNumber.nextInt(9);
@@ -49,29 +76,67 @@ public class SlotModel {
         }
     }
 
+    /**
+     * Lever difficulty method for differentiate between
+     * Easy(7 symbols uses), Medium(9 symbols uses), and Hard(11 symbols uses).
+     * @return the total symbols use for each difficulty.
+     */
+    public int Leverdifficulty() {
+        int totalRandom;
+        if (MainMenuView.difficulty == "Hard") {
+            totalRandom = 11;
+        } else if (MainMenuView.difficulty == "Medium") {
+            totalRandom = 9;
+        } else {
+            totalRandom = 7;
+        }
+        return totalRandom;
+    }
+
+    /**
+     * get betting money
+     *
+     * @return betting money
+     */
     public int getBettingMoney() {
         return bettingMoney;
     }
 
-
-    //add setSlot method for test purpose.
-    public void setSlot (int slotNumber, int slotSymbol) {
+    /**
+     * setSlot method for testing purpose only
+     *
+     * @param slotNumber set slot position to test
+     * @param slotSymbol set slot symbol to test
+     */
+    public void setSlot(int slotNumber, int slotSymbol) {
         slot[slotNumber] = slotSymbol;
     }
 
-    //Get slot number methods. There should be a better way to do it because if we need 9 slots, then there are 9 get methods.
-
+    /**
+     * get slot method
+     *
+     * @param a to get slot's number/position
+     * @return that slot's number/position
+     */
     public int getSlot(int a) {
         return slot[a];
     }
 
+    /**
+     * set betting money for combo-box button options.
+     *
+     * @param a set "a" to "betting money".
+     */
     public void setBettingMoney(int a) {
         bettingMoney = a;
     }
 
-
-    //rule for slots
-
+    /**
+     * rules for slots. If statement to check if there are any matches symbols in slots.
+     *
+     * @return winning a string to tell the user is losing or winning. Also, calculate the
+     * winning money for the user.
+     */
     public String matchCheck() {
         int winningMoney = 0;
         boolean checkIfWon = false;
@@ -80,8 +145,7 @@ public class SlotModel {
             if (slot[0] == slot[1] && slot[1] == slot[2]) {
                 if (slot[0] == 1 || slot[0] == 10) {
                     winningMoney = bettingMoney * 5;
-                }
-                else {
+                } else {
                     winningMoney = bettingMoney * 2;
                 }
             }
@@ -141,8 +205,7 @@ public class SlotModel {
                     winningMoney = bettingMoney * 2;
                 }
             }
-        }
-        else { //If the gamemode is set to freeplay
+        } else { //If the gamemode is set to freeplay
             //first row
             if (slot[0] == slot[1] && slot[1] == slot[2]) {
                 checkIfWon = true;
@@ -175,67 +238,76 @@ public class SlotModel {
             if (slot[6] == slot[4] && slot[4] == slot[2]) {
                 checkIfWon = true;
             }
-//            money += winningMoney;
+            //money += winningMoney;
         }
         if (winningMoney > 0) {
+            //Play WinSound method when winning
+            try {
+                playWinSound();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             money += winningMoney;
             return "Winner!!";
         }
-        else if(checkIfWon == true)
+        else if(checkIfWon == true) {
+            try {
+                playWinSound();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return "Winner!!";
+        }
         else if(MainMenuView.gamemode == "Simulated Casino") {
             money -= bettingMoney;
             return "Bad Luck!!";
-        }
-        else
+        } else
             return "Bad Luck!!";
     }
 
-    /*
-    //simple rules for 1by3 slots
-    public String matchCheck1() {
-        if (MainMenuView.gamemode == "Simulated Casino") {
-            //Some simple winning rules, modify if needed
-            if (slot[1] == slot[2] && slot[2] == slot[3]) {
-                //if 7 symbol is 3 in the row, then jackpot winner
-                if (slot[1] == 0) {
-                    money += 100;
-                    return "Jackpot Winner!!!";
-                    //Other 3 in the row
-                } else {
-                    money += 50;
-                    return "Winner!!";
-                }
-                //2 in the row
-            } else if (slot[1] == slot[2] || slot[2] == slot[3] || slot[3] == slot[1]) {
-                return "Free Spin!";
-                //No matches
-            } else {
-                return "Bad luck!";
-            }
-        }
-        //If the gamemode is in freeplay
-        else {
-            if (slot[1] == slot[2] && slot[2] == slot[3]) {
-                //if 7 symbol is 3 in the row, then jackpot winner
-                if (slot[1] == 0) {
-                    return "Jackpot Winner!!!";
-                    //Other 3 in the row
-                } else {
-                    return "Winner!!";
-                }
-                //2 in the row
-            } else if (slot[1] == slot[2] || slot[2] == slot[3] || slot[3] == slot[1]) {
-                return "Free Spin!";
-                //No matches
-            } else {
-                return "Bad luck!";
-            }
-        }
+    /**
+     * PlayWinSound method for making a win audio/sound when the user is winning.
+     * @throws LineUnavailableException for Exception
+     * @throws UnsupportedAudioFileException for Exception
+     * @throws IOException for Exception
+     */
+    public void playWinSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/Win.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
     }
 
+    /**
+     * PlayHandleSound method for making a pull handle audio/sound when the user is pulling the handle in slot machine.
+     * @throws LineUnavailableException for Exception
+     * @throws UnsupportedAudioFileException for Exception
+     * @throws IOException for Exception
      */
-
+    public void playHandleSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/HandleSound.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+      
+     /**
+     * exit method to exit slot-machine and go back to menu.
+     */
     public void exit() {
         MainMenuModel.money = money;
         menuModel.setVisible();

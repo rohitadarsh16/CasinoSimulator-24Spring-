@@ -1,19 +1,24 @@
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class MainMenuView extends JFrame {
     private MainMenuModel menuModel;
+    /**
+     * stores the current gamemode
+     */
     public static String gamemode;
 
     private JComboBox<String> gamemodeSelect;
-  
+
+    /**
+     * stores the current difficulty
+     */
     public static String difficulty;
     private JLabel background;
     private JLabel blackjackMenu;
@@ -33,7 +38,7 @@ public class MainMenuView extends JFrame {
     public MainMenuView(MainMenuModel menu) {
         super("CasinoSimulator");
         menuModel = menu;
-
+        setLayout(null);
 
         setSize(650, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,7 +52,7 @@ public class MainMenuView extends JFrame {
         gamemodeTxt.setFont(new Font("Dialog", Font.BOLD, 16));
         String[] playOptions = {"Simulated Casino", "Freeplay"};
         gamemodeSelect = new JComboBox<>(playOptions);
-        gamemodeSelect.setBounds(120, 0, 140, 60);
+        gamemodeSelect.setBounds(120, 0, 160, 60);
 
         //difficulty dropdown code
         String[] difficultyOptions = {"Hard", "Medium", "Easy"};
@@ -159,7 +164,7 @@ public class MainMenuView extends JFrame {
                 super.mouseClicked(e);
                 gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
                 difficulty = difficultySelect.getItemAt(difficultySelect.getSelectedIndex());
-                if(MainMenuModel.getMoney() <= 0 && gamemode == "Simulated Casino"){   //if player has no money and wants to play simulated casino, add 100 and notify
+                if(MainMenuModel.getMoney() <= 5 && gamemode == "Simulated Casino"){   //if player has no money and wants to play simulated casino, add 100 and notify
                     MainMenuModel.addMoney();
                     infoBox("$100 has been added", "You Ran Out of Money!");
                     setVisible(false);
@@ -180,6 +185,15 @@ public class MainMenuView extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 slotText.setVisible(true);
+                try {
+                    playSlotClip();
+                } catch (LineUnavailableException ex) {
+                    ex.printStackTrace();
+                } catch (UnsupportedAudioFileException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             @Override
             public void mouseExited(MouseEvent e) {
@@ -217,6 +231,15 @@ public class MainMenuView extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 blackjackText.setVisible(true);
+                try {
+                    playCardClip();
+                } catch (LineUnavailableException ex) {
+                    ex.printStackTrace();
+                } catch (UnsupportedAudioFileException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             @Override
             public void mouseExited(MouseEvent e) {
@@ -234,13 +257,20 @@ public class MainMenuView extends JFrame {
             }
         });
 
-
         //code for difficulty help button
         difficultyHelp.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 difficultyBox();
+            }
+        });
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                menuModel.exit();
             }
         });
 
@@ -258,10 +288,6 @@ public class MainMenuView extends JFrame {
         });
         */
 
-        setLayout(null);
-        setLocationRelativeTo(null);
-        setVisible(true);
-
         add(background);
         background.add(gamemodeSelect);
         background.add(gamemodeTxt);
@@ -274,10 +300,13 @@ public class MainMenuView extends JFrame {
         background.add(moneyTotal);
        // background.add(gamemodeHelp);
         //background.add(difficultyHelp);
+
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     /**
-     * creates pop-up window for running out of money
+     * creates pop-up window for getting below $5
      * @param infoMessage (what the message will say)
      * @param titleBar    (text in the title)
      */
@@ -287,7 +316,7 @@ public class MainMenuView extends JFrame {
     }
 
     /**
-     * creates pop-up window with rules
+     * creates pop-up window with rules for blackjack and slot machine
      */
     public void rulesBox(){
         BufferedImage img = null;
@@ -323,7 +352,7 @@ public class MainMenuView extends JFrame {
     }
 
     /**
-     * Creates pop-up with information on different gamemodes
+     * Creates pop-up with information on different game modes
      */
     public void gamemodeBox(){
         BufferedImage img = null;
@@ -457,7 +486,7 @@ public class MainMenuView extends JFrame {
             System.out.println("Cannot load HelpButton image!");
         }
         gamemodeHelp = new JLabel(new ImageIcon(img));
-        gamemodeHelp.setBounds(275, 10, 30, 30);
+        gamemodeHelp.setBounds(285, 10, 30, 30);
         background.add(gamemodeHelp);
 
         //load difficulty help button
@@ -467,13 +496,52 @@ public class MainMenuView extends JFrame {
             System.out.println("Cannot load HelpButton image!");
         }
         difficultyHelp = new JLabel(new ImageIcon(img));
-        difficultyHelp.setBounds(275, 75, 30, 30);
+        difficultyHelp.setBounds(285, 75, 30, 30);
         background.add(difficultyHelp);
+    }
 
+    /**
+     * plays audio for card shuffling
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     */
+    public void playCardClip() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/CardShuffle.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+    /**
+     * plays audio for slot game
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     */
+    public void playSlotClip() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/SlotStart.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
     }
 
     /**
      * For testing
+     * @return blackjackMenu
      */
+
+    public JLabel getBlackLabel() { return blackjackMenu; }
+
+    /**
+     * For testing
+     * @return what game mode is chosen
+     */
+
     public JComboBox<String> getGameOptions() { return gamemodeSelect; }
 }

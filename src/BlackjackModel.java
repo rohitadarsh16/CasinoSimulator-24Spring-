@@ -123,7 +123,7 @@ public class BlackjackModel {
                 deck.set(0, ace);
             }
         }
-        else { //If the difficulty is easy
+        else if (MainMenuView.difficulty == "Easy") { //If the difficulty is easy
             int index = randomNumber.nextInt(6);
             if(index == 0) {//If you pass a 1/6 chance
                 for(int i = 0; i < deck.size(); i++) {
@@ -201,12 +201,14 @@ public class BlackjackModel {
      * The player is dealt one last card and the current bet is doubled.
      * Checks if the player won; if not the player stands.
      */
-    public void doubleDown(){
+    public void doubleDown() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                money = money - bet;
-                bet = bet + bet;
+                //money = money - bet;
+                //bet = bet + bet;
+                playerBet(bet);
+
                 player.addCard();
                 int[] c = popPlayerCard();
                 blackjackView.ShowPlayerCard(c);
@@ -225,7 +227,7 @@ public class BlackjackModel {
                     playerLoses();
                     win();
                 }
-                //playerStand();
+                else playerStand();
             }
         }).start();
     }
@@ -302,7 +304,7 @@ public class BlackjackModel {
         switch (currentState) {
             case pWin -> blackjackView.ShowPlayerWin();
             case dWin -> blackjackView.ShowDealerWin();
-            case draw -> blackjackView.ShowDraw();
+            case draw -> { currentState = currentState.draw; blackjackView.ShowDraw(); }
         }
 
         dealer.reset();
@@ -614,7 +616,7 @@ public class BlackjackModel {
             stand = false;
         }
     }
-
+  
     /**
      * playDealSound method.
      * Plays a wav file when a card is dealt.

@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -10,6 +9,9 @@ public class MainMenuModel {
     private SlotModel slotModel;
     private BlackjackModel blackjackModel;
 
+    /**
+     * Stores money for the player
+     */
     public static int money; // available money to play
 
     public MainMenuModel() {
@@ -32,21 +34,40 @@ public class MainMenuModel {
      */
     public void setVisible() {menuView.setVisible(true);}
 
+    /**
+     * starts slot machine
+     */
     public void startSlot() {
         slotModel = new SlotModel(this, money);
     }
 
+    /**
+     * starts blackjack game
+     */
     public void startBlackjack() { blackjackModel = new BlackjackModel(this, money); }
 
+    /**
+     * returns amount of money player has
+     * @return money player has
+     */
     public static int getMoney(){return money;}
 
+    /**
+     * adds $100 to players balance
+     */
     public static void addMoney(){money = 100;}
 
+    /**
+     * Saves the data and exits the program
+     */
     public void exit() {
         save();
         System.exit(0);
     }
 
+    /**
+     * Create/overwrite file "savedata.txt" with value of money player currently has
+     */
     public void save(){
         //Create a new file called savedata.txt if it does not already exist
         try {
@@ -72,7 +93,13 @@ public class MainMenuModel {
 
     /**
      * For testing
+     * @return menuView
      */
     public MainMenuView getView() { return menuView; }
+
+    /**
+     * For testing
+     * @return blackjackModel
+     */
     public BlackjackModel getModel() { return blackjackModel; }
 }
