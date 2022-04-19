@@ -40,6 +40,7 @@ public class SlotModel {
      * difficulty for total of 9 times for 9 slots.
      */
     public void pullLever() {
+        //Play HandleSound method when pullLever method is invoked.
         try {
             playHandleSound();
         } catch (LineUnavailableException e) {
@@ -75,6 +76,11 @@ public class SlotModel {
         }
     }
 
+    /**
+     * Lever difficulty method for differentiate between
+     * Easy(7 symbols uses), Medium(9 symbols uses), and Hard(11 symbols uses).
+     * @return the total symbols use for each difficulty.
+     */
     public int Leverdifficulty() {
         int totalRandom;
         if (MainMenuView.difficulty == "Hard") {
@@ -235,6 +241,7 @@ public class SlotModel {
             //money += winningMoney;
         }
         if (winningMoney > 0) {
+            //Play WinSound method when winning
             try {
                 playWinSound();
             } catch (LineUnavailableException e) {
@@ -265,7 +272,13 @@ public class SlotModel {
         } else
             return "Bad Luck!!";
     }
-      
+
+    /**
+     * PlayWinSound method for making a win audio/sound when the user is winning.
+     * @throws LineUnavailableException for Exception
+     * @throws UnsupportedAudioFileException for Exception
+     * @throws IOException for Exception
+     */
     public void playWinSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         String path = System.getProperty("user.dir");
         File audioFile = new File(path + "/Sounds/Win.wav").getAbsoluteFile();
@@ -276,16 +289,12 @@ public class SlotModel {
         clip.start();
     }
 
-    public void playLoseSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
-        String path = System.getProperty("user.dir");
-        File audioFile = new File(path + "").getAbsoluteFile();
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioInputStream);
-        //Plays audio once
-        clip.start();
-    }
-
+    /**
+     * PlayHandleSound method for making a pull handle audio/sound when the user is pulling the handle in slot machine.
+     * @throws LineUnavailableException for Exception
+     * @throws UnsupportedAudioFileException for Exception
+     * @throws IOException for Exception
+     */
     public void playHandleSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         String path = System.getProperty("user.dir");
         File audioFile = new File(path + "/Sounds/HandleSound.wav").getAbsoluteFile();

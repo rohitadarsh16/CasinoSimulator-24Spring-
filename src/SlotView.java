@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
 
+/**
+ * SlotView class for slot-machine. Should contain all the front-end/GUI methods/functions.
+ */
 public class SlotView extends JFrame {
 
     private SlotModel slotModel;
@@ -31,7 +34,11 @@ public class SlotView extends JFrame {
     private JButton pullLever;
     private JComboBox<String> betSelect;
 
-
+    /**
+     * SlotView constructor that contain all GUI functionalities
+     * such as the ImageIcon, File, JLabel, JButton, etc., and what it does.
+     * @param slot accept the SlotModel as a parameter.
+     */
     public SlotView(SlotModel slot) {
         super("CasinoSimulator - Slot Machine");
         slotModel = slot;
@@ -60,16 +67,6 @@ public class SlotView extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*
-        for(int i = 0; i < contents.length; i++) {
-            try{
-                picture[i] = ImageIO.read(allFiles[i]);
-                icon[i]= new ImageIcon(picture[i]);
-            }catch (IOException e) {
-
-            }
-        }
-         */
 
         //create 9 labels for 9 slots
         label = new JLabel[9];
@@ -183,6 +180,7 @@ public class SlotView extends JFrame {
                     resultLabel.setText("<html><div style='text-align: center;'>Not enough money for betting!<br> Please lower the bet.</div></html>");
                 }
                 else {
+                    //The handle animation, slots animation, and symbols matching when pull lever button is click.
                     slotModel.pullLever();
                     ActionListener a = new ActionListener() {
                         @Override
@@ -243,16 +241,6 @@ public class SlotView extends JFrame {
                         Thread.sleep(100);
                     } catch (InterruptedException ex) {
                     }
-
-//                    for (int i = 0; i < 9; i++) {
-//                        label[i].setIcon(icon[slot.getSlot(i)]);
-//
-//                        add(label[i]);
-//                    }
-//                    resultLabel.setText(slot.matchCheck());
-//                    resultLabel.setHorizontalAlignment(JLabel.CENTER);
-//                    moneylabel.setText(("TOTAL:" + "$" + slot.getMoney()));
-
                 }
             }
 
