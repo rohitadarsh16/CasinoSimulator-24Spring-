@@ -27,6 +27,7 @@ public class MainMenuView extends JFrame {
     public static String difficulty;
     private JLabel background;
     private JLabel blackjackMenu;
+    private JLabel randomNumMenu;
     private JLabel slotMenu;
     private JLabel blackjackText;
     private JLabel slotText;
@@ -449,6 +450,17 @@ public class MainMenuView extends JFrame {
         catch (Exception e) { System.out.println("Cannot load background image!"); }
         background = new JLabel(new ImageIcon(img));
         background.setBounds(0, 0, 750, 700);
+
+        //load Random Number Icon
+        try {
+            img = ImageIO.read(new File(path + "/Assets/MainMenu/RandnumMenu.png"));
+        } catch (Exception e) {
+            System.out.println("Cannot load RandnumMenu image!");
+        }
+        randomNumMenu = new JLabel(new ImageIcon(img));
+        randomNumMenu.setBounds(250, 420, 150, 150);
+        background.add(randomNumMenu);
+
 
         //load Blackjack Icon
         try {
