@@ -89,7 +89,7 @@ public class MainMenuView extends JFrame {
         slotText.setVisible(false);
 
         //randnum label
-        randnumText = new JLabel("Random Card");
+        randnumText = new JLabel("Random Number");
         randnumText.setForeground(Color.WHITE);
         randnumText.setBounds(270, 560, 130, 50);
         randnumText.setFont(new Font("Dialog", Font.BOLD, 16));
