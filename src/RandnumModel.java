@@ -5,6 +5,10 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
+/**
+ * RandnumModel class.
+ * Implements the logic of the randnum game.
+ */
 public class RandnumModel {
     /**
      * Current state of the game.
@@ -13,9 +17,6 @@ public class RandnumModel {
 
     private MainMenuModel menuModel;
     private RandnumView randnumView;
-
-    private int cards_played; // how many cards were removed from the deck so far
-
     /**
      * The deck of cards represented as a linked list.
      */
@@ -28,6 +29,7 @@ public class RandnumModel {
      * Player object that represents the player.
      */
     private Player player;
+
     /**
      * Current balance.
      */
@@ -36,26 +38,52 @@ public class RandnumModel {
      * Current bet.
      */
     private int bet;
+
+    private int cards_played; // how many cards were removed from the deck so far
+    private int cardsPerRound; //counts number of cards played per round
+
+    private int[] hidden_card; // dealer's hidden card
+
     public enum currentState{
-        win, guess
+        pWin, dWin, pStand, dStand, dTurn, pTurn, draw //d = dealer, p = player
     }
+
+    /**
+     * gets current state of the game
+     * @return current state
+     */
     public currentState getCurrentState(){
         return currentState;
     }
 
+    // FOR TESTING
+    private boolean doneDeal;
+    private boolean doneHit;
+    private boolean doneStand;
+    private int hitCount = 0;
+
+    /**
+     * Constructor.
+     * Initializes the necessary variables needed to start the game.
+     * @param menu A reference to the MainMenuModel object.
+     * @param money An integer representing the amount of money the player currently has.
+     */
     public RandnumModel(MainMenuModel menu, int money) {
+        currentState = currentState.pTurn;
         menuModel = menu;
         deck = new LinkedList<>();
-        dealer = new RandnumModel.Player();
-        player = new RandnumModel.Player();
-        randnumView = new BlackjackView(this);
+        dealer = new Player();
+        player = new Player();
+        randnumView = new RandnumView(this);
         this.money = money;
         bet = 0;
+        cards_played = 0;
 
-        RandnumView.UpdateBalance();
+        randnumView.UpdateBalance();
         createDeck();
         shuffle();
     }
+
     /**
      * createDeck method.
      * Create the deck; a linked list of 52 Cards of each suit is initialized.
@@ -76,6 +104,7 @@ public class RandnumModel {
             }
         }
     }
+
     /**
      * shuffle method.
      * Shuffle the deck according to the difficulty level.
@@ -113,14 +142,173 @@ public class RandnumModel {
             }
         }
     }
+
+    /**
+     * playerHit method.Mark
+     * The player is dealt another card from the deck; checks if the player won.
+     */
+    public void playerHit() {
+        doneHit = false;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                player.addCard();
+                int[] c = popPlayerCard();
+                randnumView.ShowPlayerCard(c);
+
+                if (player.isRandnum()) {
+                    currentState = currentState.pWin; //player wins
+                    randnumView.ShowDealerCard(hidden_card);
+                    randnumView.ShowBackCard(false);
+                    playerWins();
+                    win();
+                }
+                else if (player.hasBusted()) {
+                    currentState = currentState.dWin; //dealer wins
+                    randnumView.ShowDealerCard(hidden_card);
+                    randnumView.ShowBackCard(false);
+                    playerLoses();
+                    win();
+                }
+                //else {
+                //currentState = currentState.dTurn;
+                //}
+                hitCount++;
+                doneHit = true;
+                System.out.println(hitCount);
+            }
+        }).start();
+    }
+
+    /**
+     * playerStand method.
+     * The playre gives up his turn and the dealer takes over.
+     */
+    public void playerStand() {
+        //player stands which makes it the dealer's turn
+        doneStand = false;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                currentState = currentState.dTurn;
+                player.setToStanding(true);
+                randnumView.ShowDealerCard(hidden_card);
+                randnumView.ShowBackCard(false);
+                dealerTurn();
+                doneStand = true;
+            }
+        }).start();
+    }
+
+    /**
+     * doubleDown method.
+     * The player is dealt one last card and the current bet is doubled.
+     * Checks if the player won; if not the player stands.
+     */
+    public void doubleDown() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //money = money - bet;
+                //bet = bet + bet;
+                playerBet(bet);
+
+                player.addCard();
+                int[] c = popPlayerCard();
+                randnumView.ShowPlayerCard(c);
+
+                if (player.isRandnum()) {
+                    currentState = currentState.pWin; //player wins
+                    randnumView.ShowDealerCard(hidden_card);
+                    randnumView.ShowBackCard(false);
+                    playerWins();
+                    win();
+                }
+                else if (player.hasBusted()) {
+                    currentState = currentState.dWin; //dealer wins
+                    randnumView.ShowDealerCard(hidden_card);
+                    randnumView.ShowBackCard(false);
+                    playerLoses();
+                    win();
+                }
+                else playerStand();
+            }
+        }).start();
+    }
+
+    /**
+     * dealerHit method.
+     * The dealer is dealt another card from the deck; checks if the dealer won.
+     */
+    public void dealerHit() {
+        dealer.addCard();
+        int[] c = popDealerCard();
+        randnumView.ShowDealerCard(c);
+
+        if(dealer.isRandnum()) {
+            currentState = currentState.dWin; //dealer has randnum and wins
+            playerLoses();
+            win();
+        }
+        else if(dealer.hasBusted()) {
+            currentState = currentState.pWin; //dealer busted and player wins
+            playerWins();
+            win();
+        }
+        else if (player.isStanding()) { //dealer neither has randnum nor busted and loops back to check if at 17
+            dealerTurn();
+        }
+//        else {
+//            currentState = currentState.pTurn;
+//        }
+    }
+
+    /**
+     * dealerStand method.
+     * Dealer gives up his turn; checks who won.
+     */
+    public void dealerStand() {
+        currentState = currentState.pTurn;
+        dealer.setToStanding(true);                         // if both player and dealer are standing then do this
+        if (player.isStanding()) {
+            if (player.getTotal() == dealer.getTotal()) {     //player and dealer have same total, draw
+                currentState = currentState.draw;
+                playerDraws();
+            }
+            else if (player.getTotal() < dealer.getTotal()) {     //dealer has higher total than player, dealer wins
+                currentState = currentState.dWin;
+                playerLoses();
+            }
+            else {                                               //otherwise player has higher total and wins
+                currentState = currentState.pWin;
+                playerWins();
+            }
+            win();
+        }
+    }
+
+    /**
+     * dealerTurn method.
+     * Calls dealerHit if dealer's total points are less than 17; otherwise
+     * calls dealerStand.
+     */
+    public void dealerTurn() {               //dealer's turn
+        if (dealer.getTotal() < 17) {        //if dealer has less than 17 they hit
+            dealerHit();
+        }
+        else                                //otherwise they stand
+            dealerStand();
+    }
+
     /**
      * win method.
-     * Update BlackjackView, reset players and deck.
+     * Update RandnumView, reset players and deck.
      */
     public void win() {
         switch (currentState) {
-            case win -> randnumView.ShowPlayerWin();
-            default -> randnumView.ShowPlayerLose();
+            case pWin -> randnumView.ShowPlayerWin();
+            case dWin -> randnumView.ShowDealerWin();
+            case draw -> { currentState = currentState.draw; randnumView.ShowDraw(); }
         }
 
         dealer.reset();
@@ -128,25 +316,42 @@ public class RandnumModel {
         createDeck();
         shuffle(); //Shuffle the deck after every turn
     }
+
     /**
      * playerWins method.
-     * Update bet and balance in BlackjackView, reset bet.
+     * Update bet and balance in RandnumView, reset bet.
      */
     public void playerWins(){
         money = money + (bet * 2);
         bet = 0;
         randnumView.UpdateBalance();
         randnumView.UpdateBet();
+        cardsPerRound = 0;
     }
+
     /**
      * playerLoses method.
-     * Update bet and balance in BlackjackView.
+     * Update bet and balance in RandnumView.
      */
     public void playerLoses(){
         bet = 0;
         randnumView.UpdateBalance();
         randnumView.UpdateBet();
+        cardsPerRound = 0;
     }
+
+    /**
+     * playerDraws method.
+     * Update bet and balance in RandnumView, reset bet.
+     */
+    public void playerDraws(){
+        money = money + bet;
+        bet = 0;
+        randnumView.UpdateBalance();
+        randnumView.UpdateBet();
+        cardsPerRound = 0;
+    }
+
     /**
      * playerBet method.
      * Player places a bet.
@@ -159,6 +364,52 @@ public class RandnumModel {
             randnumView.UpdateBet();
         }
     }
+
+    /**
+     * deal method.
+     * Initial deal of cards. The order is player, dealer, player, dealer.
+     * The dealer's last card is face down.
+     */
+    public void deal() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                doneDeal = false; // for testing
+                int[] c;
+                for (int i = 0; i < 4; i++) {
+                    if (i % 2 == 0) {
+                        player.addCard();
+                        c = popPlayerCard();
+                        randnumView.ShowPlayerCard(c);
+                    }
+                    else {
+                        dealer.addCard();
+                        c = popDealerCard();
+                        if (i < 3)
+                            randnumView.ShowDealerCard(c);
+                        else { // dealer's last card is face down
+                            hidden_card = c;
+                            randnumView.ShowBackCard(true);
+                        }
+                    }
+                }
+                doneDeal = true; // for testing
+                if (player.isRandnum()) {
+                    currentState = currentState.pWin; //player wins
+                    randnumView.ShowDealerCard(hidden_card);
+                    randnumView.ShowBackCard(false);
+                    playerWins();
+                    win();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * popDealerCard method.
+     * Get dealer's top card in hand.
+     * @return An integer array containing the card's suit, value, and points.
+     */
     int[] popDealerCard() {
         int[] ret = new int[3];
         Card c = dealer.popCard();
@@ -170,10 +421,61 @@ public class RandnumModel {
         return ret;
     }
 
+    /**
+     * popPlayerCard method.
+     * Get player's top card in hand.
+     * @return An integer array containing the card's suit, value, and points.
+     */
+    int[] popPlayerCard() {
+        int[] ret = new int[3];
+        Card c = player.popCard();
+
+        ret[0] = c.suit;
+        ret[1] = c.value-1; // subtract 1 because index of array starts at 0
+        ret[2] = c.points;
+
+        return ret;
+    }
+
+    /**
+     * getDealerTotal method.
+     * @return The dealer's total points as an integer.
+     */
+    public int getDealerTotal() { return dealer.getTotal(); }
+    /**
+     * getPlayerTotal method.
+     * @return The player's total points as an integer.
+     */
+    public int getPlayerTotal() { return player.getTotal(); }
+    /**
+     * getBalance method.
+     * @return The current balance as an integer.
+     */
+    public int getBalance() { return money; }
+    /**
+     * getBet method.
+     * @return The current bet as an integer.
+     */
+    public int getBet() { return bet; }
+
+    /**
+     * exit method.
+     * Update balance and quit game.
+     */
     public void exit() {
         MainMenuModel.money = money;
         menuModel.setVisible();
     }
+
+    // DEBUG
+    public void printDeck() {
+        deck.forEach(element -> System.out.println(element.value + " " + element.suit + "\n"));
+    }
+
+    /**
+     * Card class.
+     * Used to define a card in the deck.
+     */
     private class Card {
         int value;
         int suit;
@@ -222,7 +524,7 @@ public class RandnumModel {
          */
         Player() {
             stand = false;
-            hand = new Card[1];
+            hand = new Card[10]; // max of 10 possible cards should be enough
             i = j = total = 0;
         }
 
@@ -246,6 +548,25 @@ public class RandnumModel {
             } else {                           // otherwise all cards are normal values
                 total += c.points;
             }
+            try {
+                playDealSound();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /* For testing!!!
+         * Add a specific card to the hand.
+         */
+        void addCard(int value, int suit, int points) {
+            Card c = new Card(value, suit, points);
+            cards_played++;
+            hand[i++] = c;
+            total += points;
         }
 
         /**
@@ -261,10 +582,10 @@ public class RandnumModel {
         public boolean hasBusted() { return total > 21; }
 
         /**
-         * isBlackjack method.
+         * isRandnum method.
          * @return True if the total points add up to 21.
          */
-        public boolean isBlackjack() { return total == 21; }
+        public boolean isRandnum() { return total == 21; }
 
         /**
          * isStanding method.
@@ -300,4 +621,56 @@ public class RandnumModel {
         }
     }
 
+    /**
+     * playDealSound method.
+     * Plays a wav file when a card is dealt.
+     * @throws LineUnavailableException
+     * @throws UnsupportedAudioFileException
+     * @throws IOException
+     */
+    public void playDealSound() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+        String path = System.getProperty("user.dir");
+        File audioFile = new File(path + "/Sounds/CardSound.wav").getAbsoluteFile();
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        //Plays audio once
+        clip.start();
+    }
+
+    /*
+     * For testing
+     */
+    public int getDeckCount() { return deck.size(); }
+    public int getPlayerCardCount() { return player.getHandCount(); }
+    public int getDealerCardCount() { return dealer.getHandCount(); }
+    public RandnumView getView() { return randnumView; }
+    public boolean isDoneDeal() { return doneDeal; }
+    public boolean isDoneHit() { return doneHit; }
+    public boolean isDoneStand() { return doneStand; }
+    public int getHitCount() { return hitCount; }
+    public boolean dealerIsStanding() { return dealer.isStanding(); }
+
+    /*
+     * Deal a chosen card for testing purposes.
+     * If p is set to true it will deal to the player; otherwise to the dealer.
+     * If hidden is true it will show the hidden card; used to follow the normal course of the game.
+     */
+    public void dealCardTest(boolean p, boolean hidden, int value, int suit, int points) {
+        doneDeal = false;
+        if (p) { // if p is true deal to player; otherwise deal to dealer
+            player.addCard(value, suit, points);
+            int[] c = popPlayerCard();
+            randnumView.ShowPlayerCard(c);
+        }
+        else {
+            dealer.addCard(value, suit, points);
+            int[] c = popDealerCard();
+            if (hidden) {
+                hidden_card = c;
+                randnumView.ShowBackCard(true);
+            }
+            else randnumView.ShowDealerCard(c);
+        }
+    }
 }
