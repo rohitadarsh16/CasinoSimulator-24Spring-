@@ -14,6 +14,7 @@ public class MainMenuModel {
     private BlackjackModel blackjackModel;
 
     private RandnumModel randnumModel;
+    private TempleAlertModel templeAlertModel;
 
     /**
      * Stores money for the player
@@ -59,6 +60,10 @@ public class MainMenuModel {
 
     public void startRandnum() {
         randnumModel = new RandnumModel(this, money);
+    }
+
+    public void setTempleAlertModel() {
+        templeAlertModel = new TempleAlertModel(this);
     }
 
     /**

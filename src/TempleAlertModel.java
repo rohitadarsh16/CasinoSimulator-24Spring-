@@ -14,7 +14,17 @@ public class TempleAlertModel {
     private TempleAlertView templeAlertView;
     private currentState gameState;
 
-    public static void main(String[] args) throws Exception {
+    public enum currentState {
+        GameOn, GameOver
+    }
+
+    public TempleAlertModel(MainMenuModel menu) {
+        this.menuModel = menu;
+        this.gameState = currentState.GameOn;
+        this.templeAlertView = new TempleAlertView(this); // This line sets up the view, make sure RandnumView is ready for this.
+    }
+
+    public void startGame() throws Exception{
         HttpClient httpClient = HttpClient.newBuilder().build();
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create("https://www.reddit.com/r/Temple/new.json?limit=1"))
@@ -23,20 +33,6 @@ public class TempleAlertModel {
                 .build();
         HttpResponse<String> httpResponse = httpClient.send(httpRequest, BodyHandlers.ofString());
         System.out.println(httpResponse.body());
-    }
-
-    public enum currentState {
-        GameOn, GameOver
-    }
-
-    public TempleAlertModel(MainMenuModel menu, int money) {
-        this.menuModel = menu;
-        this.gameState = currentState.WaitingForBet;
-        this.templeAlertView = new TempleAlertView(this); // This line sets up the view, make sure RandnumView is ready for this.
-    }
-
-    public void startGame(int bet) {
-
     }
 
     private void endGame() {

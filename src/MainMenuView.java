@@ -28,6 +28,7 @@ public class MainMenuView extends JFrame {
     private JLabel background;
     private JLabel blackjackMenu;
     private JLabel randnumMenu;
+    private JLabel templeAlertMenu;
     private JLabel slotMenu;
     private JLabel randnumText;
     private JLabel blackjackText;
@@ -506,6 +507,15 @@ public class MainMenuView extends JFrame {
         randnumMenu.setBounds(250, 420, 150, 150);
         background.add(randnumMenu);
 
+        //load Temple News Icon
+        try {
+            img = ImageIO.read(new File(path + "/Assets/MainMenu/templeNews.jpg"));
+        } catch (Exception e) {
+            System.out.println("Cannot load templeAlertMenu image!");
+        }
+        templeAlertMenu = new JLabel(new ImageIcon(img));
+        templeAlertMenu.setBounds(250, 130, 150, 100);
+        background.add(templeAlertMenu);
 
         //load Blackjack Icon
         try {
