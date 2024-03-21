@@ -160,6 +160,7 @@ public class BlackjackView extends JFrame {
 
         // Game buttons
         dealBtn = new JButton("Deal");
+        dealBtn = new JButton("Deal");
         dealBtn.setBounds(95, 630, 100, 30);
         //dealBtn.setEnabled(false);
 

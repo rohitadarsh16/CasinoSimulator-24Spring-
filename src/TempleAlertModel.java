@@ -5,26 +5,16 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 
 public class TempleAlertModel {
-    /**
-     * Current state of the game.
-     */
-    private currentState currentState;
 
     private MainMenuModel menuModel;
     private TempleAlertView templeAlertView;
-    private currentState gameState;
-
-    public enum currentState {
-        GameOn, GameOver
-    }
 
     public TempleAlertModel(MainMenuModel menu) {
         this.menuModel = menu;
-        this.gameState = currentState.GameOn;
-        this.templeAlertView = new TempleAlertView(this); // This line sets up the view, make sure RandnumView is ready for this.
+        this.templeAlertView = new TempleAlertView(this); // This line sets up the view for temple alerts
     }
 
-    public void startGame() throws Exception{
+    public HttpResponse<String> startGame() throws Exception{
         HttpClient httpClient = HttpClient.newBuilder().build();
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create("https://www.reddit.com/r/Temple/new.json?limit=1"))
@@ -33,18 +23,7 @@ public class TempleAlertModel {
                 .build();
         HttpResponse<String> httpResponse = httpClient.send(httpRequest, BodyHandlers.ofString());
         System.out.println(httpResponse.body());
-    }
-
-    private void endGame() {
-        // Optionally reset for a new game or update UI to allow for a new game to start
-        gameState = currentState.GameOver;
-        templeAlertView.showGameOverMessage();
-        templeAlertView.updateGameView(); // This should update the game's UI based on the new game state
-
-    }
-
-    public currentState getGameState() {
-        return gameState;
+        return httpResponse;
     }
 
     public void exit() {
