@@ -62,7 +62,7 @@ public class MainMenuModel {
         randnumModel = new RandnumModel(this, money);
     }
 
-    public void setTempleAlertModel() {
+    public void startTempleAlertModel() {
         templeAlertModel = new TempleAlertModel(this);
     }
 

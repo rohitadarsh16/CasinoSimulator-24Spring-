@@ -3,13 +3,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TempleAlertView extends JFrame{
+public class TempleAlertView extends JFrame {
     private TempleAlertModel templeAlertModel;
 
     private JLabel titleLabel;
     private JLabel postLabel;
-    private JTextField postField;
-    private JButton jButton;
+    private JTextField betField;
+    private JTextField guessField;
     private JButton jButtonExit;
 
     public TempleAlertView(TempleAlertModel model) {
@@ -20,20 +20,19 @@ public class TempleAlertView extends JFrame{
         setSize(400, 300);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        titleLabel = new JLabel("Latest post from www.reddit.com/r/Temple:");
+        titleLabel = new JLabel("Temple Alerts");
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Align to the left
         add(titleLabel);
 
-        postLabel = new JLabel("post content");
-        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Align to the left
+        postLabel = new JLabel("The latest current post from www.reddit.com/r/Temple:");
+        postLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Align to the left
         add(postLabel);
 
-        postField = new JTextField(10);
-        add(postField);
+        betField = new JTextField(10);
+        add(betField);
 
-        //feedbackLabel.setText("Please enter a valid number.");
+        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Align to the left
 
-        add(jButton);
         jButtonExit = new JButton("Exit");
         jButtonExit.addActionListener(new ActionListener() {
             @Override
@@ -46,16 +45,5 @@ public class TempleAlertView extends JFrame{
         setVisible(true);
     }
 
-    public void updateGameView() {
-        titleLabel.setText("Latest post from www.reddit.com/r/Temple:");
-
-        TempleAlertModel.currentState gameState = templeAlertModel.getGameState();
-        jButton.setText("Bet");
-        postLabel.setText("Current Bet:");
-    }
-
-    public void showGameOverMessage() {
-        JOptionPane.showMessageDialog(this, "Game over! You've run out of money.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
-    }
 
 }

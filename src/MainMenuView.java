@@ -31,6 +31,7 @@ public class MainMenuView extends JFrame {
     private JLabel templeAlertMenu;
     private JLabel slotMenu;
     private JLabel randnumText;
+    private JLabel alertText;
     private JLabel blackjackText;
     private JLabel slotText;
     private JLabel saveButton;
@@ -95,6 +96,13 @@ public class MainMenuView extends JFrame {
         randnumText.setBounds(270, 560, 130, 50);
         randnumText.setFont(new Font("Dialog", Font.BOLD, 16));
         randnumText.setVisible(false);
+
+        //temple alert label
+        alertText = new JLabel("Temple Alerts");
+        alertText.setForeground(Color.WHITE);
+        alertText.setBounds(270, 110, 130, 50);
+        alertText.setFont(new Font("Dialog", Font.BOLD, 16));
+        alertText.setVisible(false);
 
         //save text
         saveText = new JLabel("Save");
@@ -258,6 +266,33 @@ public class MainMenuView extends JFrame {
                 randnumText.setVisible(false);
             }
         });
+
+        //temple alerts code
+        //Cards when clicked now start displaying a temple alert
+        templeAlertMenu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                gamemode = gamemodeSelect.getItemAt(gamemodeSelect.getSelectedIndex());
+                setVisible(false);
+                menuModel.startTempleAlertModel();
+            }
+        });
+
+        //code for rollover effect on temple alert image
+        templeAlertMenu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                alertText.setVisible(true);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                alertText.setVisible(false);
+            }
+        });
+
         //blackjack code
         //Cards when clicked now start blackjack game
         blackjackMenu.addMouseListener(new MouseAdapter() {
@@ -351,6 +386,7 @@ public class MainMenuView extends JFrame {
         background.add(blackjackText);
         background.add(slotText);
         background.add(randnumText);
+        background.add(alertText);
         background.add(saveText);
         background.add(helpText);
         background.add(difficultyText);
@@ -514,7 +550,7 @@ public class MainMenuView extends JFrame {
             System.out.println("Cannot load templeAlertMenu image!");
         }
         templeAlertMenu = new JLabel(new ImageIcon(img));
-        templeAlertMenu.setBounds(250, 130, 150, 100);
+        templeAlertMenu.setBounds(250, 150, 150, 100);
         background.add(templeAlertMenu);
 
         //load Blackjack Icon
