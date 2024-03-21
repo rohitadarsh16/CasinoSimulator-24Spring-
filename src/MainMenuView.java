@@ -100,7 +100,7 @@ public class MainMenuView extends JFrame {
         //temple alert label
         alertText = new JLabel("Temple Alerts");
         alertText.setForeground(Color.WHITE);
-        alertText.setBounds(270, 132, 130, 50);
+        alertText.setBounds(270, 110, 130, 50);
         alertText.setFont(new Font("Dialog", Font.BOLD, 16));
         alertText.setVisible(false);
 
@@ -280,7 +280,7 @@ public class MainMenuView extends JFrame {
         });
 
         //code for rollover effect on temple alert image
-        randnumMenu.addMouseListener(new MouseAdapter() {
+        templeAlertMenu.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
