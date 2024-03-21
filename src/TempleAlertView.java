@@ -17,7 +17,7 @@ public class TempleAlertView extends JFrame{
         this.templeAlertModel = model;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 100);
+        setSize(400, 300);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         titleLabel = new JLabel("Latest post from www.reddit.com/r/Temple:");
@@ -49,7 +49,7 @@ public class TempleAlertView extends JFrame{
     public void updateGameView() {
         titleLabel.setText("Latest post from www.reddit.com/r/Temple:");
 
-        templeAlertModel.currentState gameState = templeAlertModel.getGameState();
+        TempleAlertModel.currentState gameState = templeAlertModel.getGameState();
         jButton.setText("Bet");
         postLabel.setText("Current Bet:");
     }
