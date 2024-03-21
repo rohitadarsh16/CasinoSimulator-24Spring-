@@ -39,3 +39,7 @@ Testing was perfomed using JUnit testing suite primarily on macOS. There are two
 **Warning** Some of the tests behave differently if ran on macOS or Windows. For example, when automating clicking on a bet label, say the $5 label, macOS requires two
 clicks in order to register one click whereas on Windows only one click is sufficient. This means that one pair of mousePress, mouseRelease functions need to be commented
 out when testing on Windows.
+
+### Feature List
+1. We implemented a Temple Alert's feature where the user can see the latest post made on www.reddit.com/r/Temple/. The feature works when the user clicks on the Temple News image and can click the exit button to return back to the main menu.
+2. We also implemented a Random Number Game where the user can guess a number between 1-100 and make a bet on their guess. They have multiple chances, getting told their guess is too low, too high, or the correct number. They must guess the correct number to win their bet. 
